@@ -24,7 +24,6 @@ def getThreeElementSums(arr, two_sums):
     return triplets
 
 def getTripletsValues(arr, triplets):
-
     trips = list()
     for triplet in triplets:
         trips.append([arr[i] for i in triplet])
@@ -32,6 +31,8 @@ def getTripletsValues(arr, triplets):
     trips = list(set(trips))
     trips = [list(vals) for vals in trips]
     return trips
+
+# Alternative approach: use a counter at the beginning.
 
 '''
 class Solution:
