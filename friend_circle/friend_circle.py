@@ -1,5 +1,7 @@
 # Solve as connected components problem
 
+# https://leetcode.com/problems/friend-circles/
+
 from typing import List
 
 class Node():
@@ -61,3 +63,6 @@ def findComponents(M: List[List[int]]) -> int:
         [G, U] = DFS(G, U[0], U)
     return n_components
 
+class Solution:
+    def findCircleNum(self, M: List[List[int]]) -> int:
+        return findComponents(M)
