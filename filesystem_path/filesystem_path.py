@@ -1,104 +1,41 @@
-from typing import Dict
+from typing import Dict, List
 
 # https://leetcode.com/problems/longest-absolute-file-path/
-
-S = "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"
-S = "dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext"
-
-paths = S.split('\n')
-
-fs = dict()
 
 def getPath(fs: Dict, path_str: str):
     """
     Navigate in dictionary representing filesystem to 
     path represented by path_str
     """
+    if not path_str:
+        return fs
     subs = path_str.split("/")
     d_ret = fs
     for sub_i in subs:
         d_ret = d_ret[sub_i]
     return d_ret
 
-def getFilesystemDict(S: str) -> Dict:
+def newPath(path1: str, path2: str) -> str:
+    """
+    Append path1 and path2 a new path.
+    """
+    if not path1:
+        char = ''
+    else:
+        char = '/'
+    return path1 + char + path2
+
+def getFilesystemDict(S: str) -> List[str]:
     """
     Get dictionary representation of filesystem.
     """
     # Constuct several different paths
     paths = S.split('\n')
+    # Dictionary represents nested paths
     fs = dict()
-    # Maintain previous paths as stack
-    prev_paths = list()
-    prev_tabs = list()
-    # List of file paths
-    file_paths = list()
-    # Iterate through sub-paths
-    for i, path in enumerate(paths):
-        print(prev_tabs)
-        print(prev_paths)
-        tabs = path.count('\t')
-        print(path)
-        print(tabs)
-        path = path.replace('\t', '')
-        is_file = "." in path
-        if not i:
-            fs[path] = dict()
-            prev_dir = path
-            prev_paths.append(path)
-            prev_tabs.append(0)
-            continue
-        # Deeper level
-        if tabs > prev_tabs[-1]:
-            # A file; value is None
-            path_above = getPath(fs, prev_paths[-1])
-            if is_file:
-                path_above[path] = None
-                file_paths.append(prev_paths[-1] + '/' + path)
-            # Not a file; value is dict
-            else:
-                path_above[path] = dict()
-                prev_paths.append(prev_paths[-1] + '/' + path)
-                prev_tabs.append(tabs)
-        # Same level
-        elif tabs == prev_tabs[-1]:
-            if is_file:
-                path_above = getPath(fs, prev_paths[-1])
-                path_above[path] = None
-                file_paths.append(prev_paths[-1] + '/' + path)
-            # Not a file; value is dict
-            else:
-                path_above = getPath(fs, prev_paths[-1])
-                path_above[path] = dict()
-                prev_paths.append(prev_paths[-1] + '/' + path)
-            prev_tabs.append(tabs)
-        # Shallower level
-        elif tabs < prev_tabs[-1]:
-            while tabs <= prev_tabs[-1]:
-                prev_paths.pop()
-                prev_tabs.pop()
-            if is_file:
-                path_above = getPath(fs, prev_paths[-1])
-                path_above[path] = None
-                file_paths.append(prev_paths[-1] + '/' + path)
-            # Not a file; value is dict
-            else:
-                path_above = getPath(fs, prev_paths[-1])
-                path_above[path] = dict()
-                prev_paths.append(prev_paths[-1] + '/' + path)
-            prev_tabs.append(tabs)
-    return [fs, file_paths]
-
-
-def getFilesystemDict2(S: str) -> Dict:
-    """
-    Get dictionary representation of filesystem.
-    """
-    # Constuct several different paths
-    paths = S.split('\n')
-    fs = dict()
-    # Maintain previous paths as stack
-    prev_paths = list()
-    prev_tabs = list()
+    # Maintain previous paths and tabs as stack
+    dirs = ['']
+    dirs_tabs = [-1]
     # List of file paths
     file_paths = list()
     # Iterate through sub-paths
@@ -106,25 +43,49 @@ def getFilesystemDict2(S: str) -> Dict:
         tabs = path.count('\t')
         path = path.replace('\t', '')
         is_file = "." in path
-        if not i:
-            fs[path] = dict()
-            prev_dir = path
-            prev_paths.append(path)
-            prev_tabs.append(0)
-            continue
-        # Shallower level
-        if tabs < prev_tabs[-1]:
-            while tabs <= prev_tabs[-1]:
-                prev_paths.pop()
-                prev_tabs.pop()
-        path_above = getPath(fs, prev_paths[-1])
-        # Path represents a file; add to file paths 
+        # Shallower or equal level
+        if tabs <= dirs_tabs[-1]:
+            while tabs <= dirs_tabs[-1]:
+                dirs.pop()
+                dirs_tabs.pop()
+        path_above = getPath(fs, dirs[-1])
+        new_path = newPath(dirs[-1], path)
+        # Path represents a file; add to file paths
         if is_file:
-            file_paths.append(prev_paths[-1] + '/' + path)
+            file_paths.append(new_path)
         # Path represents a directory; value is dict
         else:
             path_above[path] = dict()
-            prev_paths.append(prev_paths[-1] + '/' + path)
-            prev_tabs.append(tabs)
+            dirs.append(new_path)
+            dirs_tabs.append(tabs)
+    return file_paths
 
-    return [fs, file_paths]
+def getLenLongestStr(strs: List[str]) -> List[str]:
+    """
+    Get longest string in list of strings. 
+    """
+    L = dict()
+    for s in strs:
+        L[s] = len(s)
+    if not L: # Empty sequence
+        return 0
+    longest = max(L, key=lambda k: L[k])
+    return L[longest]
+
+def longestPath(S: str) -> int:
+    """
+    Get length of longest path in filesystem represented by S.
+    """
+    # No files -> return zero
+    if not S.count('.'):
+        return 0
+    # Only a single path with a file -> return its length
+    if not S.count('\t') and not S.count('\n'):
+        return len(S)
+    file_paths = getFilesystemDict(S)
+    longest = getLenLongestStr(file_paths)
+    return longest
+
+class Solution:
+    def lengthLongestPath(self, S: str) -> int:
+        return longestPath(S)
