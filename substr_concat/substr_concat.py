@@ -3,6 +3,8 @@ import copy
 from typing import List
 from collections import Counter
 
+# https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+
 ## Represent left words as Counter for O(1) lookup
 # Be able to handle cases with duplicate words, e.g.
 # s = "wordgoodgoodgoodbestword"
