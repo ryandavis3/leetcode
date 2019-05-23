@@ -11,23 +11,33 @@ from collections import Counter
 # words = ["word","good","best","good"]
 # should get result of [8]
 
+# Handle special case where all same letter
+
 class SubString():
     """
     Class for substring.
     """
-    def __init__(self, found: set, left: set, start: int, L: int):
-        self.found = found
-        self.left = left
+    def __init__(self, remaining: list, start: int, L: int):
+        self.remaining = Counter(remaining)
         self.start = start
         self.L = L
         self.end = self.start + L
-    
+    def startRem(self):
+        s = '%s;' % self.start
+        for key in self.remaining:
+            s += '%s:%s' % (key, self.remaining[key])  
+        return s
 
 def findFirstWord(s: str, word: str) -> List[int]:
     """
-    Find indices of first word.
+    Find indices of first word. Include overlaps.
     """
-    return [m.start() for m in re.finditer(word, s)]
+    L = len(word)
+    if L > 1:
+        pattern = '%s(?=%s)' % (word[0], word[1:])
+    else:
+        pattern = word
+    return [m.start() for m in re.finditer(pattern, s)]
 
 def firstSubstrs(s: str, words: List[str]):
     """
@@ -36,10 +46,9 @@ def firstSubstrs(s: str, words: List[str]):
     """
     word = words[0]
     L = len(word)
-    found = set([words[0]])
-    left = set(words[1:])
+    remaining = words[1:]
     indices = findFirstWord(s, word)
-    substrs = [SubString(found, left, start, L) for start in indices]
+    substrs = [SubString(remaining, start, L) for start in indices]
     return substrs
 
 
@@ -52,10 +61,13 @@ def extendSubstrLeft(substr: SubString, s: str) -> SubString:
     start_ext = substr.start - substr.L
     if start_ext >= 0:
         left_str = s[start_ext : substr.start]
-        if left_str in substr.left:
+        # String matches a remaining string
+        if left_str in substr.remaining:
             substr.start = start_ext
-            substr.left.remove(left_str)
-            substr.found.add(left_str)
+            substr.remaining[left_str] -= 1
+            # If no more remaining, delete key
+            if substr.remaining[left_str] == 0:
+                del substr.remaining[left_str]
             return substr
     return None
 
@@ -66,12 +78,15 @@ def extendSubstrRight(substr: SubString, s: str) -> SubString:
     """
     substr = copy.deepcopy(substr)
     end_ext = substr.end + substr.L
-    if end_ext < len(s):
-        left_str = s[substr.end : end_ext]
-        if left_str in substr.left:
+    if end_ext <= len(s):
+        right_str = s[substr.end : end_ext]
+        # String matches a remaining string
+        if right_str in substr.remaining:
             substr.end = end_ext
-            substr.left.remove(left_str)
-            substr.found.add(left_str)
+            substr.remaining[right_str] -= 1
+            # If no more remaining, delete key
+            if substr.remaining[right_str] == 0:
+                del substr.remaining[right_str]
             return substr
     return None
 
@@ -100,17 +115,34 @@ def extendSubstrs(substrs: List[SubString], s: str) -> List:
         exts = extendSubstr(substr, s)
         result = result + exts
     substrs = [x for x in result if x is not None]
-    valid_start = [x.start for x in substrs if not x.left]
+    valid_start = [x.start for x in substrs if not x.remaining]
     return [substrs, valid_start]
 
-def buildSubstrs(substrs: List[SubString], s: str) -> List[int]:
+# Remove duplicates in each round
+# Check for substrings with the same start and remaining fields
+
+def removeDuplicateSubstrs(substrs: List[SubString]) -> List[SubString]:
+    obs = set()
+    l = list()
+    for substr in substrs:
+        if substr.startRem() not in obs:
+            obs.add(substr.startRem())
+            l.append(substr)
+    return l
+
+def buildSubstrs(substrs: List[SubString], s: str, max_substrs: int) -> List[int]:
     """
     Build substrings and find valid start points in the 
     larger string.
     """
     valid_starts = list()
+    substrs = [x for x in substrs if x is not None]
+    valid_starts += [x.start for x in substrs if not x.remaining]
     while len(substrs) > 0:
         [substrs, valid_start] = extendSubstrs(substrs, s)
+        substrs = removeDuplicateSubstrs(substrs)
+        if len(substrs) > max_substrs * 2:
+            substrs = substrs[0:max_substrs]
         valid_starts = valid_starts + valid_start
     return valid_starts
 
@@ -120,8 +152,11 @@ def findSubstring(s: str, words: List[str]) -> List[int]:
     """
     if not s or not words:
         return []
+    if len(words) == 1 and words[0] == s:
+        return [0]
+    max_substrs = max([len(findFirstWord(s, word)) for word in words])
     substrs = firstSubstrs(s, words)
-    index = buildSubstrs(substrs, s)
+    index = buildSubstrs(substrs, s, max_substrs)
     if not index:
         return []
     index = list(set(index))
