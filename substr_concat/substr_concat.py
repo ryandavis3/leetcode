@@ -5,24 +5,29 @@ from collections import Counter
 
 # https://leetcode.com/problems/substring-with-concatenation-of-all-words/
 
-## Represent left words as Counter for O(1) lookup
-# Be able to handle cases with duplicate words, e.g.
-# s = "wordgoodgoodgoodbestword"
-# words = ["word","good","best","good"]
-# should get result of [8]
-
-# Handle special case where all same letter
-
 class SubString():
     """
     Class for substring.
     """
     def __init__(self, remaining: list, start: int, L: int):
+        """
+        Constructor. 
+
+        Args:
+            remaining (list of str) : Words remaining to include in
+                substring.
+            start (int) : Index where substring starts.
+            L (int) : Length of word. 
+        """
         self.remaining = Counter(remaining)
         self.start = start
         self.L = L
         self.end = self.start + L
     def startRem(self):
+        """
+        A sort of string hash value encoding the start index and
+        remaining words left.
+        """
         s = '%s;' % self.start
         for key in self.remaining:
             s += '%s:%s' % (key, self.remaining[key])  
@@ -118,10 +123,10 @@ def extendSubstrs(substrs: List[SubString], s: str) -> List:
     valid_start = [x.start for x in substrs if not x.remaining]
     return [substrs, valid_start]
 
-# Remove duplicates in each round
-# Check for substrings with the same start and remaining fields
-
 def removeDuplicateSubstrs(substrs: List[SubString]) -> List[SubString]:
+    """
+    Remove duplicate substrings from list.
+    """    
     obs = set()
     l = list()
     for substr in substrs:
@@ -146,19 +151,35 @@ def buildSubstrs(substrs: List[SubString], s: str, max_substrs: int) -> List[int
         valid_starts = valid_starts + valid_start
     return valid_starts
 
+def caseSingleLetter(s: str, words: List[str]):
+    """
+    Solve case where string and words both use only a single letter.
+    """
+    pass
+
 def findSubstring(s: str, words: List[str]) -> List[int]:
     """
     Find valid starts.
     """
+    # Either s or words is empty
     if not s or not words:
         return []
+    # Word matches string
     if len(words) == 1 and words[0] == s:
         return [0]
+    # More words than can fit in string
+    Lw = len(words[0])
+    if Lw * len(words) > len(s):
+        return []
+    # Max possible number of substrings
     max_substrs = max([len(findFirstWord(s, word)) for word in words])
+    # Anchor substrings
     substrs = firstSubstrs(s, words)
+    # Get substrings
     index = buildSubstrs(substrs, s, max_substrs)
     if not index:
         return []
+    # Return unique indices of where word sequences can start
     index = list(set(index))
     return index
 
