@@ -52,3 +52,34 @@ class Solution:
         return node.val
 
 # Follow up: use reservoir sampling when the list is large.
+# Only use one traversal
+
+def getRandomReservoir(head: ListNode) -> int:
+    """
+    Get a random node from the linked list
+    using reservoir sampling.
+    """
+    result = head.val
+    node = head.next
+    n = 2
+    while node:
+        R = randint(0, n-1)
+        if R == 0:
+            result = node.val
+        node = node.next
+        n += 1
+    return result
+
+class SolutionReservoir:
+    def __init__(self, head: ListNode):
+        """
+        @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node.
+        """
+        self.head = head
+    def getRandom(self) -> int:
+        """
+        Returns a random node's value.
+        """
+        val = getRandomReservoir(self.head)
+        return val
