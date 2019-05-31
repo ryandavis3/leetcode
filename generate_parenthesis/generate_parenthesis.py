@@ -4,36 +4,33 @@ from typing import List, Dict
 
 ## Dynamic programming solution
 
-def addParenthesesStr(s: str) -> List[str]:
+def addEnclosingParentheses(s: str) -> List[str]:
     """
-    Add parentheses to string. There are three possibilities:
-        * Add () to left side
-        * Add () to right side
-        * Add enclosing (str)
+    Add enclosing parentheses to string.
     """
-    added = []
-    added += ['('+s+')']
-    left = '()' + s
-    right = s + '()'
-    added += [left]
-    if left != right:
-        added += [right]
-    return added
+    return ['('+s+')']
 
-def addParenthesesList(L: List[str], D: Dict, n: int) -> List[str]:
+def getCombinationsFromLists(L1: List[str], L2: List[str]):
+    """
+    Get combinations of strings from L1 (left) and
+    L2 (right). String in L1 must preced string in L2.
+    """
+    L_comb = []
+    for left in L1:
+        for right in L2:
+            L_comb += [left+right]
+    return L_comb
+
+def getCombinationsN(L: List[str], D: Dict, n: int) -> List[str]:
     """
     Add parentheses to each string in a list.
     """
     L_add = []
     for s in L:
-        L_add += addParenthesesStr(s)
-    for num in range(2, n-1):
-        for left in D[num]:
-            for right in D[n-num]:
-                L_add += [left+right]
-        for left in D[n-num]:
-            for right in D[num]:
-                L_add += [left+right]
+        L_add += addEnclosingParentheses(s)
+    for num in range(1, n):
+        L_add += getCombinationsFromLists(D[num], D[n-num])
+        L_add += getCombinationsFromLists(D[n-num], D[num])
     L_add = list(set(L_add))
     return L_add
 
@@ -48,14 +45,14 @@ def generateParenthesis(n: int):
     if not n:
         return []
     elif n == 1:
-        return ['()']
+        return D[1]
     elif n == 2:
-        return ['(())', '()()']
+        return D[2]
     i = 2
-    L = ['(())', '()()']
+    L = D[2].copy()
     while i < n:
         i += 1
-        L = addParenthesesList(L, D, i)
+        L = getCombinationsN(L, D, i)
         D[i] = L
     return L
 
