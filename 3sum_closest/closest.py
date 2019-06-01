@@ -2,72 +2,66 @@ from typing import List
 
 # https://leetcode.com/problems/3sum-closest/
 
-def sign(num: int):
-    if num >= 0:
-        return 1
-    else:
-        return -1
-
-def twoSumClosest(L: List[int], target: int) -> int:
-
+def twoSumClosest(nums: List[int], target: int) -> int:
+    """
+    Find two integers in a list such that the sum is 
+    closest to a target.
+    """
+    L = len(nums)
+    if L == 2:
+        return sum(nums)
     # Set indices at start and end of list
     i = 0
-    j = len(L)-1
-    # First iteration
-    sum_ij = L[i] + L[j]
-    diff = target - sum_ij
-    if len(L) == 2:
-        return diff
+    j = L-1
+    # Set initial min diff at large number
     min_diff = 10**10
-    result = [i, j, 0, sum_ij]
-    if diff > 0:
-        i += 1
-    elif diff < 0:
-        j -= 1
+    close_sum = None
     # Iterate through list
-    result = None
     while i < j and j:
         # Difference between current sum and target
-        sum_ij = L[i] + L[j]
-        diff = target - sum_ij
+        diff = target - (nums[i] + nums[j])
         # Exact match! 
         if diff == 0:
-            min_diff = 0
-            #result = [i, j, 0, sum_ij]
+            close_sum = nums[i] + nums[j]
             break
         # If sign of difference changes, either the current
         # sum or the previous sum is the closest.
         if abs(diff) < abs(min_diff):
-            #result = [i, j, 0, sum_ij]
             min_diff = diff
+            close_sum = nums[i] + nums[j]
         # Need larger sum - remove first element
         if diff > 0:
             i += 1
         # Need smaller sum - remove last element
-        elif diff < 0:
+        else:
             j -= 1
-    #if not result:
-        #result = [i, j, diff, sum_ij]
-    return min_diff
+    return close_sum
 
 def threeSumClosest(nums: List[int], target: int) -> int:
-
+    """
+    Find three integers in a list such that sum sum is
+    closest to a target. 
+    """
+    # Sort integers in ascending order
     nums = sorted(nums)
-    closest_diff = 10**10
-    closest_index = [-1, -1, -1]
+    # Large value for initial min difference 
+    min_diff = 10**10
     for i, num in enumerate(nums):
-        L = nums.copy()
-        L.remove(num)
-        t = target - num
-        diff = twoSumClosest(L, t)
-        if diff == 0:
+        # Copy list and remove one integer
+        nums_i = nums.copy()
+        nums_i.remove(num)
+        # Subtract integer from target to get the
+        # two-integer sum target.
+        target_small = target - num
+        sum_i = twoSumClosest(nums_i, target_small)
+        if sum_i == target_small:
             return target
-        #print('Diff: %s' % diff)
-        if abs(diff) < abs(closest_diff):
-            closest_sum = target - diff
-            #print('Sum: %s' % closest_sum)
-            closest_diff = diff
-    return closest_sum
+        # Update min difference if we find a closer solution
+        diff = target_small - sum_i
+        if abs(diff) < abs(min_diff):
+            close_sum = sum_i + num
+            min_diff = diff
+    return close_sum
 
 class Solution:
     def threeSumClosest(self, nums: List[int], target: int) -> int:
