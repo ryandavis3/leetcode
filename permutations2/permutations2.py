@@ -5,12 +5,13 @@ from collections import Counter
 
 class Permutation:
     """
-    Class representing a single permutation
+    Class representing a single permutation of a collection
+    of integers that may contain duplicates.
     """
     def __init__(self, L: List, R: Counter):
         """
         Constuctor. L is the permutation and R is
-        a set of remaining digits. 
+        a counter of remaining digits. 
         """
         self.L = L
         self.R = R
