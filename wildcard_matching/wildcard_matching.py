@@ -1,132 +1,51 @@
-from typing import List
+# https://leetcode.com/problems/wildcard-matching
 
-def buildEmptyGrid(s: str, p: str):
+def buildGrid(s: str, p: str):
     """
-    Build empty grid for DP solution. Rows represent
-    characters in the string and columns represent
-    characters in the pattern. 
+    Build dynamic programming grid / table to solve wildcard
+    matching.
     """
-    grid = list()
-    for _ in range(len(p)):
-        grid.append([None] * len(s))
-    return grid
-
-def fillFirstRowCol(grid: List[List[int]], s: str, p: str):
-    # Top left corner
-    i = 0
-    j = 0
-    if p[i] == '*':
-        grid[i][j] = 1
-    elif p[i] == '?':
-        grid[i][j] = 1
-    elif p[i] == s[i]:
-        grid[i][j] = 1
-    else:
-        grid[i][j] = 0
-
-    # Top row
+    # Add null character to beginning of each of the strings.
+    s = '#' + s
+    p = '#' + p
+    # Length of both strings.
     Ls = len(s)
+    Lp = len(p)
+    # Initialize grid with all zeros.
+    G = []
+    for i in range(Lp):
+        G += [[0] * Ls]
+    # Fill in first row (vs null string)
+    G[0][0] = 1
     for j in range(1, Ls):
-        if p[i] == '*':
-            grid[i][j] = 1
-        else:
-            grid[i][j] = 0
-
-    # Leftmost column
-    Lp = len(p)
-    j = 0
+        if s[j] == '#':
+            G[0][j] = G[0][j-1]
+    # Fill in first column (vs null string)
     for i in range(1, Lp):
-        if not grid[i-1][j]:
-            grid[i][j] = 0
-        else:
-            if p[i-1] == '*' and (p[i] == s[j] or p[i] == '?'):
-                grid[i][j] = 1
-            elif p[i] == '*':
-                grid[i][j] = 1
-            else:
-                grid[i][j] = 0
-    return grid
+        if p[i] in set(['#', '*']):
+            G[i][0] = G[i-1][0]
+    # Fill in subsequent rows
+    for i in range(1, Lp):
+        for j in range(1, Ls):
+            # If s char matches p char (or p char is ?), 
+            # match will be the same as for case where both
+            # strings omit last letter.
+            if s[j] == p[i] or p[i] == '?':
+                G[i][j] = G[i-1][j-1]
+            # For star character, see if we can match by adding
+            # zero, one, or more than one characters.
+            if p[i] == '*':
+                G[i][j] = max([G[i][j-1], G[i-1][j-1], G[i-1][j]])
+    return G
 
-def printGrid(grid: List[List[int]]):
-    for line in grid:
-        print(line)
-
-
-def checkDiag(grid, i, j, s, p):
+def isMatch(s: str, p: str) -> bool:
     """
-    Check if diagonal move works.
+    Check to see if string s matches wildcard pattern p.
     """
-    if not grid[i-1][j-1]:
-        return 0
-    if p[i] in set([s[j], '?', '*']):
-        return 1
-    else: 
-        return 0
+    G = buildGrid(s, p)
+    return bool(G[-1][-1])
 
-def checkDown(grid, i, j, s, p):
-    """
-    Check if down move works.
-    """
-    if not grid[i-1][j]:
-        return 0
-    if p[i] == '*':
-        return 1
-    if p[i-1] != '*':
-        return 0
-    if p[i] in set([s[j], '?', '*']):
-        if p[i] != '*' and p[:i+1].replace('*','') != s[:j+1].replace('*',''):
-            return 0
-        return 1
-    else:
-        return 0
-
-def checkRight(grid, i, j, s, p):
-    """
-    Check if right move works.
-    """
-    if not grid[i][j-1]:
-        return 0
-    if p[i] != '*':
-        return 0
-    if p[i] in set([s[j], '?', '*']):
-        return 1
-    else:
-        return 0
-
-def isReachable(grid, i, j, s, p):
-
-    if not (grid[i-1][j-1] or grid[i-1][j] or grid[i][j-1]):
-        return 0
-    if p[i] in set([s[j], '?', '*']):
-        return 1
-    return 0
-
-def isReachable2(grid, i, j, s, p):
-    diag = checkDiag(grid, i, j, s, p)
-    down = checkDown(grid, i, j, s, p)
-    right = checkRight(grid, i, j, s, p)
-    return max([diag, down, right])
-
-def fillRow(grid, row, s, p):
-    
-    Ls = len(s)
-    for col in range(1, Ls):
-        grid[row][col] = isReachable2(grid, row, col, s, p)
-    return grid
-
-def fillGrid(s: str, p: str):
-    grid = buildEmptyGrid(s, p)
-    grid = fillFirstRowCol(grid, s, p)
-    Lp = len(p)
-    for row in range(1, Lp):
-        grid = fillRow(grid, row, s, p)
-    return grid
 
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
-        grid = fillGrid(s, p)
-        if grid[-1][-1]:
-            return True
-        else:
-            return False
-
+        return isMatch(s, p)
