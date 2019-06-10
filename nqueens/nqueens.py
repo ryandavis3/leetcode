@@ -1,68 +1,58 @@
 from typing import List
 
-# N-Queens Problem
-# https://leetcode.com/problems/n-queens/
+# https://leetcode.com/problems/n-queens
 
-def emptyBoard(N: int) -> List[List[int]]:
+def solve(n: int, i: int, a: List[int], b: List[int], c: List[int]):
     """
-    Build empty NxN board.
-    """
-    board = []
-    for _ in range(N):
-        board += [[0]*N]
-    return board
-
-def printBoard(board: List[List[int]]) -> None:
-    for line in board:
-        print(line)
-
-def isSafe(board: List[List[int]], row: int, col: int, N: int) -> bool:
-    """
-    Return true if queens can safely be placed on board
-    at row, col. Otherwise return False.
+    Use a generator function with recursion to solve the N-Queens
+    problem.
     
-    This function should be called when queens have been
-    placed from column 0 to col-1.
+    Args:
+        a (list of int): Positions of queens. a[i] = val means
+            there is a queen in column i and row val.
+        b (list of int): Sum of row, col for lower left diagonal.
+        c (list of int): Sum of row, col for upper left diagonal.
     """
-    # Queens in same row
-    for j in range(col):
-        if board[row][j]:
-            return False
-    # Queens on left lower diagonal
-    i = row + 1
-    j = col - 1
-    while i < N and j >= 0:
-        if board[i][j]:
-            return False
-        i += 1
-        j -= 1
-    # Queens on left upper diagonal
-    i = row - 1
-    j = col - 1
-    while i >= 0 and j >= 0:
-        if board[i][j]:
-            return False
-        i -= 1
-        j -= 1
-    return True
+    # Incomplete board; add a queen in column i
+    if i < n:
+        # Try to place a queen in each row (within column)
+        for j in range(n):
+            # Check horizontal, diagonal attacking queens
+            if j not in a and i+j not in b and i-j not in c:
+                for solution in solve(n, i+1, a+[j], b+[i+j], c+[i-j]):
+                    yield solution
+    # Complete board
+    else:
+        yield a
 
-def solve(board: List[List[int]], col: int, N: int):
+def translate(L: List[int], N: int) -> List[str]:
     """
-    Recursively solve N-Queens problem by placing a 
-    queen in column col.
+    Translate solution from more concise queen position format 
+    to more verbose string format.
+
+    Example:
+        [1, 3, 0, 2] -> ['..Q.', 'Q...', '...Q', '.Q..']
     """
-    # If all queens are placed, return True
-    if col >= N:
-        return True
-    # Try to place queen in all rows one by one
-    for i in range(N):
-        if isSafe(board, i, col, N):
-            board[i][col] = 1
-            if solve(board, col+1, N):
-                return True
-            board[i][col] = 0
-    return False
+    Ls = []
+    for col, row in enumerate(L):
+        s = col * '.' + 'Q' + (N-col-1) * '.'
+        Ls += [[row, s]]
+    Ls = sorted(Ls, key=lambda x: x[0])
+    Ls = [x[1] for x in Ls]
+    return Ls
+
+def solveNQ(N: int) -> List[int]:
+    """
+    Solve N-Queens problem.
+    """
+    # Get all solutions using generator approach.
+    sols = []
+    for sol in solve(N, 0, [], [], []):
+        sols += [sol]
+    # Translate solutions into '.Q' string format
+    sols = [translate(sol, N) for sol in sols]
+    return sols
 
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
-        pass
+        return solveNQ(n)
