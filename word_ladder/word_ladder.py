@@ -2,42 +2,6 @@ from typing import List, Set, Dict
 
 # https://leetcode.com/problems/word-ladder/
 
-def isAccessible(word1: str, word2: str) -> bool:
-    """
-    Return True if we can obtain word2 by changing at most one
-    letter from word1. Else return False.
-    """
-    if word1 == word2:
-        return False
-    L = len(word1)
-    n_edits = 0
-    for i in range(L):
-        if n_edits > 1:
-            return False
-        if word1[i] != word2[i]:
-            n_edits += 1
-    return n_edits == 1
-
-def getAccessibleWords(word: str, words: Set) -> Set:
-    """
-    Get words from list that are accessible from a starting
-    word. 
-    """
-    words_a = set()
-    for word_tf in words:
-        if isAccessible(word, word_tf):
-            words_a.add(word_tf)
-    return words_a
-
-def getAdjacencyLists(words: Set) -> Dict:
-    """
-    Get adjacency lists for set of words.
-    """
-    adj = {}
-    for word in words:
-        adj[word] = getAccessibleWords(word, words)
-    return adj 
-
 class AdjacencyList:
     """
     Class for adjacency list with wildcard encoding
@@ -86,36 +50,7 @@ class Queue:
     def is_empty(self):
         return len(self.Q) == 0
 
-def bfs(word: str, adj: Dict, target: str):
-    """
-    Search for target word using breadth-first search. Use
-    graph abstraction. Nodes are words and two notes have
-    an edge if one can be transformed to the other by
-    changing only one letter.
-    """
-    # Visited nodes
-    visited = set()
-    visited.add(word)
-    # Queue for recently visited nodes
-    Q = Queue()
-    Q.enqueue(word)
-    parent = {}
-    # Iterate while nodes in queue
-    while not Q.is_empty:
-        word = Q.dequeue()
-        # Target found!
-        if word == target:
-            return parent
-        # Adjacent words
-        adj_words = adj[word]
-        for adj_word in adj_words:
-            if adj_word not in visited:
-                parent[adj_word] = word
-                visited.add(adj_word)
-                Q.enqueue(adj_word)
-    return None
-
-def bfs2(word: str, words: Set, target: str):
+def bfs(beginWord: str, endWord: str, wordList: Set):
     """
     Search for target word using breadth-first search. Use
     graph abstraction. Nodes are words and two notes have
@@ -123,19 +58,19 @@ def bfs2(word: str, words: Set, target: str):
     changing only one letter.
     """
     # Adjacency list
-    adj = AdjacencyList(words)
+    adj = AdjacencyList(wordList)
     # Visited nodes
     visited = set()
-    visited.add(word)
+    visited.add(beginWord)
     # Queue for recently visited nodes
     Q = Queue()
-    Q.enqueue(word)
+    Q.enqueue(beginWord)
     parent = {}
     # Iterate while nodes in queue
     while not Q.is_empty:
         word = Q.dequeue()
-        # Target found!
-        if word == target:
+        # End word found!
+        if word == endWord:
             return parent
         # Adjacent words
         adj_words = adj.get(word)
@@ -146,53 +81,30 @@ def bfs2(word: str, words: Set, target: str):
                 Q.enqueue(adj_word)
     return None
 
-def bfsFast(word: str, words: Set, target: str):
-    """
-    Faster (by a constant factor) breadth-first search.
-    """
-    visited = set()
-    visited.add(word)
-    unvisited = words.copy()
-    Q = Queue()
-    Q.enqueue(word)
-    parent = {}
-    while not Q.is_empty:
-        word = Q.dequeue()
-        if word == target:
-            return parent
-        adj_words = getAccessibleWords(word, unvisited)
-        for adj_word in adj_words:
-            if adj_word not in visited:
-                parent[adj_word] = word
-                visited.add(adj_word)
-                unvisited.remove(adj_word)
-                Q.enqueue(adj_word)
-
-
-def pathLengthParents(parent: Dict, start: str, end: str) -> int:
+def pathLengthParents(parent: Dict, beginWord: str, endWord: str) -> int:
     """
     Recover length of path between words from dictionary representing
     parents.
     """
     L = 1
-    word = end
-    while word != start:
+    word = endWord
+    while word != beginWord:
         L += 1
         word = parent[word]
     return L
 
-def ladderLength(start: str, end: str, words: List[str]) -> int:
+def ladderLength(beginWord: str, endWord: str, wordList: List[str]) -> int:
     """
     Given two words a dictionary's word list, find the length
     of the shortest transformation sequence from the first word to
     the second. 
     """
-    words = set(words)
-    words.add(start)
-    parent = bfs2(start, words, end)
+    wordList = set(wordList)
+    wordList.add(beginWord)
+    parent = bfs(beginWord, endWord, wordList)
     if parent is None:
         return 0
-    return pathLengthParents(parent, start, end)
+    return pathLengthParents(parent, beginWord, endWord)
 
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
