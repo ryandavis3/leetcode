@@ -38,6 +38,35 @@ def getAdjacencyLists(words: Set) -> Dict:
         adj[word] = getAccessibleWords(word, words)
     return adj 
 
+class AdjacencyList:
+    """
+    Class for adjacency list with wildcard encoding
+    by letter.
+    """
+    def __init__(self, words: Set):
+        """
+        Constructor. Build dict with wildcard encoding.
+        e.g. D['sand'] = {'land', 'rand', 'band', 'hand', 'wand', 'sand'}
+        """
+        D = {}
+        for word in words:
+            for i in range(len(word)):
+                word_st = word[0:i] + '*' + word[i+1:]
+                if word_st not in D:
+                    D[word_st] = set()
+                D[word_st].add(word)
+        self.D = D
+    def get(self, word: str) -> Set:
+        """
+        Get adjacent words.
+        """
+        adj = set()
+        for i in range(len(word)):
+            word_st = word[0:i] + '*' + word[i+1:]
+            adj = adj.union(self.D[word_st])
+        adj.remove(word)
+        return adj
+
 ## Use breadth-first search to find the shortest path between
 ## the two words.
 
@@ -79,6 +108,37 @@ def bfs(word: str, adj: Dict, target: str):
             return parent
         # Adjacent words
         adj_words = adj[word]
+        for adj_word in adj_words:
+            if adj_word not in visited:
+                parent[adj_word] = word
+                visited.add(adj_word)
+                Q.enqueue(adj_word)
+    return None
+
+def bfs2(word: str, words: Set, target: str):
+    """
+    Search for target word using breadth-first search. Use
+    graph abstraction. Nodes are words and two notes have
+    an edge if one can be transformed to the other by
+    changing only one letter.
+    """
+    # Adjacency list
+    adj = AdjacencyList(words)
+    # Visited nodes
+    visited = set()
+    visited.add(word)
+    # Queue for recently visited nodes
+    Q = Queue()
+    Q.enqueue(word)
+    parent = {}
+    # Iterate while nodes in queue
+    while not Q.is_empty:
+        word = Q.dequeue()
+        # Target found!
+        if word == target:
+            return parent
+        # Adjacent words
+        adj_words = adj.get(word)
         for adj_word in adj_words:
             if adj_word not in visited:
                 parent[adj_word] = word
@@ -129,8 +189,7 @@ def ladderLength(start: str, end: str, words: List[str]) -> int:
     """
     words = set(words)
     words.add(start)
-    adj = getAdjacencyLists(words)
-    parent = bfs(start, adj, end)
+    parent = bfs2(start, words, end)
     if parent is None:
         return 0
     return pathLengthParents(parent, start, end)
