@@ -12,6 +12,8 @@ def isAccessible(word1: str, word2: str) -> bool:
     L = len(word1)
     n_edits = 0
     for i in range(L):
+        if n_edits > 1:
+            return False
         if word1[i] != word2[i]:
             n_edits += 1
     return n_edits == 1
@@ -39,12 +41,100 @@ def getAdjacencyLists(words: Set) -> Dict:
 ## Use breadth-first search to find the shortest path between
 ## the two words.
 
-## Keep set of discovered words
+class Queue:
+    """
+    Class implementing queue (LIFO).
+    """
+    def __init__(self):
+        self.Q = []
+    def enqueue(self, value):
+        self.Q = self.Q + [value]
+    def dequeue(self):
+        value = self.Q[0]
+        self.Q = self.Q[1:]
+        return value
+    @property
+    def is_empty(self):
+        return len(self.Q) == 0
 
-## https://en.wikipedia.org/wiki/Breadth-first_search
+def bfs(word: str, adj: Dict, target: str):
+    """
+    Search for target word using breadth-first search. Use
+    graph abstraction. Nodes are words and two notes have
+    an edge if one can be transformed to the other by
+    changing only one letter.
+    """
+    # Visited nodes
+    visited = set()
+    visited.add(word)
+    # Queue for recently visited nodes
+    Q = Queue()
+    Q.enqueue(word)
+    parent = {}
+    # Iterate while nodes in queue
+    while not Q.is_empty:
+        word = Q.dequeue()
+        # Target found!
+        if word == target:
+            return parent
+        # Adjacent words
+        adj_words = adj[word]
+        for adj_word in adj_words:
+            if adj_word not in visited:
+                parent[adj_word] = word
+                visited.add(adj_word)
+                Q.enqueue(adj_word)
+    return None
 
-## If end word not on list, return False right away
+def bfsFast(word: str, words: Set, target: str):
+    """
+    Faster (by a constant factor) breadth-first search.
+    """
+    visited = set()
+    visited.add(word)
+    unvisited = words.copy()
+    Q = Queue()
+    Q.enqueue(word)
+    parent = {}
+    while not Q.is_empty:
+        word = Q.dequeue()
+        if word == target:
+            return parent
+        adj_words = getAccessibleWords(word, unvisited)
+        for adj_word in adj_words:
+            if adj_word not in visited:
+                parent[adj_word] = word
+                visited.add(adj_word)
+                unvisited.remove(adj_word)
+                Q.enqueue(adj_word)
+
+
+def pathLengthParents(parent: Dict, start: str, end: str) -> int:
+    """
+    Recover length of path between words from dictionary representing
+    parents.
+    """
+    L = 1
+    word = end
+    while word != start:
+        L += 1
+        word = parent[word]
+    return L
+
+def ladderLength(start: str, end: str, words: List[str]) -> int:
+    """
+    Given two words a dictionary's word list, find the length
+    of the shortest transformation sequence from the first word to
+    the second. 
+    """
+    words = set(words)
+    words.add(start)
+    adj = getAdjacencyLists(words)
+    parent = bfs(start, adj, end)
+    if parent is None:
+        return 0
+    return pathLengthParents(parent, start, end)
 
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        pass
+        return ladderLength(beginWord, endWord, wordList)
