@@ -2,6 +2,8 @@ from typing import List, Dict
 
 # https://leetcode.com/problems/palindrome-partitioning/
 
+M = 10000
+
 def addPalindrome(D: Dict, s: str, start: int, end: int):
     """
     Add palindrome to dictionary. 
@@ -54,16 +56,13 @@ def buildPartitions(D: Dict, s: str):
     """
     L = len(s)
     # Build up set of partitions using one char at a time
-    for i in range(L):
-        l = i+1
+    for l in range(1, L+1):
         if l not in D:
             D[l] = {}
-        if i == 0:
+        if l == 1:
             continue
-        for j in range(1, i+1):
-            if 0 not in D[j]:
-                continue
-            if j not in D[l-j]:
+        for j in range(1, l):
+            if 0 not in D[j] or j not in D[l-j]:
                 continue
             if 0 not in D[l]:
                 D[l][0] = []
@@ -71,9 +70,60 @@ def buildPartitions(D: Dict, s: str):
                 for s_r in D[l-j][j]:
                     D[l][0] += [s_l + s_r]
 
+# https://leetcode.com/problems/palindrome-partitioning-ii/
+
+def numberCuts(D: Dict):
+    """
+    Given a dictionary D representing partitions, get the min
+    number of cuts required for every string length and starting
+    index.
+    """
+    C = {}
+    Ls = list(D.keys())
+    for L in Ls:
+        C[L] = {}
+        indices = list(D[L].keys())
+        for i in indices:
+            partitions = D[L][i]
+            cuts = [len(p)-1 for p in partitions]
+            C[L][i] = min(cuts)
+    return C
+
+def minCutPartition(C: Dict, L: int) -> List:
+    """
+    Get the minimum cuts needed for a palindrome partitioning.
+    """
+    # Build up set of partitions using one char at a time
+    for l in range(1, L+1):
+        if l not in C:
+            C[l] = {}
+        if l == 1:
+            continue
+        for j in range(1, l):
+            if 0 not in C[j] or j not in C[l-j]:
+                continue
+            if 0 not in C[l]:
+                C[l][0] = M
+            C[l][0] = min(C[l][0], C[j][0] + C[l-j][j] + 1)
+
 class Solution:
+    
     def partition(self, s: str) -> List[List[str]]:
+        """
+        Palindrome Partitioning
+        https://leetcode.com/problems/palindrome-partitioning/
+        """
         L = len(s)
         D = findPalindromes(s)
         buildPartitions(D, s)
         return D[L][0]
+    
+    def minCut(self, s: str) -> int:
+        """
+        Palindrome Partitioning II
+        https://leetcode.com/problems/palindrome-partitioning-ii/
+        """
+        L = len(s)
+        D = findPalindromes(s)
+        C = numberCuts(D)
+        return minCutPartition(C, L)
