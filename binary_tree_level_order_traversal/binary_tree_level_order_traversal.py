@@ -1,5 +1,7 @@
 from typing import List
 
+# https://leetcode.com/problems/binary-tree-level-order-traversal/
+
 class TreeNode:
     """
     Class for binary tree node.
@@ -11,7 +13,7 @@ class TreeNode:
 
 class Queue:
     """
-    Class implementing queue (LIFO).
+    Class implementing queue (FIFO).
     """
     def __init__(self):
         self.Q = []
