@@ -29,7 +29,7 @@ class Queue:
 
 def levelOrder(root: TreeNode) -> List[List[int]]:
     """
-    Given a binary tree, reutnr the level order traversal of 
+    Given a binary tree, return the level order traversal of 
     its nodes.
     """
     # No root given
