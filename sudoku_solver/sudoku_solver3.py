@@ -103,6 +103,8 @@ def getMinRow(empty: Dict) -> int:
 ## TODO: Maintain set of possible numbers for each empty cell.
 ## Update set when new number is added. Search space of numbers
 ## first with the cells with the fewest possible numbers.
+## Should be able to get rid of needed rows, cols, sub-board
+## and only maintain possible numbers.
 
 class Board:
     """
