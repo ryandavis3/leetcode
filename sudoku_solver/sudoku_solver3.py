@@ -73,25 +73,11 @@ def representSubBoards(board: List[List[str]]) -> Dict:
                         S[i][j].add(val)
     return S
 
-def getEmptyCells(board: List[List[str]]):
-    """
-    Get empty cells on board.
-    """
-    # Populate dictionary on first pass
-    empty = {}
-    for i in range(9):
-        empty[i] = set()
-        for j in range(9):
-            if board[i][j] == '.':
-                empty[i].add(j)
-    # Remove empty values
-    for i in range(9):
-        if not empty[i]:
-            del empty[i]
-    return empty
 
-def getEmptyCells2(board: List[List[str]]):
-
+def getEmptyCells(board: List[List[str]]) -> List:
+    """
+    Get empty cells on board as list of tuples.
+    """
     empty = set()
     for i in range(9):
         for j in range(9):
@@ -100,21 +86,8 @@ def getEmptyCells2(board: List[List[str]]):
                 empty.add(index)
     return empty
 
-def getMinRow(empty: Dict) -> int:
-    """
-    Get minimum index of empty rows.
-    """
-    if not empty:
-        return -1
-    return min(empty.keys())
-
 ## TODO: Modify items directly rather than using deep copy,
 ## then undo if it does not work. Add function undoMove. 
-## TODO: Maintain set of possible numbers for each empty cell.
-## Update set when new number is added. Search space of numbers
-## first with the cells with the fewest possible numbers.
-## Should be able to get rid of needed rows, cols, sub-board
-## and only maintain possible numbers.
 
 def getCandidateNumbers(board: List[List[int]], rows: Dict, cols: Dict, sub: Dict) -> List:
     """
@@ -182,17 +155,12 @@ class Board:
     Class for Sudoku board.
     """
     def __init__(self, board: List[List[str]], 
-            empty: Set, rows: Dict, cols: Dict, sub: Dict, min_row: int,
-            candidates: Dict, n_candidates: Dict):
+            empty: Set, candidates: Dict, n_candidates: Dict):
         """
         Constructor.
         """
         self.board = board
         self.empty = empty
-        self.rows = rows
-        self.cols = cols
-        self.sub = sub
-        self.min_row = min_row
         self.candidates = candidates
         self.n_candidates = n_candidates
 
@@ -205,20 +173,18 @@ class Board:
         rows = representRows(board)
         cols = representCols(board)
         sub_boards = representSubBoards(board)
-        empty = getEmptyCells2(board)
-        min_row = 0 #getMinRow(empty)
+        empty = getEmptyCells(board)
         rows = neededValues(rows)
         cols = neededValues(cols)
         sub = neededValuesSubBoard(sub_boards)
         [candidates, n_candidates] = getCandidateNumbers(board, rows, cols, sub)
-        return cls(board, empty, rows, cols, sub, min_row, candidates, n_candidates)
+        return cls(board, empty, candidates, n_candidates)
 
     @property
     def isFull(self):
         """
         Return True if Sudoku 
         """
-        #return len(self.n_candidates) == 0
         return len(self.empty) == 0
 
     def makeMove(self, i: int, j: int, val: str):
@@ -233,17 +199,6 @@ class Board:
         # Update board
         board = copy.deepcopy(self.board)
         board[i][j] = val
-        # Update needed rows
-        rows = copy.deepcopy(self.rows)
-        rows[i].remove(val)
-        # Update needed columns
-        cols = copy.deepcopy(self.cols)
-        cols[j].remove(val)
-        # Update sub-boards
-        sub_i = SUBINDEX[i]
-        sub_j = SUBINDEX[j]
-        sub = copy.deepcopy(self.sub)
-        #sub[sub_i][sub_j].remove(val)
         # Update candidates
         candidates = copy.deepcopy(self.candidates)
         n_candidates = copy.deepcopy(self.n_candidates)
@@ -252,29 +207,10 @@ class Board:
         kwargs = {
             'board' : board,
             'empty' : empty,
-            'rows' : rows,
-            'cols' : cols,
-            'sub' : sub,
-            'min_row' : self.min_row,
             'candidates' : candidates,
             'n_candidates' : n_candidates,
         }
         return Board(**kwargs)
-
-    def validNumbers(self, i: int, j: int):
-        """
-        Get valid numbers for index (i, j) that satisfy constraints.
-        """
-        sub_i = SUBINDEX[i]
-        sub_j = SUBINDEX[j]
-        return self.rows[i] & self.cols[j] & self.sub[sub_i][sub_j]
-
-def findEmptyIndex(board: Board) -> List[int]:
-    """
-    Find earliest (i, j) pair on board with unassigned number.
-    """
-    j = min(board.empty[board.min_row])
-    return [board.min_row, j]
 
 def solve(board: Board):
     """
@@ -283,15 +219,11 @@ def solve(board: Board):
     # Finished sudoku board!!
     if board.isFull:
         return board
-    #print(board.n_candidates)
-    #print(board.board)
-    #print(board.empty)
+    # No candidates left -> backtrack!
     if not board.n_candidates:
         return False
-    # Choose (i, j) to which to add number
-    #[i, j] = findEmptyIndex(board)
+    # Search index with fewest candidates
     [i, j] = min(board.n_candidates, key=board.n_candidates.get)
-    #cand = board.validNumbers(i, j)
     cand = board.candidates[i][j]
     # Consider each possible number to add 
     for val in cand:
