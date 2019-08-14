@@ -7,6 +7,7 @@ from typing import List, Dict, Set
 # O(1) time checking of constraints.
 
 ALL_VALS = set(['1','2','3','4','5','6','7','8','9'])
+SUBINDEX = {0:0, 1:0, 2:0, 3:1, 4:1, 5:1, 6:2, 7:2, 8:2}
 
 def representRows(board: List[List[str]]) -> Dict:
     """
@@ -72,52 +73,96 @@ def representSubBoards(board: List[List[str]]) -> Dict:
                         S[i][j].add(val)
     return S
 
-def subBoardIndex(k: int) -> List:
-    """
-    Map row or column index k to a sub-board index 0-2. 
-    """
-    if k < 3:
-        return 0
-    elif k < 6:
-        return 1
-    else:
-        return 2
 
-def getEmptyCells(board: List[List[str]]) -> Set:
+def getEmptyCells(board: List[List[str]]) -> List:
     """
-    Return set of empty cells from board.
+    Get empty cells on board as list of tuples.
     """
     empty = set()
     for i in range(9):
         for j in range(9):
             if board[i][j] == '.':
-                empty.add(tuple([i, j]))
+                index = tuple([i, j])
+                empty.add(index)
     return empty
 
-## TODO: Initialize list of empty cells. Update list when
-## number is added. 
-## TODO: Member function to make move (add number) on board.
-## TODO: Backtracking to find solution. 
+## TODO: Modify items directly rather than using deep copy,
+## then undo if it does not work. Add function undoMove. 
+
+def getCandidateNumbers(board: List[List[int]], rows: Dict, cols: Dict, sub: Dict) -> List:
+    """
+    Get candidate numbers
+    """
+    candidates = {}
+    n_candidates = {}
+    for i in range(9):
+        candidates[i] = {}
+        for j in range(9):
+            if board[i][j] == '.':
+                sub_i = SUBINDEX[i]
+                sub_j = SUBINDEX[j]
+                candidates[i][j] = rows[i] & cols[j] & sub[sub_i][sub_j]
+                index = tuple([i, j])
+                n_candidates[index] = len(candidates[i][j])
+    return [candidates, n_candidates]
+
+def updateCandidates(i: int, j: int, val: str, candidates: Dict, n_candidates: Dict) -> List:
+    """
+    Update candidate numbers after move.
+    """
+    # No candidates for (i, j) -> we are adding value
+    index = tuple([i, j])
+    del n_candidates[index]
+    del candidates[i][j]
+    # Row constraint
+    remove = set()
+    for jj in range(9):
+        if i in candidates:
+            if jj in candidates[i]:
+                if val in candidates[i][jj]:
+                    index = tuple([i, jj])
+                    remove.add(index)
+    # Column constraint
+    for ii in range(9):
+        if ii in candidates:
+            if j in candidates[ii]:
+                if val in candidates[ii][j]:
+                    index = tuple([ii, j])
+                    remove.add(index)
+    # Sub-board constraint
+    sub_i = SUBINDEX[i]
+    sub_j = SUBINDEX[j] 
+    for ii in range(3*sub_i, 3*(sub_i+1)):
+        for jj in range(3*sub_j, 3*(sub_j+1)):
+            if ii in candidates:
+                if jj in candidates[ii]:
+                    if val in candidates[ii][jj]:
+                        index = tuple([ii, jj])
+                        remove.add(index)
+    # Remove values
+    for index in remove:
+        [ii, jj] = index
+        if jj in candidates[ii]:
+            candidates[ii][jj].remove(val)
+        if index in n_candidates:
+            n_candidates[index] -= 1
+            if n_candidates[index] == 0:
+                del n_candidates[index]
+    return [candidates, n_candidates]
 
 class Board:
     """
     Class for Sudoku board.
     """
-    def __init__(self, board: List[List[str]], rows: Dict, 
-            cols: Dict, sub_boards: Dict, empty: Set, needed_rows: Dict,
-            needed_cols: Dict, needed_sub: Dict):
+    def __init__(self, board: List[List[str]], 
+            empty: Set, candidates: Dict, n_candidates: Dict):
         """
         Constructor.
         """
         self.board = board
-        self.rows = rows
-        self.cols = cols
-        self.sub_boards = sub_boards
         self.empty = empty
-        self.empty_list = list(empty)
-        self.needed_rows = needed_rows
-        self.needed_cols = needed_cols
-        self.needed_sub = needed_sub
+        self.candidates = candidates
+        self.n_candidates = n_candidates
 
     @classmethod
     def from_board(cls, board: List[List[str]]):
@@ -129,86 +174,43 @@ class Board:
         cols = representCols(board)
         sub_boards = representSubBoards(board)
         empty = getEmptyCells(board)
-        needed_rows = neededValues(rows)
-        needed_cols = neededValues(cols)
-        needed_sub = neededValuesSubBoard(sub_boards)
-        return cls(board, rows, cols, sub_boards, empty, needed_rows, needed_cols, needed_sub)
-
-    def validMove(self, i: int, j: int, val: str) -> bool:
-        """
-        Return True if we can place val at position (i, j), 
-        else return False.
-        """
-        # Row constraint
-        if val in self.rows[i]:
-            return False
-        # Column constraint
-        if val in self.cols[j]:
-            return False
-        # Sub-board constraint
-        sub_i = subBoardIndex(i)
-        sub_j = subBoardIndex(j)
-        if val in self.sub_boards[sub_i][sub_j]:
-            return False
-        # All constraints satisfied -> return True!
-        return True
+        rows = neededValues(rows)
+        cols = neededValues(cols)
+        sub = neededValuesSubBoard(sub_boards)
+        [candidates, n_candidates] = getCandidateNumbers(board, rows, cols, sub)
+        return cls(board, empty, candidates, n_candidates)
 
     @property
     def isFull(self):
+        """
+        Return True if Sudoku 
+        """
         return len(self.empty) == 0
 
     def makeMove(self, i: int, j: int, val: str):
         """
         Add value val to index (i, j) on board.
         """
-        # Update row sets
-        rows = copy.deepcopy(self.rows)
-        rows[i].add(val)
-        # Update column sets
-        cols = copy.deepcopy(self.cols)
-        cols[j].add(val)
-        # Update sub-boards
-        sub_i = subBoardIndex(i)
-        sub_j = subBoardIndex(j)
-        sub_boards = copy.deepcopy(self.sub_boards)
-        sub_boards[sub_i][sub_j].add(val)
         # Update empty cells
-        empty = self.empty - set([tuple([i, j])])
+        index = tuple([i, j])
+        empty = copy.deepcopy(self.empty)
+        if index in empty:
+            empty.remove(index)
         # Update board
         board = copy.deepcopy(self.board)
         board[i][j] = val
-        # Update needed rows
-        needed_rows = copy.deepcopy(self.needed_rows)
-        needed_rows[i].remove(val)
-        # Update needed columns
-        needed_cols = copy.deepcopy(self.needed_cols)
-        needed_cols[j].remove(val)
-        # Update sub-boards
-        needed_sub = copy.deepcopy(self.needed_sub)
-        needed_sub[sub_i][sub_j].remove(val)
+        # Update candidates
+        candidates = copy.deepcopy(self.candidates)
+        n_candidates = copy.deepcopy(self.n_candidates)
+        [candidates, n_candidates] = updateCandidates(i, j, val, candidates, n_candidates)
         # Return new board
         kwargs = {
             'board' : board,
-            'rows' : rows,
-            'cols' : cols,
-            'sub_boards' : sub_boards,
             'empty' : empty,
-            'needed_rows' : needed_rows,
-            'needed_cols' : needed_cols,
-            'needed_sub' : needed_sub,
+            'candidates' : candidates,
+            'n_candidates' : n_candidates,
         }
         return Board(**kwargs)
-
-    def validNumbers(self, i: int, j: int):
-        sub_i = subBoardIndex(i)
-        sub_j = subBoardIndex(j)
-        return self.needed_rows[i] & self.needed_cols[j] & self.needed_sub[sub_i][sub_j]
-
-def findEmpty(board: Board):
-    for i in range(9):
-        for j in range(9):
-            if board.board[i][j] == '.':
-                return [i, j]
 
 def solve(board: Board):
     """
@@ -217,22 +219,27 @@ def solve(board: Board):
     # Finished sudoku board!!
     if board.isFull:
         return board
-    # Choose (i, j) to which to add number
-    [i, j] = findEmpty(board)
-    cand = board.validNumbers(i, j)
+    # No candidates left -> backtrack!
+    if not board.n_candidates:
+        return False
+    # Search index with fewest candidates
+    [i, j] = min(board.n_candidates, key=board.n_candidates.get)
+    cand = board.candidates[i][j]
     # Consider each possible number to add 
     for val in cand:
-        # Move is valid
-        if board.validMove(i, j, str(val)):
-            # Make move and recursively solve
-            board_next = board.makeMove(i, j, str(val))
-            board_next = solve(board_next)
-            # Valid board return it!
-            if board_next is not False:
-                return board_next
+        # Make move and recursively solve
+        board_next = board.makeMove(i, j, val)
+        board_next = solve(board_next)
+        # Valid board return it!
+        if board_next is not False:
+            return board_next
     # No valid board found - return False
     return False
 
 class Solution:
     def solveSudoku(self, board: List[List[str]]) -> None:
-        pass 
+        boardC = Board.from_board(board)
+        boardC = solve(boardC)
+        for i in range(9):
+            for j in range(9):
+                board[i][j] = boardC.board[i][j]
