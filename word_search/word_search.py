@@ -6,7 +6,7 @@ from typing import List
 def search(board: List[List[str]], word: str, i: str, j: str) -> bool:
     """
     Recursively search for word on board. Return True if
-    we find word, else return False.
+    we find word, else return False. Use depth-first search.
     """
     # Board dimensions
     m = len(board)
