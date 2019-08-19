@@ -1,67 +1,83 @@
-from typing import List, Set
-from collections import Counter
+import copy
+from typing import List
 
 # https://leetcode.com/problems/word-search/
 
-def search(board: List[List[str]], word: str, used: Set, i: int, j: int, m: int, n: int) -> bool:
+def search(board: List[List[str]], word: str, i: str, j: str) -> bool:
     """
-    Recursively search for word on board.
+    Recursively search for word on board. Return True if
+    we find word, else return False.
     """
-    used = used.copy()
-    # Word is empty string - done!
-    if not word:
-        return True
-    # Cannot use the same letter cell more than once
-    if tuple([i, j]) in used:
-        return False
-    # Character to find
-    char = word[0]
-    # Indices must be in bounds
-    if i < 0 or i >= m:
-        return False
-    if j < 0 or j >= n:
-        return False
-    # If board value not character, return False. Else, search
-    # for a new word with the first character removed.
-    if board[i][j] != char:
-        return False
-    word = word[1:]
-    used.add(tuple([i, j]))
-    # Search horizontal and vertical moves.
-    left = search(board, word, used, i, j-1, m, n)
-    right = search(board, word, used, i, j+1, m, n)
-    up = search(board, word, used, i-1, j, m, n)
-    down = search(board, word, used, i+1, j, m, n)
-    # If one of the directions work, our search is succesful.
-    return max([left, right, up, down]) 
-
-def flatten_board(board: List[List[str]]) -> List[str]:
-    """
-    Flatten board from list of list of int to list of int.
-    """
-    _flat = []
-    for line in board:
-        _flat += line
-    return _flat
-
-def exist(board: List[List[str]], word: str):
-    """
-    Search for full word on board. Try each letter on board as 
-    a starting letter.
-    """
-    if not word:
-        return True
-    if not board:
-        return False
+    # Board dimensions
     m = len(board)
     n = len(board[0])
-    if len(word) > m * n:
-        return False
+    # Completed word!
+    if not word: 
+        return True
+    # Mark index in board as visited
+    board[i][j] = 'XX'
+    # Character, word after character
+    char = word[0]
+    word_next = word[1:]
+    result = []
+    # Search right
+    if j < n - 1:
+        if board[i][j+1] == char:
+            if search(board, word_next, i, j+1):
+                return True
+            board[i][j+1] = char
+    # Search left 
+    if j > 0:
+        if board[i][j-1] == char:
+            if search(board, word_next, i, j-1):
+                return True
+            board[i][j-1] = char
+    # Search down
+    if i < m - 1:
+        if board[i+1][j] == char:
+            if search(board, word_next, i+1, j):
+                return True
+            board[i+1][j] = char
+    # Search up
+    if i > 0:
+        if board[i-1][j] == char:
+            if search(board, word_next, i-1, j):
+                return True
+            board[i-1][j] = char
+    return False
+
+def exist(board: List[List[str]], word: str) -> bool:
+    """
+    Given a 2D board and word, find if word exists in grid.
+    """
+    # Board dimensions
+    m = len(board)
+    n = len(board[0])
+    # Empty word passed!
+    if not word:
+        return True
+    # Character, word
+    char = word[0]
+    word_next = word[1:]
+    # Try each starting position
     for i in range(m):
         for j in range(n):
-            if search(board, word, set(), i, j, m, n):
-                return True
+            # Search further if first character matches
+            if board[i][j] == char:
+                # Found match - return True!
+                char = board[i][j]
+                if search(board, word_next, i, j):
+                    return True
+                board[i][j] = char
+    # No match found - return False
     return False
+
+def printBoard(board: List[List[str]]) -> None:
+    """
+    Print board to stdout.
+    """
+    for line in board:
+        print(line)
 
 class Solution:
     def exist(self, board: List[List[str]], word: str) -> bool:
