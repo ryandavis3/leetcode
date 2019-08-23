@@ -44,6 +44,28 @@ def markHorizontalOnes(matrix: List[List[str]], i: int, j: int, l: int, X: bool)
     for k in range(j, j+l):
         matrix[i][k] = val
 
+def inMemo(memo: Dict, i: int, j: int, m: int, n: int) -> bool:
+    if i not in memo:
+        return False
+    if j not in memo[i]:
+        return False
+    if m not in memo[i][j]:
+        return False
+    if n not in memo[i][j][m]:
+        return False
+    return True
+
+def addToMemo(memo: Dict, i: int, j: int, m: int, n: int, val: int) -> None:
+    if i not in memo:
+        memo[i] = {}
+    if j not in memo[i]:
+        memo[i][j] = {}
+    if m not in memo[i][j]:
+        memo[i][j][m] = {}
+    memo[i][j][m][n] = val
+
+## TODO: Use nested dict for memoization. Faster lookup. 
+## TODO: Prune search directions where we cannot improve on current solution.
 
 def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) -> int:
     """
@@ -51,9 +73,8 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
     only ones inlcuding 1 at (i, j).
     """
     # If we have memoized solution already, return it! 
-    rectangle_id = tuple([i, j, m, n])
-    if rectangle_id in memo:
-        return [memo[rectangle_id], memo]
+    if inMemo(memo, i, j, m, n):
+        return [memo[i][j][m][n], memo]
 
     # Dimensions of matrix
     rows = len(matrix)
@@ -65,46 +86,49 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
     # Search right
     j_r = j + n
     if j_r < cols:
-        if checkVerticalOnes(matrix, i, j_r, m):
-            markVerticalOnes(matrix, i, j_r, m, X=True)
-            [max_area_n, memo] = search(matrix, i, j, m, n+1, memo)
-            if max_area_n > max_area:
-                max_area = max_area_n
-            markVerticalOnes(matrix, i, j_r, m, X=False)
+        if n * (cols - j) > max_area:
+            if checkVerticalOnes(matrix, i, j_r, m):
+                markVerticalOnes(matrix, i, j_r, m, X=True)
+                [max_area_n, memo] = search(matrix, i, j, m, n+1, memo)
+                if max_area_n > max_area:
+                    max_area = max_area_n
+                markVerticalOnes(matrix, i, j_r, m, X=False)
 
     # Search left
     j_l = j - 1
     if j_l > -1:
-        if checkVerticalOnes(matrix, i, j_l, m):
-            markVerticalOnes(matrix, i, j_l, m, X=True)
-            [max_area_n, memo] = search(matrix, i, j_l, m, n+1, memo)
-            if max_area_n > max_area:
-                max_area = max_area_n
-            markVerticalOnes(matrix, i, j_l, m, X=False)
+        if n * (j + m) > max_area:
+            if checkVerticalOnes(matrix, i, j_l, m):
+                markVerticalOnes(matrix, i, j_l, m, X=True)
+                [max_area_n, memo] = search(matrix, i, j_l, m, n+1, memo)
+                if max_area_n > max_area:
+                    max_area = max_area_n
+                markVerticalOnes(matrix, i, j_l, m, X=False)
 
     # Search up 
     i_u = i - 1
     if i_u > -1:
-        if checkHorizontalOnes(matrix, i_u, j, n):
-            markHorizontalOnes(matrix, i_u, j, n, X=True)
-            [max_area_n, memo] = search(matrix, i_u, j, m+1, n, memo)
-            if max_area_n > max_area:
-                max_area = max_area_n
-            markHorizontalOnes(matrix, i_u, j, n, X=False)
+        if m * (i + n) > max_area:
+            if checkHorizontalOnes(matrix, i_u, j, n):
+                markHorizontalOnes(matrix, i_u, j, n, X=True)
+                [max_area_n, memo] = search(matrix, i_u, j, m+1, n, memo)
+                if max_area_n > max_area:
+                    max_area = max_area_n
+                markHorizontalOnes(matrix, i_u, j, n, X=False)
 
     # Search down
     i_d = i + m
     if i_d < rows:
-        if checkHorizontalOnes(matrix, i_d, j, n):
-            markHorizontalOnes(matrix, i_d, j, n, X=True)
-            [max_area_n, memo] = search(matrix, i, j, m+1, n, memo)
-            if max_area_n > max_area:
-                max_area = max_area_n
-            markHorizontalOnes(matrix, i_d, j, n, X=False)
+        if m * (rows - i) > max_area:
+            if checkHorizontalOnes(matrix, i_d, j, n):
+                markHorizontalOnes(matrix, i_d, j, n, X=True)
+                [max_area_n, memo] = search(matrix, i, j, m+1, n, memo)
+                if max_area_n > max_area:
+                    max_area = max_area_n
+                markHorizontalOnes(matrix, i_d, j, n, X=False)
 
     # Memoize result
-    memo[rectangle_id] = max_area
-
+    addToMemo(memo, i, j, m, n, max_area)
     return [max_area, memo]
 
 def maximalRectangle(matrix: List[List[str]]) -> int:
