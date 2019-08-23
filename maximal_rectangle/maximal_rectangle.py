@@ -54,14 +54,11 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
     rectangle_id = tuple([i, j, m, n])
     if rectangle_id in memo:
         return [memo[rectangle_id], memo]
-
     # Dimensions of matrix
     rows = len(matrix)
     cols = len(matrix[0])
-    
     # Set initial max area to area of current rectangle
     max_area = m*n
-
     # Search right
     j_r = j + n
     if j_r < cols:
@@ -71,7 +68,6 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
             if max_area_n > max_area:
                 max_area = max_area_n
             markVerticalOnes(matrix, i, j_r, m, X=False)
-
     # Search left
     j_l = j - 1
     if j_l > -1:
@@ -81,7 +77,6 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
             if max_area_n > max_area:
                 max_area = max_area_n
             markVerticalOnes(matrix, i, j_l, m, X=False)
-
     # Search up 
     i_u = i - 1
     if i_u > -1:
@@ -91,7 +86,6 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
             if max_area_n > max_area:
                 max_area = max_area_n
             markHorizontalOnes(matrix, i_u, j, n, X=False)
-
     # Search down
     i_d = i + m
     if i_d < rows:
@@ -101,26 +95,25 @@ def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) 
             if max_area_n > max_area:
                 max_area = max_area_n
             markHorizontalOnes(matrix, i_d, j, n, X=False)
-
     # Memoize result
     memo[rectangle_id] = max_area
-
     return [max_area, memo]
 
 def maximalRectangle(matrix: List[List[str]]) -> int:
-
+    """
+    Given a 2D binary matrix filled with zeros and ones, find the largest
+    rectangle containing only ones and return its area.
+    """
     # No matrix passed!
     if not matrix:
         return 0
-
     # Dimensions of matrix
     rows = len(matrix)
     cols = len(matrix[0])
-
     # Set initial max area to zero
     max_area = 0
     memo = {}
-
+    # Iterate over each possible start point
     for i in range(rows):
         for j in range(cols):
             if matrix[i][j] == "1":
@@ -133,6 +126,9 @@ def maximalRectangle(matrix: List[List[str]]) -> int:
     return [max_area, memo]
 
 def printMatrix(matrix: List[List[str]]) -> None:
+    """
+    Print matrix line by line.
+    """
     for line in matrix:
         print(line)
 
