@@ -44,6 +44,7 @@ def markHorizontalOnes(matrix: List[List[str]], i: int, j: int, l: int, X: bool)
     for k in range(j, j+l):
         matrix[i][k] = val
 
+## TODO: Get faster solution using dynamic programming.
 
 def search(matrix: List[List[str]], i: int, j: int, m: int, n: int, memo: Dict) -> int:
     """
