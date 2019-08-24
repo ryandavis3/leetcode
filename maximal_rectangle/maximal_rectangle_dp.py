@@ -51,34 +51,53 @@ def maximalRectangle(matrix: List[List[str]]) -> int:
     cols = len(matrix[0])
 
     # Matrices for length, width, area of maximal rectangles
-    L = emptyMatrix(rows, cols)
-    H = emptyMatrix(rows, cols)
-    A = emptyMatrix(rows, cols)
+    Lw = emptyMatrix(rows, cols)
+    Hw = emptyMatrix(rows, cols)
+    Aw = emptyMatrix(rows, cols)
+    Lh = emptyMatrix(rows, cols)
+    Hh = emptyMatrix(rows, cols)
+    Ah = emptyMatrix(rows, cols)
 
     # First row
     C = consecutive(matrix[0])
-    L[0] = C
-    A[0] = C
+    Lw[0] = C
+    Aw[0] = C
+    Lh[0] = C
+    Aw[0] = C
     for j in range(len(C)):
         if C[j] > 0:
-            H[0][j] = 1
+            Hw[0][j] = 1
+            Aw[0][j] = 1       
 
     # Rows after first
     for i in range(1, rows):
         C = consecutive(matrix[i])
         for j in range(cols):
             if C[j] > 0: 
-                H[i][j] = 1
-                L[i][j] = C[j]
-                A[i][j] = C[j]
-                if A[i][j] > 0:
-                    h = H[i-1][j] + 1
-                    l = min(L[i-1][j], C[j])
+                Hw[i][j] = 1
+                Lw[i][j] = C[j]
+                Aw[i][j] = C[j]
+                if Aw[i][j] > 0:
+                    h = Hw[i-1][j] + 1
+                    l = min(Lw[i-1][j], Cw[j])
                     a = h * l
-                    if a > A[i][j]:
-                        A[i][j] = a
-                        L[i][j] = l
-                        H[i][j] = h
+                    if a > Aw[i][j]:
+                        Aw[i][j] = a
+                        Lw[i][j] = l
+                        Hw[i][j] = h
+                
+                
+                Hw[i][j] = 1
+                Lw[i][j] = C[j]
+                Aw[i][j] = C[j]
+                if Aw[i][j] > 0:
+                    h = Hw[i-1][j] + 1
+                    l = min(Lw[i-1][j], Cw[j])
+                    a = h * l
+                    if a > Aw[i][j]:
+                        Aw[i][j] = a
+                        Lw[i][j] = l
+                        Hw[i][j] = h
     return [L, H, A]
 
 class Solution:
