@@ -28,12 +28,14 @@ def consecutive(arr: List[str]) -> List[int]:
     return C
 
 def transpose(M: List[List[str]]) -> List[List[str]]:
-    
+    """
+    Return transpose of matrix M.
+    """
     rows = len(M)
     cols = len(M[0])
     MT = emptyMatrix(cols, rows)
     for i in range(rows):
-        for j in range(cols)
+        for j in range(cols):
             MT[j][i] = M[i][j]
     return MT
 
@@ -45,16 +47,17 @@ def printMatrix(matrix: List[List[str]]) -> None:
         print(line)
 
 def maximalRectangle(matrix: List[List[str]]) -> int:
-
+    """
+    Given a 2D matrix filled with zeros and ones, find
+    the largest rectangle containing only ones and return its area.
+    """
     # Dimensions of matrix
     rows = len(matrix)
     cols = len(matrix[0])
-
     # Matrices for length, width, area of maximal rectangles
     L = emptyMatrix(rows, cols)
     H = emptyMatrix(rows, cols)
     A = emptyMatrix(rows, cols)
-
     # First row
     C = consecutive(matrix[0])
     L[0] = C
@@ -62,7 +65,6 @@ def maximalRectangle(matrix: List[List[str]]) -> int:
     for j in range(len(C)):
         if C[j] > 0:
             H[0][j] = 1
-
     # Rows after first
     for i in range(1, rows):
         C = consecutive(matrix[i])
@@ -82,8 +84,14 @@ def maximalRectangle(matrix: List[List[str]]) -> int:
     return [L, H, A]
 
 class Solution:
-    def maximalRectangle(self, matrix: List[List[str]]) -> int:
-        [L, H, A] = maximalRectangle(matrix)
-        matrix_T = transpose(matrix)
-        [LT, HT, AT] = maximalRectangle(matrix_T)
-        return max(max([max(l) for l in A]), max([max(l) for l in AT])
+    def maximalRectangle(self, M: List[List[str]]) -> int:
+        # Find maximal rectangles of both matrix and its transpose 
+        # and take maximum area.
+        if not M:
+            return 0
+        [L, H, A] = maximalRectangle(M)
+        max_area = max([max(l) for l in A])
+        MT = transpose(M)
+        [LT, HT, AT] = maximalRectangle(MT)
+        max_area_T = max([max(l) for l in AT])
+        return max(max_area, max_area_T)
