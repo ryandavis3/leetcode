@@ -4,50 +4,42 @@ from typing import List
 
 def maxArea(height: List[int]) -> int:
     """
-    Brute force solution -> O(n^2) -> too slow.
+    Given n noon-negative integers a1, a2, ..., an, where each
+    represents a point a coordinate (i, ai). n vertical lines are 
+    drawn such that the two endpoints of line i are at (i, ai) and
+    (i, 0). Find two lines which together the the x-axis forms
+    a container such that the container contains the most water.
     """
-    # Iterate over each pair of integers
-    area = 0
-    for i, h1 in enumerate(height):
-        for j, h2 in enumerate(height):
-            a = abs(i-j) * min(h1, h2)
-            if a > area:
-                area = a
-    return area
-
-def maxArea2(height: List[int]) -> int:
-    """
-    Solution with two pointers.
-    """
+    # Use two pointers, one at left (right) end of array
     L = len(height)
     left = 0
     right = L - 1
     max_area = 0
-    move = 'L'
+    # Start with widest possible container and search containers
+    # with smaller widths (and larger heights)
     while left < right:
-        
+        # Compute area for pair; update max area
         area = (right - left) * min(height[left], height[right])
         if area > max_area:
             max_area = area
-
+        # Set initial max left (right) heights
         if left == 0 and right == L - 1: 
             max_l = height[left]
             max_r = height[right]
-        
-        if move == 'L':
+        # Move left pointer to the right
+        if height[left] < height[right]:
             while height[left] <= max_l and left < right:
                 left += 1
             max_l = height[left]
-            move = 'R'
-        elif move == 'R':
-            while height[right] <= max_l and left < right:
+        # Move right pointer to the left
+        else:
+            while height[right] <= max_r and left < right:
                 right -= 1
             max_r = height[right]
-            move = 'L'
-   
+    # Return max area
     return max_area
 
 
 class Solution:
     def maxArea(self, height: List[int]) -> int:
-        return maxArea2(height)
+        return maxArea(height)
