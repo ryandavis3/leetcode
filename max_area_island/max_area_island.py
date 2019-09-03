@@ -47,4 +47,4 @@ def maxAreaIsland(grid: List[List[str]]) -> int:
 
 class Solution:
     def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
-        pass
+        return maxAreaIsland(grid)
