@@ -31,7 +31,7 @@ def reverseBetween(head: ListNode, m: int, n: int) -> ListNode:
     # Move head to first node in list to reverse
     prev = head
     curr = prev.next
-    i = 1
+    i = 2
     while i < m:
         i += 1
         prev = prev.next
@@ -39,16 +39,21 @@ def reverseBetween(head: ListNode, m: int, n: int) -> ListNode:
     # Iteratively reverse linked list
     prev_tail = prev
     curr_tail = curr
-    while i < n and curr:
+    while i <= n and curr:
+        i += 1
         ptr = curr
         curr = curr.next
         ptr.next = prev
-        prev = prev.next
+        prev = ptr
     # Stitch list together
-    prev_tail.next = ptr
-    curr_tail.next = curr
+    if m == 1: # Reversed list starts at beginning
+        head = ptr
+        prev_tail.next = curr
+    else:
+        prev_tail.next = ptr
+        curr_tail.next = curr
     return head
 
 class Solution:
     def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
-        return reverseBetween(head, m, n)    
+        return reverseBetween(head, m, n)
