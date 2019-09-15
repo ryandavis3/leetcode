@@ -1,33 +1,40 @@
 # https://leetcode.com/problems/longest-valid-parentheses/
 
-def longestValidParentheses(s: str) -> int:
+def reverseStr(s: str) -> str:
+    """
+    Reverse string of parentheses.
+    """
+    # Replace parentheses with tokens
+    d1 = {'(': 'a', ')': 'b'}
+    for key, val in d1.items():
+        s = s.replace(key, val)
+    # Replace tokens with opposite parentheses
+    d2 = {'a': ')', 'b': '('}
+    for key, val in d2.items():
+        s = s.replace(key, val)
+    return s[::-1]
+
+def longest(s: str) -> str:
     """
     Given a string containing just the characters '(' and ')'
-    find the length of the longest valid (well-formed) 
-    parentheses substring.
+    find the longest valid (well-formed) parentheses substring.
     """
     # No string passed!
     if not s:
-        return None, ""
+        return ""
     # Length one string passed!
     if len(s) == 1:
-        return None, ""
-    # Table for open parentheses to left
-    left = []
-    L = len(s)
-    for _ in range(L):
-        left += [[0] * L]
-    # Substrings
-    substr = []
-    for _ in range(L):
-        substr += [[""] * L]
+        return ""
+    # Initial max length string is empty string
     max_len = 0 
     max_str = ""
+    L = len(s)
     # Iterate across possible starts
-    for i in range(L):
+    for i in range(1):
         if L - i < max_len:
             break
         start = i
+        left = 0
         # Iterate across possible ends
         for j, char in enumerate(s):
             if L - start < max_len:
@@ -38,34 +45,44 @@ def longestValidParentheses(s: str) -> int:
             # First character in string
             elif j == i:
                 if char == '(':
-                    left[i][j] += 1
+                    left += 1
                 elif char == ')':
                     start += 1
                 continue
-            # Carry over left parentheses
-            left[i][j] = left[i][j-1]
             # Open parenthesis
             if char == '(':
-                left[i][j] += 1
+                left += 1
             # Closed parenthesis
             elif char == ')':
                 # Add to substring
-                if left[i][j] == 1:
-                    substr[i][j] = s[start:j+1]
-                    left[i][j] -= 1
+                if left == 1:
+                    left -= 1
                     # New longest substring!
                     if j - start > max_len:
                         max_len = j - start
-                        max_str = substr[i][j]
-                elif left[i][j] > 1:
-                    left[i][j] -= 1
+                        max_str = s[start:j+1]
+                elif left > 1:
+                    left -= 1
                 # No matching open parenthesis; start over!
                 else:
-                    left[i][j] = 0
+                    left = 0
                     start = j+1
-    return substr, max_str
+    return max_str
+
+def longestValidParentheses(s: str) -> int:
+    """
+    Get length of substring with longest valid parentheses.
+    """
+    # Get max substring of string (and reversed string)
+    max_str = longest(s)
+    max_str_rev = longest(reverseStr(s))
+    # Return lenth of longer string
+    if len(max_str) > len(max_Str_rev):
+        return max_str
+    else:
+        return max_str_rev
 
 class Solution:
     def longestValidParentheses(self, s: str) -> int:
-        substr, max_str = longestValidParentheses(s)
+        max_str = longestValidParentheses(s)
         return len(max_str)
