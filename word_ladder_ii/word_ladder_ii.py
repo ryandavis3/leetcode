@@ -52,25 +52,20 @@ def buildAdjList(wordList: Set):
 
 
 def search(beginWord: str, endWord: str, wordList: Set, adj: Set) -> List[List[str]]:
-
+    
+    # Word not available - return empty list
     if beginWord not in wordList:
         return []
-
     # Finished!
     if beginWord == endWord:
         return [[beginWord]]
-    
     words = []
     words_adj = adj[beginWord]
-
-    wordList = copy.deepcopy(wordList)
     wordList.remove(beginWord)
-
     for word in words_adj:
         nextWords = search(word, endWord, wordList, adj)
         for n in nextWords:
             words += [[beginWord] + n]
-
     return words
 
     
