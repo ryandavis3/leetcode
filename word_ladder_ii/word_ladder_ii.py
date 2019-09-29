@@ -1,5 +1,5 @@
 import copy
-from typing import List, Set
+from typing import List, Set, Dict
 
 # https://leetcode.com/problems/word-ladder-ii/
 
@@ -68,7 +68,66 @@ def search(beginWord: str, endWord: str, wordList: Set, adj: Set) -> List[List[s
             words += [[beginWord] + n]
     return words
 
+def step(state: Dict, adj: Dict):
+
+    if state['begin'] not in state['words']:
+        return None
     
+    if state['begin'] == state['end']:
+        state['sequence'] += [state['begin']]
+        state['complete'] = True
+        return [state]
+    
+    # Adjacent words
+    words_adj = adj[state['begin']]
+
+    states_next = []
+    for word in words_adj:
+        if word in state['words']:
+            state_next = copy.deepcopy(state)  
+            state_next['words'] = state_next['words'] - {state['begin']}
+            state_next['sequence'] += [state['begin']]
+            state_next['begin'] = word
+            states_next += [state_next]
+
+    return states_next
+
+# Memoize!
+
+def steps(states: List[Dict], adj: Dict):
+
+    print(states)
+    states_next = []
+    complete = False
+    for state in states:
+        state_next = step(state, adj)
+        if state_next is not None:
+            states_next += state_next
+            for sn in state_next:
+                if sn['complete']:
+                    complete = True
+    
+    if complete:
+        states_next = [sn for sn in states_next if sn['complete']]
+
+    return states_next
+
+def findLadders2(beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+
+    wordList = set(wordList)
+    wordList.add(beginWord)
+    state = {'begin': beginWord, 'end': endWord, 'words': wordList, 'complete': False, 'sequence': []}
+    states = [state]
+    adj = buildAdjList(wordList)
+    while True:
+        states = steps(states, adj)
+        if not states:
+            return []
+        if states[0]['complete']:
+            states = [s['sequence'] for s in states]
+            return states
+
+
 class Solution:
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
-        return findLadders(beginWord, endWord, wordList)
+        return findLadders2(beginWord, endWord, wordList)
