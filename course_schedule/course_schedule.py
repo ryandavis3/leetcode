@@ -47,7 +47,7 @@ class Graph:
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         graph = Graph(numCourses, prerequisites)
-        return not graph.isCyclic
+        return not graph.isCyclic()
 
 
 if __name__ == "__main__":
@@ -55,9 +55,11 @@ if __name__ == "__main__":
     prerequisites = [[1,0]]
     graph = Graph(numCourses, prerequisites)  
     result1 = graph.isCyclic()
+    solution = Solution()
+    finish1 = solution.canFinish(numCourses, prerequisites)
     print(result1)
+    print(finish1)
     numCourses = 2
     prerequisites = [[1,0], [0,1]]
     graph = Graph(numCourses, prerequisites)
     result2 = graph.isCyclic()
-    print(result2)
