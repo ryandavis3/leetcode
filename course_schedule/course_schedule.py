@@ -25,7 +25,6 @@ class Graph:
         visited[v] = True
         recStack[v] = True
         for neighbor in self.graph[v]:
-            breakpoint()
             if recStack[neighbor] == True:
                 return True
             if visited[neighbor] == False:
