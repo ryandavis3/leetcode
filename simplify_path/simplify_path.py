@@ -1,11 +1,28 @@
 import unittest
+from typing import List, Set
+
+
+DOUBLE_DOT = '..'
+
+
+def _resolve_double_dot(strings: List[str]) -> List[str]: 
+    i = 0
+    while i < len(strings):
+        if i + 1 < len(strings) and strings[i + 1] == DOUBLE_DOT:
+            strings = strings[:i] + strings[i+2:]
+            i -= 2
+        else:
+            i += 1
+    return strings
+
 
 
 def simplify_path(path: str) -> str:
     strings = path.split('/')
-    strings = [s for s in strings if s != '']
+    strings = [s for s in strings if s != '' and s != '.']
     if strings[0] == '..':
         strings = strings[1:]
+    strings = _resolve_double_dot(strings=strings)
     path_new = "/".join(strings)
     path_new = "/" + path_new
     return path_new
@@ -13,7 +30,7 @@ def simplify_path(path: str) -> str:
 
 class Solution:
     def simplifyPath(self, path: str) -> str:
-        pass
+        return simplify_path(path=path)
 
 
 class TestSimplify(unittest.TestCase):
@@ -35,3 +52,11 @@ class TestSimplify(unittest.TestCase):
         expected_output = "/home/foo"
         output = simplify_path(path=path)
         self.assertEqual(output, expected_output)
+
+    def test_4(self) -> None:
+        path = "/a/./b/../../c/"
+        expected_output = "/c"
+        output = simplify_path(path=path)
+        self.assertEqual(output, expected_output)
+
+
