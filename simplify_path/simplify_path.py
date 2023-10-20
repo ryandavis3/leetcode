@@ -15,15 +15,18 @@ def _resolve_double_dot(strings: List[str]) -> List[str]:
         else:
             i += 1
     # remove leading double dot
-    if len(strings) > 0:
-        while strings[0] == DOUBLE_DOT:
-            strings = strings[1:]
+    while len(strings) > 0 and strings[0] == DOUBLE_DOT:
+        strings = strings[1:]
     return strings
 
 
 def simplify_path(path: str) -> str:
+    if path == "/":
+        return path
     strings = path.split('/')
     strings = [s for s in strings if s != '' and s != '.']
+    if len(strings) == 0:
+        return "/"
     if strings[0] == '..':
         strings = strings[1:]
     strings = _resolve_double_dot(strings=strings)
@@ -66,5 +69,23 @@ class TestSimplify(unittest.TestCase):
     def test_5(self) -> None:
         path = "/a/../../b/../c//.//"
         expected_output = "/c"
+        output = simplify_path(path=path)
+        self.assertEqual(output, expected_output)
+
+    def test_6(self) -> None:
+        path = "/"
+        expected_output = "/"
+        output = simplify_path(path=path)
+        self.assertEqual(output, expected_output)
+
+    def test_7(self) -> None:
+        path = "///"
+        expected_output = "/"
+        output = simplify_path(path=path)
+        self.assertEqual(output, expected_output)
+
+    def test_8(self) -> None:
+        path = "/hzx/.././BVHm/../././..//"
+        expected_output = "/"
         output = simplify_path(path=path)
         self.assertEqual(output, expected_output)
