@@ -1,7 +1,14 @@
 import unittest
 
+
 def simplify_path(path: str) -> str:
-    pass
+    strings = path.split('/')
+    strings = [s for s in strings if s != '']
+    if strings[0] == '..':
+        strings = strings[1:]
+    path_new = "/".join(strings)
+    path_new = "/" + path_new
+    return path_new
 
 
 class Solution:
