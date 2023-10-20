@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "Leetcode Solutions"
+version = "0.1.0"
+description = "Solutions to Leetcode problems."
+authors = ["Ryan Davis <davisr137@gmail.com>"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
