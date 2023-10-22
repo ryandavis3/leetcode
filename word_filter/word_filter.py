@@ -29,7 +29,17 @@ class WordTree:
 class WordFilter:
 
     def __init__(self, words: List[str]):
-        
+        # Instantiate word tree object forward
+        self.word_tree_forward = WordTree()
+        # Iterate over each word and add it
+        for index, word in words.items():
+            self.word_tree_forward(_dict=self.word_tree_forward, word=word, index=index)
+        # Instantiate word tree object backward
+        self.word_tree_backward = WordTree()
+        # Iterate over each word and add it
+        words_backward = words[::-1]
+        for index, word in words_backward.items():
+            self.word_tree_backward(_dict=self.word_tree_backward, word=word, index=index)
 
     def f(self, pref: str, suff: str) -> int:
         pass        
