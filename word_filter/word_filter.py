@@ -121,6 +121,8 @@ class TestWordFilter(unittest.TestCase):
         indices = self.word_filter.f_prefix(pref='a')
         indices_expected = [0, 1]
         self.assertEqual(indices, indices_expected)
+        indices = self.word_filter.f_prefix(pref='b')
+        self.assertEqual(len(indices), 0)
 
     def test_f_suffix(self) -> None:
         indices = self.word_filter.f_suffix(suff='e')
