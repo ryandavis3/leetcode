@@ -52,7 +52,9 @@ class TestWordFilter(unittest.TestCase):
     def test_1(self):
         words = ['apple']
         word_filter = WordFilter(words=words)
-
+        word_tree_forward_expected = {'a': {'p': {'p': {'l': {'e': 0}}}}}
+        word_tree_forward = word_filter.word_tree_forward.word_tree
+        self.assertEqual(word_tree_forward, word_tree_forward_expected)
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
