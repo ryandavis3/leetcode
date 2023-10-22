@@ -57,9 +57,15 @@ class WordFilter:
         pass        
 
 
+class TestTree(unittest.TestCase):
+    def test_1(self) -> None:
+        tree = {'a': {'b': 0, 'c': 1, 'd': {'e': 2}}}
+        indices = get_indices_in_tree(tree=tree)
+        indices_expected = [0, 1, 2]
+        self.assertEqual(indices, indices_expected)
+
 class TestWordFilter(unittest.TestCase):
-    
-    def test_1(self):
+    def test_1(self) -> None:
         words = ['apple']
         word_filter = WordFilter(words=words)
         word_tree_forward_expected = {'a': {'p': {'p': {'l': {'e': 0}}}}}
@@ -67,7 +73,7 @@ class TestWordFilter(unittest.TestCase):
         self.assertEqual(word_tree_forward, word_tree_forward_expected)
         word_tree_backward = word_filter.word_tree_backward.word_tree
         word_tree_backward_expected = {'e': {'l': {'p': {'p': {'a': 0}}}}}
-        self.assertEqual(word_tree_backward, word_tree_backward_expected)
+        self.assertEqual(word_tree_backward, word_tree_backward_expected)        
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
