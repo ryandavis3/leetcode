@@ -47,7 +47,11 @@ class WordFilter:
 
 
 class TestWordFilter(unittest.TestCase):
-    pass
+    
+    def test_1(self):
+        words = ['apple']
+        word_tree = WordTree(words=words)
+        
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
