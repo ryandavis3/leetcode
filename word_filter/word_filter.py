@@ -21,7 +21,11 @@ def add_word_to_dict(_dict: Dict, word: str, index: int) -> None:
 def get_indices_in_tree(tree: Union[Dict, int]) -> List[int]:
     if isinstance(tree, int):
         return [tree]
-     
+    indices: List[int] = []
+    for _, subtree in tree.items():
+        indices_subtree = get_indices_in_tree(tree=subtree)
+        indices += indices_subtree
+    return indices
 
 
 class WordTree:
