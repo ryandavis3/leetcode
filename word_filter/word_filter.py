@@ -1,3 +1,4 @@
+import unittest
 from typing import Dict, List
 
 
@@ -44,6 +45,9 @@ class WordFilter:
     def f(self, pref: str, suff: str) -> int:
         pass        
 
+
+class TestWordFilter(unittest.TestCase):
+    pass
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
