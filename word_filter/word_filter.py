@@ -2,10 +2,11 @@ import unittest
 from typing import Dict, List
 
 
-def add_word_to_dict(_dict: Dict, word: str, index: int):
+def add_word_to_dict(_dict: Dict, word: str, index: int) -> None:
     # Word has only one or zero letters
     if len(word) <= 1:
         _dict[word] = index
+        return None
     # First letter
     letter = word[0]
     # Remaining word
@@ -14,7 +15,7 @@ def add_word_to_dict(_dict: Dict, word: str, index: int):
     if letter not in _dict:
         _dict[letter]: Dict = {}
     # Recursively move to the next 
-    add_word_to_dict(_dict=_dict[letter], word=remaining)
+    add_word_to_dict(_dict=_dict[letter], word=remaining, index=index)
 
 
 class WordTree:
