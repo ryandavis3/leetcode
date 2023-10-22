@@ -35,7 +35,7 @@ def get_indices_from_prefix(tree: Dict, prefix: str) -> Union[int, List[int]]:
     letter = prefix[0]
     remaining = prefix[1:]
     if letter not in tree:
-        return -1
+        return []
     indices = get_indices_from_prefix(tree=tree[letter], prefix=remaining)
     return indices
 
@@ -75,7 +75,11 @@ class WordFilter:
         return indices
 
     def f(self, pref: str, suff: str) -> int:
-        pass        
+        i_prefix = self.f_prefix(pref=pref)
+        i_prefix_set = set(i_prefix)
+        i_suffix = self.f_suffix(suff=suff)
+        i_suffix_set = set(i_suffix)
+                
 
 
 class TestTree(unittest.TestCase):
