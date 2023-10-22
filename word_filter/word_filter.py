@@ -65,6 +65,10 @@ class WordFilter:
             word_backward = word[::-1]
             self.word_tree_backward.add_word(word=word_backward, index=index)
 
+    def f_prefix(self, pref: str) -> List[int]:
+        indices = get_indices_from_prefix(tree=self.word_tree_forward.word_tree, prefix=pref)
+        return indices
+
     def f(self, pref: str, suff: str) -> int:
         pass        
 
@@ -89,7 +93,12 @@ class TestTree(unittest.TestCase):
         
 
 class TestWordFilter(unittest.TestCase):
-    def test_1(self) -> None:
+    @classmethod
+    def setUpClass(cls) -> None:
+        words = ['apple', 'application']
+        cls.word_filter = WordFilter(words=words)
+
+    def test_init(self) -> None:
         words = ['apple']
         word_filter = WordFilter(words=words)
         word_tree_forward_expected = {'a': {'p': {'p': {'l': {'e': 0}}}}}
@@ -97,7 +106,12 @@ class TestWordFilter(unittest.TestCase):
         self.assertEqual(word_tree_forward, word_tree_forward_expected)
         word_tree_backward = word_filter.word_tree_backward.word_tree
         word_tree_backward_expected = {'e': {'l': {'p': {'p': {'a': 0}}}}}
-        self.assertEqual(word_tree_backward, word_tree_backward_expected)        
+        self.assertEqual(word_tree_backward, word_tree_backward_expected)      
+
+    def test_f_prefix(self) -> None:
+        indices = self.word_filter.f_prefix(pref='a')
+        indices_expected = [0, 1]
+        self.assertEqual(indices, indices_expected)
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
