@@ -28,6 +28,15 @@ def get_indices_in_tree(tree: Union[Dict, int]) -> List[int]:
     return indices
 
 
+def get_indices_from_tree(tree: Dict, prefix: str) -> int:
+    letter = prefix[0]
+    remaining = prefix[1:]
+    if letter not in tree:
+        return -1
+    indices = get_indices_from_tree(tree=tree[letter], prefix=remaining)
+    return indices
+
+
 class WordTree:
 
     def __init__(self):
@@ -59,9 +68,9 @@ class WordFilter:
 
 class TestTree(unittest.TestCase):
     def test_1(self) -> None:
-        tree = {'a': {'b': 0, 'c': 1, 'd': {'e': 2}}}
+        tree = {'a': {'b': 0, 'c': 1, 'd': {'e': 2, 'f': 3}}}
         indices = get_indices_in_tree(tree=tree)
-        indices_expected = [0, 1, 2]
+        indices_expected = [0, 1, 2, 3]
         self.assertEqual(indices, indices_expected)
 
 class TestWordFilter(unittest.TestCase):
