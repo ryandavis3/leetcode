@@ -28,16 +28,16 @@ def get_indices_in_tree(tree: Union[Dict, int]) -> List[int]:
     return indices
 
 
-def get_index_from_tree(tree: Dict, prefix: str) -> int:
+def get_indices_from_prefix(tree: Dict, prefix: str) -> Union[int, List[int]]:
     if prefix == '':
         indices = get_indices_in_tree(tree=tree)
-        return max(indices)
+        return indices
     letter = prefix[0]
     remaining = prefix[1:]
     if letter not in tree:
         return -1
-    index = get_index_from_tree(tree=tree[letter], prefix=remaining)
-    return index
+    indices = get_indices_from_prefix(tree=tree[letter], prefix=remaining)
+    return indices
 
 
 class WordTree:
@@ -81,10 +81,11 @@ class TestTree(unittest.TestCase):
         self.assertEqual(indices, indices_expected)
     
     def test_2(self) -> None:
-        index = get_index_from_tree(tree=self.tree, prefix='ad')
-        self.assertEqual(index, 3)
-        index = get_index_from_tree(tree=self.tree, prefix='ab')
-        self.assertEqual(index, 0)
+        indices = get_indices_from_prefix(tree=self.tree, prefix='ad')
+        indices_expected = [2, 3]
+        self.assertEqual(indices, indices_expected)
+        indices = get_indices_from_prefix(tree=self.tree, prefix='ab')
+        self.assertEqual(indices, [0])
         
 
 class TestWordFilter(unittest.TestCase):
