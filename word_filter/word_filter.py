@@ -68,6 +68,11 @@ class WordFilter:
     def f_prefix(self, pref: str) -> List[int]:
         indices = get_indices_from_prefix(tree=self.word_tree_forward.word_tree, prefix=pref)
         return indices
+    
+    def f_suffix(self, suff: str) -> List[int]:
+        suffix_reversed = suff[::-1]
+        indices = get_indices_from_prefix(tree=self.word_tree_backward.word_tree, prefix=suffix_reversed)
+        return indices
 
     def f(self, pref: str, suff: str) -> int:
         pass        
@@ -111,6 +116,11 @@ class TestWordFilter(unittest.TestCase):
     def test_f_prefix(self) -> None:
         indices = self.word_filter.f_prefix(pref='a')
         indices_expected = [0, 1]
+        self.assertEqual(indices, indices_expected)
+
+    def test_f_suffix(self) -> None:
+        indices = self.word_filter.f_suffix(suff='e')
+        indices_expected = [0]
         self.assertEqual(indices, indices_expected)
 
 # Your WordFilter object will be instantiated and called as such:
