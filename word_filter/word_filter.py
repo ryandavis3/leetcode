@@ -2,10 +2,13 @@ import unittest
 from typing import Dict, List, Union
 
 
+SENTINEL = '#'
+
+
 def add_word_to_dict(_dict: Dict, word: str, index: int) -> None:
     # Word has only one or zero letters
-    if len(word) <= 1:
-        _dict[word] = index
+    if len(word) == 0:
+        _dict[SENTINEL] = index
         return None
     # First letter
     letter = word[0]
@@ -113,11 +116,11 @@ class TestWordFilter(unittest.TestCase):
     def test_init(self) -> None:
         words = ['apple']
         word_filter = WordFilter(words=words)
-        word_tree_forward_expected = {'a': {'p': {'p': {'l': {'e': 0}}}}}
+        word_tree_forward_expected = {'a': {'p': {'p': {'l': {'e': {'#': 0}}}}}}
         word_tree_forward = word_filter.word_tree_forward.word_tree
         self.assertEqual(word_tree_forward, word_tree_forward_expected)
         word_tree_backward = word_filter.word_tree_backward.word_tree
-        word_tree_backward_expected = {'e': {'l': {'p': {'p': {'a': 0}}}}}
+        word_tree_backward_expected = {'e': {'l': {'p': {'p': {'a': {'#': 0}}}}}}
         self.assertEqual(word_tree_backward, word_tree_backward_expected)      
 
     def test_f_prefix(self) -> None:
