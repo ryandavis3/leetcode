@@ -33,14 +33,14 @@ class WordFilter:
         # Instantiate word tree object forward
         self.word_tree_forward = WordTree()
         # Iterate over each word and add it
-        for index, word in words.items():
-            self.word_tree_forward(_dict=self.word_tree_forward, word=word, index=index)
+        for index, word in enumerate(words):
+            self.word_tree_forward.add_word(word=word, index=index)
         # Instantiate word tree object backward
         self.word_tree_backward = WordTree()
         # Iterate over each word and add it
         words_backward = words[::-1]
-        for index, word in words_backward.items():
-            self.word_tree_backward(_dict=self.word_tree_backward, word=word, index=index)
+        for index, word in enumerate(words_backward):
+            self.word_tree_backward.add_word(word=word, index=index)
 
     def f(self, pref: str, suff: str) -> int:
         pass        
@@ -50,8 +50,8 @@ class TestWordFilter(unittest.TestCase):
     
     def test_1(self):
         words = ['apple']
-        word_tree = WordTree(words=words)
-        
+        word_filter = WordFilter(words=words)
+
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
