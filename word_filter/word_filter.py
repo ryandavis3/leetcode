@@ -132,6 +132,12 @@ class TestWordFilter(unittest.TestCase):
         indices_expected = [0]
         self.assertEqual(indices, indices_expected)
 
+    def test_f(self) -> None:
+        index = self.word_filter.f(pref='a', suff='e')
+        self.assertEqual(index, 0)
+        index = self.word_filter.f(pref='a', suff='n')
+        self.assertEqual(index, 1)
+
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
 # param_1 = obj.f(pref,suff)
