@@ -1,5 +1,5 @@
 import unittest
-from typing import Dict, List
+from typing import Dict, List, Union
 
 
 def add_word_to_dict(_dict: Dict, word: str, index: int) -> None:
@@ -16,6 +16,12 @@ def add_word_to_dict(_dict: Dict, word: str, index: int) -> None:
         _dict[letter]: Dict = {}
     # Recursively move to the next 
     add_word_to_dict(_dict=_dict[letter], word=remaining, index=index)
+
+
+def get_indices_in_tree(tree: Union[Dict, int]) -> List[int]:
+    if isinstance(tree, int):
+        return [tree]
+     
 
 
 class WordTree:
