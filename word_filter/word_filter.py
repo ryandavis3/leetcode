@@ -79,7 +79,10 @@ class WordFilter:
         i_prefix_set = set(i_prefix)
         i_suffix = self.f_suffix(suff=suff)
         i_suffix_set = set(i_suffix)
-                
+        i_common = i_prefix_set & i_suffix_set
+        if len(i_common) == 0:
+            return -1
+        return max(i_common)
 
 
 class TestTree(unittest.TestCase):
