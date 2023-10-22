@@ -137,6 +137,8 @@ class TestWordFilter(unittest.TestCase):
         self.assertEqual(index, 0)
         index = self.word_filter.f(pref='a', suff='n')
         self.assertEqual(index, 1)
+        index = self.word_filter.f(pref='ap', suff='le')
+        self.assertEqual(index, 0)
 
 # Your WordFilter object will be instantiated and called as such:
 # obj = WordFilter(words)
