@@ -10,13 +10,18 @@ class TreeNode:
 
 
 def get_max_money(node: TreeNode, include_head: bool) -> int:
+    if include_head and hasattr(node, 'max_value_include'):
+        return node.max_value_include
+    elif not include_head and hasattr(node, 'max_value_exclude'):
+        return node.max_value_exclude
     node_value = node.val if include_head else 0
     if node.left is not None:
         left_value_exclude_next = get_max_money(node=node.left, include_head=False)
         if not include_head:
             left_value_include_next = get_max_money(node=node.left, include_head=True)
             left_value = max(left_value_include_next, left_value_exclude_next) 
-        left_value = left_value_exclude_next
+        else:
+            left_value = left_value_exclude_next
     else:
         left_value = 0
     if node.right is not None:
@@ -24,10 +29,16 @@ def get_max_money(node: TreeNode, include_head: bool) -> int:
         if not include_head:
             right_value_include_next = get_max_money(node=node.right, include_head=True)
             right_value = max(right_value_include_next, right_value_exclude_next)
-        right_value = right_value_exclude_next
+        else:
+            right_value = right_value_exclude_next
     else:
         right_value = 0
-    return left_value + right_value + node_value
+    max_value = left_value + right_value + node_value
+    if include_head:
+        node.max_value_include = max_value
+    else:
+        node.max_value_exclude = max_value
+    return max_value
     
 
 def rob(root: Optional[TreeNode]) -> int:
