@@ -54,3 +54,8 @@ class TestRob(unittest.TestCase):
         nums = [2,3,2,3]
         max_rob = rob(nums=nums)
         self.assertEqual(max_rob, 6)
+
+    def test_rob3(self) -> None:
+        nums = [5, 1, 4]
+        max_rob = rob(nums=nums)
+        self.assertEqual(max_rob, 5)
