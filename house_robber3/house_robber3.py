@@ -11,15 +11,17 @@ class TreeNode:
 
 def get_max_money(node: TreeNode, include_head: bool) -> int:
     node_value = node.val if include_head else 0
-    if node.left is None and node.right is None:
-        return node_value
-    if node.left is None and node.right is not None:
-        value = node_value + get_max_money(node=node.right, include_head=False)
-        return value
-    if node.left is not None and node.right is None:
-        value = node_value + get_max_money(node=node.left, include_head=False)
-        return value
-
+    include_head_next = False if include_head else True
+    if node.left is not None:
+        left_value = get_max_money(node=node.left, include_head=include_head_next)
+    else:
+        left_value = 0
+    if node.right is not None:
+        right_value = get_max_money(node=node.right, include_head=include_head_next)
+    else:
+        right_value = 0
+    return left_value + right_value + node_value
+    
 
 class Solution:
     def rob(self, root: Optional[TreeNode]) -> int:
@@ -30,4 +32,11 @@ class Solution:
 
 
 class TestRob(unittest.TestCase):
-    pass
+    def test_get_max_money(self) -> None:
+        node4 = TreeNode(val=3)
+        node5 = TreeNode(val=1)
+        node2 = TreeNode(val=2, right=node4)
+        node3 = TreeNode(val=3, right=node5)
+        node1 = TreeNode(val=3, left=node2, right=node3)
+        max_money = get_max_money(node=node1, include_head=True)
+        self.assertEqual(max_money, 7)
