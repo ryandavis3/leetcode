@@ -21,7 +21,7 @@ def rob(nums: List[int]):
             continue
         if i == L - 1:
             if 0 in max_sum_sets[i-2]:
-                max_possible_value = max_sum[i-2]
+                max_possible_value = max(max_sum[i-2], num)
             else:
                 max_possible_value = max_sum[i-2] + num 
         else:
@@ -41,7 +41,7 @@ def rob(nums: List[int]):
 
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        pass
+        return rob(nums=nums)
 
 
 class TestRob(unittest.TestCase):
@@ -59,3 +59,8 @@ class TestRob(unittest.TestCase):
         nums = [5, 1, 4]
         max_rob = rob(nums=nums)
         self.assertEqual(max_rob, 5)
+
+    def test_rob4(self) -> None:
+        nums = [1, 2, 3]
+        max_rob = rob(nums=nums)
+        self.assertEqual(max_rob, 3)
