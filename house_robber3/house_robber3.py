@@ -23,9 +23,15 @@ def get_max_money(node: TreeNode, include_head: bool) -> int:
     return left_value + right_value + node_value
     
 
+def rob(root: Optional[TreeNode]) -> int:
+    max_money_include = get_max_money(node=root, include_head=True)
+    max_money_exclude = get_max_money(node=root, include_head=False)
+    return max(max_money_include, max_money_exclude)
+
+
 class Solution:
     def rob(self, root: Optional[TreeNode]) -> int:
-        return get_max_money(node=root, include_head=True)
+        return rob(root=root)
 
 
 #def build_tree_from_root(root: List[int]) -> TreeNode:
