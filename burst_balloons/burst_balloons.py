@@ -29,3 +29,5 @@ class TestNumsMemoize(unittest.TestCase):
         nums_memoize.add(key=(1, 2), value=4)
         value = nums_memoize.get(key=(1, 2))
         self.assertEqual(value, 4)
+        with self.assertRaises(KeyError):
+            _ = nums_memoize.get(key=(3,))
