@@ -19,15 +19,22 @@ def rob(nums: List[int]):
                 max_sum[i] = nums[1]
                 max_sum_sets[i] = set([1])
             continue
-        if max_sum[i-2] + num > max_sum[i-1]:
+        if i == L - 1:
+            if 0 in max_sum_sets[i-2]:
+                max_possible_value = max_sum[i-2]
+            else:
+                max_possible_value = max_sum[i-2] + num 
+        else:
+            max_possible_value = max_sum[i-2] + num
+        if max_possible_value > max_sum[i-1]:
             max_sum_set = max_sum_sets[i-2].copy()
             max_sum_set.add(i)
-            max_sum[i] = max_sum[i-2] + num
+            max_sum[i] = max_possible_value
             max_sum_sets[i] = max_sum_set
         else:
             max_sum_set = max_sum_sets[i-1].copy()
             max_sum_set.add(i-1)
-            max_sum[i] = max_sum[i-1] + num
+            max_sum[i] = max_sum[i-1]
             max_sum_sets[i] = max_sum_set
     return max_sum[-1]
 
