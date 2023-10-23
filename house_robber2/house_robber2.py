@@ -9,15 +9,15 @@ def rob(nums: List[int]):
     for i, num in enumerate(nums):
         if i == 0:
             max_sum[i] = num
-            max_sum_sets[i] = set(i)
+            max_sum_sets[i] = set([i])
             continue
         if i == 1:
             if nums[0] > nums[1]:
                 max_sum[i] = nums[0]
-                max_sum_sets[i] = set(0)
+                max_sum_sets[i] = set([0])
             else:
                 max_sum[i] = nums[1]
-                max_sum_sets[i] = set(1)
+                max_sum_sets[i] = set([1])
             continue
         if max_sum[i-2] + num > max_sum[i-1]:
             max_sum_set = max_sum_sets[i-2].copy()
