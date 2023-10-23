@@ -33,7 +33,6 @@ def rob(nums: List[int]):
             max_sum_sets[i] = max_sum_set
         else:
             max_sum_set = max_sum_sets[i-1].copy()
-            max_sum_set.add(i-1)
             max_sum[i] = max_sum[i-1]
             max_sum_sets[i] = max_sum_set
     return max_sum[-1]
@@ -41,7 +40,9 @@ def rob(nums: List[int]):
 
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        return rob(nums=nums)
+        rob_forward = rob(nums=nums)
+        rob_backward = rob(nums=nums[::-1])
+        return max(rob_forward, rob_backward)
 
 
 class TestRob(unittest.TestCase):
@@ -64,3 +65,8 @@ class TestRob(unittest.TestCase):
         nums = [1, 2, 3]
         max_rob = rob(nums=nums)
         self.assertEqual(max_rob, 3)
+
+    def test_rob5(self) -> None:
+        nums = [1,1,3,6,7,10,7,1,8,5,9,1,4,4,3]
+        max_rob = rob(nums=nums)
+        self.assertEqual(max_rob, 41)   
