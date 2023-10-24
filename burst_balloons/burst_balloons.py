@@ -65,5 +65,5 @@ class TestIncrementGroups(unittest.TestCase):
         nums = [3, 1, 5, 8]
         nums_memoize = NumsMemoize()
         nums_memoize_incremented = increment_groups(nums=nums, nums_memoize=nums_memoize)
-        print(nums_memoize_incremented)
-        assert False
+        combinations_expected = {1: {(0,): 3, (1,): 1, (2,): 5, (3,): 8}}
+        self.assertEqual(combinations_expected, nums_memoize_incremented._combinations)
