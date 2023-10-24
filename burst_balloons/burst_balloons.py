@@ -57,3 +57,13 @@ class TestNumsMemoize(unittest.TestCase):
         self.assertEqual(value, 4)
         with self.assertRaises(KeyError):
             _ = nums_memoize.get(key=(3,))
+
+
+class TestIncrementGroups(unittest.TestCase):
+
+    def test_increment_groups1(self) -> None:
+        nums = [3, 1, 5, 8]
+        nums_memoize = NumsMemoize()
+        nums_memoize_incremented = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        print(nums_memoize_incremented)
+        assert False
