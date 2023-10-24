@@ -16,6 +16,14 @@ class NumsMemoize:
             self._combinations[L]: Dict = {}
         self._combinations[L][key] = value
 
+    def is_key_in_memo(self) -> bool:
+        L = len(key)
+        if L not in self._combinations:
+            return False
+        if key in self._combinations[L]:
+            return True
+        return False
+
     def get(self, key: Tuple) -> int:
         err_msg = f'Key {key} not found!'
         L = len(key)
@@ -50,6 +58,8 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
                 key = (index, combination_index)
                 nums_memoize.add(key=key, value=new_value)
         return nums_memoize
+
+
 
 
 class Solution:
