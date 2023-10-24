@@ -6,6 +6,7 @@ class NumsMemoize:
 
     def __init__(self):
         self._combinations: Dict = {}
+        self.group_size = 0
 
     def add(self, key: Tuple, value: int) -> None:
         self._combinations[key] = value
