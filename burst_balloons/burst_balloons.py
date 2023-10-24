@@ -39,7 +39,12 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
             key = (i,)
             nums_memoize.add(key=key, value=value)
         nums_memoize.increment_group_size()
-    return nums_memoize
+        return nums_memoize
+    combinations = nums_memoize._combinations[nums_memoize.group_size]
+    for combination, value in combinations.items():
+        combination_index = combination[0]
+        for index in range(0, combination_index):
+            pass
 
 
 class Solution:
