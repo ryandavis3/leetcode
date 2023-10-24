@@ -6,9 +6,11 @@ from typing import List, Dict, Tuple
 
 class NumsMemoize:
 
-    def __init__(self):
+    def __init__(self, nums: List[int]):
         self._combinations: Dict = {}
         self._group_size = 0
+        self.nums = nums
+        self.nums_indices = set(range(len(nums)))
 
     def add(self, key: Tuple, value: int) -> None:
         L = len(key)
@@ -58,6 +60,8 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
                 key = (index, combination_index)
                 nums_memoize.add(key=key, value=new_value)
         return nums_memoize
+    for combination, value in combinations.items():
+        combination_index = combination[0]
 
 
 
