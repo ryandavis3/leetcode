@@ -15,9 +15,13 @@ class NumsMemoize:
         self._combinations[L][key] = value
 
     def get(self, key: Tuple) -> int:
-        if key not in self._combinations:
-            raise KeyError(f'Key {key} not found!')
-        return self._combinations[key]
+        err_msg = f'Key {key} not found!'
+        L = len(key)
+        if L not in self._combinations:
+            raise KeyError(err_msg)
+        if key not in self._combinations[L]:
+            raise KeyError(err_msg)
+        return self._combinations[L][key]
 
     def increment_group_size(self) -> None:
         self._group_size += 1
