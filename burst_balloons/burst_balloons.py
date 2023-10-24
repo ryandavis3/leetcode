@@ -33,8 +33,13 @@ class NumsMemoize:
         return self._group_size
 
 
-def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> None:
-
+def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
+    if nums_memoize.group_size == 0:
+        for i, value in enumerate(nums):
+            key = (i,)
+            nums_memoize.add(key=key, value=value)
+        nums_memoize.increment_group_size()
+    return nums_memoize
 
 
 class Solution:
