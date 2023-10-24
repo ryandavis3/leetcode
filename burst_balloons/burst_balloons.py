@@ -6,7 +6,7 @@ class NumsMemoize:
 
     def __init__(self):
         self._combinations: Dict = {}
-        self.group_size = 0
+        self._group_size = 0
 
     def add(self, key: Tuple, value: int) -> None:
         self._combinations[key] = value
@@ -15,6 +15,9 @@ class NumsMemoize:
         if key not in self._combinations:
             raise KeyError(f'Key {key} not found!')
         return self._combinations[key]
+
+    def increment_group_size(self) -> None:
+        self._group_size += 1
 
 
 class Solution:
