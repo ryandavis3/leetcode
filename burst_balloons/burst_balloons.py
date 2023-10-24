@@ -34,17 +34,22 @@ class NumsMemoize:
 
 
 def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
-    if nums_memoize.group_size == 0:
+    G = nums_memoize.group_size
+    if G == 0:
         for i, value in enumerate(nums):
             key = (i,)
             nums_memoize.add(key=key, value=value)
         nums_memoize.increment_group_size()
         return nums_memoize
-    combinations = nums_memoize._combinations[nums_memoize.group_size]
-    for combination, value in combinations.items():
-        combination_index = combination[0]
-        for index in range(0, combination_index):
-            pass
+    combinations = nums_memoize._combinations[G]
+    if G == 1:
+        for combination, value in combinations.items():
+            combination_index = combination[0]
+            for index in range(0, combination_index):
+                new_value = value + nums[index] * nums[combination_index]
+                key = (index, combination_index)
+                nums_memoize.add(key=key, value=new_value)
+        return nums_memoize
 
 
 class Solution:
@@ -72,3 +77,12 @@ class TestIncrementGroups(unittest.TestCase):
         nums_memoize_incremented = increment_groups(nums=nums, nums_memoize=nums_memoize)
         combinations_expected = {1: {(0,): 3, (1,): 1, (2,): 5, (3,): 8}}
         self.assertEqual(combinations_expected, nums_memoize_incremented._combinations)
+
+    def test_increment_groups2(self) -> None:
+        nums = [3, 1, 5, 8]
+        nums_memoize = NumsMemoize()
+        nums_memoize_incremented1 = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        nums_memoize_incremented2 = increment_groups(nums=nums, nums_memoize=nums_memoize_incremented1)
+        combinations = nums_memoize_incremented2._combinations[2]
+        combinations_expected = {(0, 1): 4, (0, 2): 20, (1, 2): 10, (0, 3): 32, (1, 3): 16, (2, 3): 48}
+        self.assertEqual(combinations, combinations_expected)
