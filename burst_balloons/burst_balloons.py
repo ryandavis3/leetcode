@@ -9,7 +9,10 @@ class NumsMemoize:
         self._group_size = 0
 
     def add(self, key: Tuple, value: int) -> None:
-        self._combinations[key] = value
+        L = len(key)
+        if L not in self._combinations:
+            self._combinations[L]: Dict = {}
+        self._combinations[L][key] = value
 
     def get(self, key: Tuple) -> int:
         if key not in self._combinations:
@@ -18,6 +21,14 @@ class NumsMemoize:
 
     def increment_group_size(self) -> None:
         self._group_size += 1
+
+    @property
+    def group_size(self) -> int:
+        return self._group_size
+
+
+def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> None:
+
 
 
 class Solution:
