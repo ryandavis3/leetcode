@@ -47,7 +47,7 @@ class NumsMemoize:
         return self._group_size
 
 
-def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
+def increment_groups(nums: List[int], nums_memoize: NumsMemoize):
     G = nums_memoize.group_size
     if G == 0:
         for i, value in enumerate(nums):
