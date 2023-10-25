@@ -13,3 +13,4 @@ python = "^3.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
+mypy = "^1.6.1"
