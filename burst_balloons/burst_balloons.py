@@ -1,7 +1,7 @@
 # https://leetcode.com/problems/burst-balloons/
 
 import unittest
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Set
 
 
 class NumsMemoize:
@@ -18,13 +18,16 @@ class NumsMemoize:
             self._combinations[L]: Dict = {}
         self._combinations[L][key] = value
 
-    def is_key_in_memo(self) -> bool:
+    def is_key_in_memo(self, key: Tuple) -> bool:
         L = len(key)
         if L not in self._combinations:
             return False
         if key in self._combinations[L]:
             return True
         return False
+
+    def get_remaining_indices(self, key: Tuple) -> Set:
+        pass
 
     def get(self, key: Tuple) -> int:
         err_msg = f'Key {key} not found!'
@@ -72,8 +75,13 @@ class Solution:
 
 
 class TestNumsMemoize(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.nums = [3, 1, 5, 8]
+
     def test_1(self) -> None:
-        nums_memoize = NumsMemoize()
+        nums_memoize = NumsMemoize(nums=self.nums)
         nums_memoize.add(key=(1,), value=1)
         nums_memoize.add(key=(2,), value=3)
         nums_memoize.add(key=(1, 2), value=4)
@@ -82,19 +90,28 @@ class TestNumsMemoize(unittest.TestCase):
         with self.assertRaises(KeyError):
             _ = nums_memoize.get(key=(3,))
 
+    def test_is_key_in_memo(self) -> None:
+        nums_memoize = NumsMemoize(nums=self.nums)
+        nums_memoize.add(key=(1,), value=1)
+        nums_memoize.add(key=(1, 2), value=4)
+        self.assertTrue(nums_memoize.is_key_in_memo(key=(1, 2)))
+        self.assertFalse(nums_memoize.is_key_in_memo(key=(1, 3)))
+
+    def test_remaining_indices(self) -> None:
+        pass
 
 class TestIncrementGroups(unittest.TestCase):
 
     def test_increment_groups1(self) -> None:
         nums = [3, 1, 5, 8]
-        nums_memoize = NumsMemoize()
+        nums_memoize = NumsMemoize(nums=nums)
         nums_memoize_incremented = increment_groups(nums=nums, nums_memoize=nums_memoize)
         combinations_expected = {1: {(0,): 3, (1,): 1, (2,): 5, (3,): 8}}
         self.assertEqual(combinations_expected, nums_memoize_incremented._combinations)
 
     def test_increment_groups2(self) -> None:
         nums = [3, 1, 5, 8]
-        nums_memoize = NumsMemoize()
+        nums_memoize = NumsMemoize(nums=nums)
         nums_memoize_incremented1 = increment_groups(nums=nums, nums_memoize=nums_memoize)
         nums_memoize_incremented2 = increment_groups(nums=nums, nums_memoize=nums_memoize_incremented1)
         combinations = nums_memoize_incremented2._combinations[2]
