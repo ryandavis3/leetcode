@@ -120,7 +120,7 @@ def solve(nums: List[int]) -> int:
 
 class Solution:
     def maxCoins(self, nums: List[int]) -> int:
-        pass
+        return solve(nums=nums)
 
 
 class TestNumsMemoize(unittest.TestCase):
