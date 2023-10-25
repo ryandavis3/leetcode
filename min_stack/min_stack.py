@@ -28,7 +28,10 @@ class MinStack:
     def pop(self) -> None:
         if self._head is None:
             raise ValueError('No head available!')
+        node_id = self._head.node_id
         self._head = self._head.prev
+        if node_id == self._min.node_id:
+            self._min = self._min.prev
 
     def top(self) -> int:
         if self._head is None:
