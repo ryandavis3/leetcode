@@ -10,7 +10,8 @@ class NumsMemoize:
         self._combinations: Dict = {}
         self._group_size = 0
         self.nums = nums
-        self.nums_indices = set(range(len(nums)))
+        self.nums_indices = list(range(len(nums)))
+        self.nums_indices_set = set(self.nums_indices)
 
     def add(self, key: Tuple, value: int) -> None:
         L = len(key)
@@ -65,8 +66,6 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize) -> NumsMemoize:
         return nums_memoize
     for combination, value in combinations.items():
         combination_index = combination[0]
-
-
 
 
 class Solution:
