@@ -64,8 +64,20 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize):
                 key = (index, combination_index)
                 nums_memoize.add(key=key, value=new_value)
         return nums_memoize
-    for combination, value in combinations.items():
-        combination_index = combination[0]
+    for combination, previous_value in combinations.items():
+        for i, index in enumerate(combination):
+            if i == 0:
+                j = 0
+                while j < index:
+                    new_key = (j,) + combination
+                    added_value = nums[j] * nums[combination[index]]
+                    new_value = previous_value + added_value
+                    if nums_memoize.is_key_in_memo(key=new_key):
+                        current_value = nums_memoize.get(key=new_key)
+                    else:
+                        current_value = 0
+                    if new_value > current_value:
+                        nums_memoize.add(key=new_key, value=new_value)
 
 
 class Solution:
