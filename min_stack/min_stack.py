@@ -64,3 +64,14 @@ class TestMinStack(unittest.TestCase):
         top = stack.top()
         self.assertEqual(top, 1)
 
+    def test_get_min(self) -> None:
+        nums = [10, 3, 4, 1, 2]
+        stack = MinStack()
+        for num in nums:
+            stack.push(val=num)
+        min = stack.getMin()
+        self.assertEqual(min, 1)
+        stack.pop()
+        stack.pop()
+        min = stack.getMin()
+        self.assertEqual(min, 3)
