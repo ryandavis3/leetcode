@@ -27,7 +27,7 @@ class MinStack:
 
     def pop(self) -> None:
         if self._head is None:
-            raise ValueError('No head available!')
+            raise ValueError('Stack is empty!')
         node_id = self._head.node_id
         self._head = self._head.prev
         if node_id == self._min.node_id:
@@ -35,13 +35,15 @@ class MinStack:
 
     def top(self) -> int:
         if self._head is None:
-            raise ValueError('No head available!')
+            raise ValueError('Stack is empty!')
         top_value = self._head.value
         return top_value
 
     def getMin(self) -> int:
         # Get the minimum element in the stack
-        pass
+        if self._min is None:
+            raise ValueError('Stack is empty!')
+        return self._min.value
 
 # Your MinStack object will be instantiated and called as such:
 # obj = MinStack()
