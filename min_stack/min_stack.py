@@ -1,4 +1,5 @@
 import unittest
+import uuid
 from typing import Optional
 
 
@@ -6,6 +7,7 @@ class Node:
     def __init__(self, value: int, prev):
         self.value = value
         self.prev = prev
+        self.uuid = str(uuid.uuid4())
 
 
 class MinStack:
