@@ -63,6 +63,7 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize):
                 new_value = value + nums[index] * nums[combination_index]
                 key = (index, combination_index)
                 nums_memoize.add(key=key, value=new_value)
+        nums_memoize.increment_group_size()
         return nums_memoize
     for combination, previous_value in combinations.items():
         for i, index in enumerate(combination):
@@ -70,7 +71,7 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize):
                 j = 0
                 while j < index:
                     new_key = (j,) + combination
-                    added_value = nums[j] * nums[combination[index]]
+                    added_value = nums[j] * nums[index]
                     new_value = previous_value + added_value
                     if nums_memoize.is_key_in_memo(key=new_key):
                         current_value = nums_memoize.get(key=new_key)
@@ -78,6 +79,43 @@ def increment_groups(nums: List[int], nums_memoize: NumsMemoize):
                         current_value = 0
                     if new_value > current_value:
                         nums_memoize.add(key=new_key, value=new_value)
+                    j += 1
+            elif i < len(nums) - 1:
+                j = combination[i-1] + 1
+                while j < index:
+                    new_key = combination[:i] + (j,) + combination[i:]
+                    added_value = nums[combination[i-1]] * nums[j] * nums[index]
+                    new_value = previous_value + added_value
+                    if nums_memoize.is_key_in_memo(key=new_key):
+                        current_value = nums_memoize.get(key=new_key)
+                    else:
+                        current_value = 0
+                    if new_value > current_value:
+                        nums_memoize.add(key=new_key, value=new_value)
+                    j += 1
+            else:
+                j = index + 1
+                while j < len(nums):
+                    new_key = combination[i:] + (j,)
+                    added_value = nums[index] * nums[j]
+                    new_value = previous_value + added_value
+                    if nums_memoize.is_key_in_memo(key=new_key):
+                        current_value = nums_memoize.get(key=new_key)
+                    else:
+                        current_value = 0
+                    if new_value > current_value:
+                        nums_memoize.add(key=new_key, value=new_value)
+                    j += 1
+    nums_memoize.increment_group_size()
+
+
+def solve(nums: List[int]) -> int:
+    nums_memoize = NumsMemoize(nums=nums)
+    L = len(nums)
+    for _ in range(L):
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+    index_tuple = tuple(range(len(nums)))
+    return nums_memoize._combinations[L][index_tuple]
 
 
 class Solution:
@@ -128,3 +166,16 @@ class TestIncrementGroups(unittest.TestCase):
         combinations = nums_memoize._combinations[2]
         combinations_expected = {(0, 1): 4, (0, 2): 20, (1, 2): 10, (0, 3): 32, (1, 3): 16, (2, 3): 48}
         self.assertEqual(combinations, combinations_expected)
+
+    def test_increment_groups3(self) -> None:
+        nums = [3, 1, 5, 8]
+        nums_memoize = NumsMemoize(nums=nums)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+
+    def test_solve(self):
+        nums = [3, 1, 5, 8]
+        max_balloon = solve(nums=nums)
+        self.assertEqual(max_balloon, 167)
