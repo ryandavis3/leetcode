@@ -104,15 +104,15 @@ class TestIncrementGroups(unittest.TestCase):
     def test_increment_groups1(self) -> None:
         nums = [3, 1, 5, 8]
         nums_memoize = NumsMemoize(nums=nums)
-        nums_memoize_incremented = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
         combinations_expected = {1: {(0,): 3, (1,): 1, (2,): 5, (3,): 8}}
-        self.assertEqual(combinations_expected, nums_memoize_incremented._combinations)
+        self.assertEqual(combinations_expected, nums_memoize._combinations)
 
     def test_increment_groups2(self) -> None:
         nums = [3, 1, 5, 8]
         nums_memoize = NumsMemoize(nums=nums)
-        nums_memoize_incremented1 = increment_groups(nums=nums, nums_memoize=nums_memoize)
-        nums_memoize_incremented2 = increment_groups(nums=nums, nums_memoize=nums_memoize_incremented1)
-        combinations = nums_memoize_incremented2._combinations[2]
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        _ = increment_groups(nums=nums, nums_memoize=nums_memoize)
+        combinations = nums_memoize._combinations[2]
         combinations_expected = {(0, 1): 4, (0, 2): 20, (1, 2): 10, (0, 3): 32, (1, 3): 16, (2, 3): 48}
         self.assertEqual(combinations, combinations_expected)
