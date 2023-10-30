@@ -28,6 +28,15 @@ def predict_winner(nums: List[int], turn: bool) -> int:
         if turn:
             return difference
         return -difference
+    first_value = nums[0]
+    last_value = nums[-1]
+    if turn:
+        choose_first_result = first_value + predict_winner(nums=nums[1:], turn=False)
+        choose_last_result = last_value + predict_winner(nums=nums[:-1], turn=False)
+    else:
+        choose_first_result = -first_value + predict_winner(nums=nums[1:], turn=True)
+        choose_last_result = -last_value + predict_winner(nums=nums[:-1], turn=True)
+    return max(choose_first_result, choose_last_result)
 
 
 
@@ -50,3 +59,8 @@ class TestPredictWinner(unittest.TestCase):
         self.assertEqual(nums1, 4)
         nums2 = predict_winner(nums=nums, turn=False)
         self.assertEqual(nums2, -4)
+
+    def test3(self) -> None:
+        nums = [1, 5, 2]
+        nums1 = predict_winner(nums=nums, turn=True)
+        self.assertEqual(nums1, -2)
