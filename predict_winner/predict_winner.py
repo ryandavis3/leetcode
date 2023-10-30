@@ -19,14 +19,14 @@ class MemoizedMaxPoints:
 
 
 class MemoizedMaxPointsInstance:
-    __instance: Optional[MemoizedMaxPoints] = None
+    _instance: Optional[MemoizedMaxPoints] = None
 
 
 def get_memoized_singleton() -> MemoizedMaxPoints:
-    if MemoizedMaxPointsInstance.__instance is None:
+    if MemoizedMaxPointsInstance._instance is None:
         memoized_max_points = MemoizedMaxPoints()
-        MemoizedMaxPointsInstance.__instance = memoized_max_points
-    return MemoizedMaxPointsInstance.__instance
+        MemoizedMaxPointsInstance._instance = memoized_max_points
+    return MemoizedMaxPointsInstance._instance
 
 
 @dataclass(frozen=True)
@@ -113,6 +113,7 @@ class Solution:
 
 class TestPredictWinner(unittest.TestCase):
     def test1(self) -> None:
+        print(MemoizedMaxPointsInstance._instance)
         game_state = GameState(
             nums=[5, 2],
             turn=True,
