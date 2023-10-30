@@ -1,4 +1,5 @@
-from typing import Dict, List, Tuple
+import unittest
+from typing import Dict, List, Tuple, Optional
 
 
 class MemoizedMaxPoints:
@@ -16,6 +17,24 @@ class MemoizedMaxPoints:
         self.max_points[key] = points
 
 
+def predict_winner(nums: List[int], turn: bool) -> int:
+    if len(nums) == 2:
+        difference = abs(nums[0] - nums[1])
+        if turn:
+            return difference
+        return -difference
+
+
+
 class Solution:
     def predictTheWinner(self, nums: List[int]) -> bool:
         pass
+
+
+class TestPredictWinner(unittest.TestCase):
+    def test1(self) -> None:
+        nums = [5, 2]
+        nums1 = predict_winner(nums=nums, turn=True)
+        self.assertEqual(nums1, 3)
+        nums2 = predict_winner(nums=nums, turn=False)
+        self.assertEqual(nums2, -3)
