@@ -63,6 +63,7 @@ def predict_winner(game_state: GameState) -> int:
             player_two_points=game_state.player_two_points,
         )
         choose_last_result = predict_winner(game_state=next_game_state_last)
+        return max(choose_first_result, choose_last_result)
     else:
         next_game_state_first = GameState(
             nums=game_state.nums[1:],
@@ -78,7 +79,7 @@ def predict_winner(game_state: GameState) -> int:
             player_two_points=game_state.player_two_points + last_value,
         )
         choose_last_result = predict_winner(game_state=next_game_state_last)
-    return max(choose_first_result, choose_last_result)
+        return min(choose_first_result, choose_last_result)
 
 
 
