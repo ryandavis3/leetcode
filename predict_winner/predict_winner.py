@@ -18,6 +18,17 @@ class MemoizedMaxPoints:
         self.max_points[key] = points
 
 
+class MemoizedMaxPointsInstance:
+    __instance: Optional[MemoizedMaxPoints] = None
+
+
+def get_memoized_singleton() -> MemoizedMaxPoints:
+    if MemoizedMaxPointsInstance.__instance is None:
+        memoized_max_points = MemoizedMaxPoints()
+        MemoizedMaxPointsInstance.__instance = memoized_max_points
+    return MemoizedMaxPointsInstance.__instance
+
+
 @dataclass(frozen=True)
 class GameState:
     nums: List[int]
@@ -27,6 +38,10 @@ class GameState:
 
 
 def predict_winner(game_state: GameState) -> int:
+    memoized_max_points = get_memoized_singleton()
+    max_points = memoized_max_points.get(nums=game_state.nums, turn=game_state.turn)
+    if max_points is not None:
+        return max_points
     next_turn = not game_state.turn
     if len(game_state.nums) == 1:
         if game_state.turn:
@@ -35,7 +50,9 @@ def predict_winner(game_state: GameState) -> int:
         else:
             player_one_points = game_state.player_one_points
             player_two_points = game_state.player_two_points + game_state.nums[0]
-        return player_one_points - player_two_points
+        max_points = player_one_points - player_two_points
+        memoized_max_points.put(nums=game_state.nums, turn=game_state.turn, points=max_points)
+        return max_points
     if len(game_state.nums) == 2:
         max_points = max(game_state.nums)
         min_points = min(game_state.nums)
@@ -45,7 +62,9 @@ def predict_winner(game_state: GameState) -> int:
         else:
             player_one_points = game_state.player_one_points + min_points
             player_two_points = game_state.player_two_points + max_points
-        return player_one_points - player_two_points
+        max_points = player_one_points - player_two_points
+        memoized_max_points.put(nums=game_state.nums, turn=game_state.turn, points=max_points)
+        return max_points
     first_value = game_state.nums[0]
     last_value = game_state.nums[-1]
     if game_state.turn:
@@ -63,7 +82,9 @@ def predict_winner(game_state: GameState) -> int:
             player_two_points=game_state.player_two_points,
         )
         choose_last_result = predict_winner(game_state=next_game_state_last)
-        return max(choose_first_result, choose_last_result)
+        max_points = max(choose_first_result, choose_last_result)
+        memoized_max_points.put(nums=game_state.nums, turn=game_state.turn, points=max_points)
+        return max_points
     else:
         next_game_state_first = GameState(
             nums=game_state.nums[1:],
@@ -79,7 +100,9 @@ def predict_winner(game_state: GameState) -> int:
             player_two_points=game_state.player_two_points + last_value,
         )
         choose_last_result = predict_winner(game_state=next_game_state_last)
-        return min(choose_first_result, choose_last_result)
+        max_points = max(choose_first_result, choose_last_result)
+        memoized_max_points.put(nums=game_state.nums, turn=game_state.turn, points=max_points)
+        return max_points
 
 
 
