@@ -18,6 +18,11 @@ class MemoizedMaxPoints:
 
 
 def predict_winner(nums: List[int], turn: bool) -> int:
+    if len(nums) == 1:
+        value = nums[0]
+        if turn:
+            return value
+        return -value
     if len(nums) == 2:
         difference = abs(nums[0] - nums[1])
         if turn:
@@ -38,3 +43,10 @@ class TestPredictWinner(unittest.TestCase):
         self.assertEqual(nums1, 3)
         nums2 = predict_winner(nums=nums, turn=False)
         self.assertEqual(nums2, -3)
+
+    def test2(self) -> None:
+        nums = [4]
+        nums1 = predict_winner(nums=nums, turn=True)
+        self.assertEqual(nums1, 4)
+        nums2 = predict_winner(nums=nums, turn=False)
+        self.assertEqual(nums2, -4)
