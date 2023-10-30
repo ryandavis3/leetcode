@@ -100,7 +100,7 @@ def predict_winner(game_state: GameState) -> int:
             player_two_points=game_state.player_two_points + last_value,
         )
         choose_last_result = predict_winner(game_state=next_game_state_last)
-        max_points = max(choose_first_result, choose_last_result)
+        max_points = min(choose_first_result, choose_last_result)
         memoized_max_points.put(nums=game_state.nums, turn=game_state.turn, points=max_points)
         return max_points
 
@@ -180,6 +180,6 @@ class TestPredictWinner(unittest.TestCase):
             player_one_points=0,
             player_two_points=0,
         )
-        nums2 = predict_winner(game_state=game_state)
-        self.assertEqual(nums2, 222)
+        result = predict_winner(game_state=game_state)
+        self.assertEqual(result, -43)
 
