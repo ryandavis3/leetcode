@@ -108,7 +108,11 @@ def predict_winner(game_state: GameState) -> int:
 
 class Solution:
     def predictTheWinner(self, nums: List[int]) -> bool:
-        pass
+        game_state = GameState(nums=nums, turn=True, player_one_points=0, player_two_points=0)
+        points = predict_winner(game_state=game_state)
+        if points < 0:
+            return False
+        return True
 
 
 class TestPredictWinner(unittest.TestCase):
@@ -168,3 +172,14 @@ class TestPredictWinner(unittest.TestCase):
         )
         nums2 = predict_winner(game_state=game_state)
         self.assertEqual(nums2, 222)
+
+    def test5(self) -> None:
+        game_state = GameState(
+            nums=[2, 4, 55, 6, 8],
+            turn=True,
+            player_one_points=0,
+            player_two_points=0,
+        )
+        nums2 = predict_winner(game_state=game_state)
+        self.assertEqual(nums2, 222)
+
