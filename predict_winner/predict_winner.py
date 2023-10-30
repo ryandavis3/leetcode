@@ -12,9 +12,9 @@ def predict_winner(nums: List[int]) -> bool:
         max_right = nums[right] - max_diff(left, right-1)
         return max(max_left, max_right)
 
-    return max_diff(0, n-1)
+    return max_diff(0, n-1) >= 0
 
 
 class Solution:
     def predictTheWinner(self, nums: List[int]) -> bool:
-        pass
+        return predict_winner(nums=nums)
