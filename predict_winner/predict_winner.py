@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
 
 
@@ -17,7 +18,16 @@ class MemoizedMaxPoints:
         self.max_points[key] = points
 
 
+@dataclass(frozen=True)
+class GameState:
+    nums: List[int]
+    turn: bool
+    player_one_points: int
+    player_two_points: int
+
+
 def predict_winner(nums: List[int], turn: bool) -> int:
+    print(nums)
     if len(nums) == 1:
         value = nums[0]
         if turn:
@@ -64,3 +74,8 @@ class TestPredictWinner(unittest.TestCase):
         nums = [1, 5, 2]
         nums1 = predict_winner(nums=nums, turn=True)
         self.assertEqual(nums1, -2)
+
+    def test4(self) -> None:
+        nums = [1, 5, 233, 7]
+        nums2 = predict_winner(nums=nums, turn=True)
+        self.assertEqual(nums2, -2)
