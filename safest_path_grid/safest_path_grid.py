@@ -63,26 +63,6 @@ def maximum_safeness_factor(grid: List[List[int]]) -> MaxSafenessFactorResults:
     return max_safeness_factor_results
 
 
-def maximum_safeness_factor2(grid: List[List[int]]) -> MaxSafenessFactorResults:
-    _grid = Grid(grid=grid)
-    rows = len(grid)
-    columns = len(grid[0])
-    cell_safe_factors: List[List[int]] = []
-    for _ in range(rows):
-        row = [None] * columns
-        cell_safe_factors += [row]
-    for i in range(rows):
-        for j in range(columns):
-            cell_safe_factor = _grid.get_minimum_manhattan_distance_to_thief(i=i, j=j)
-            cell_safe_factors[i][j] = cell_safe_factor
-    max_safeness_factor_results = MaxSafenessFactorResults(
-        grid=_grid,
-        path_safe_factors=path_safe_factors,
-        max_safeness_factor=path_safe_factors[-1][-1],
-    )
-    return max_safeness_factor_results
-
-
 class Solution:
     def maximumSafenessFactor(self, grid: List[List[int]]) -> int:
         results = maximum_safeness_factor(grid=grid)
