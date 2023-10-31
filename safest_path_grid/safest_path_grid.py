@@ -34,7 +34,7 @@ def maximum_safeness_factor(grid: List[List[int]]) -> int:
         path_safe_factors += [row]
     for i in range(rows):
         for j in range(columns):
-            cell_safe_factor = grid.get_minimum_manhattan_distance_to_thief(i=i, j=j)
+            cell_safe_factor = _grid.get_minimum_manhattan_distance_to_thief(i=i, j=j)
             if i == 0 and j == 0:
                 path_safe_factors[i][j] = cell_safe_factor
             elif i == 0 and j > 0:
@@ -42,7 +42,7 @@ def maximum_safeness_factor(grid: List[List[int]]) -> int:
             elif i > 0 and j == 0:
                 path_safe_factors[i][j] = min(path_safe_factors[i-1][j], cell_safe_factor)
             else:
-                safest_pre_path = max(path_safe_factors[i-1][j], path_safe_factors[i-1][j])
+                safest_pre_path = max(path_safe_factors[i-1][j], path_safe_factors[i][j-1])
                 path_safe_factors[i][j] = min(safest_pre_path, cell_safe_factor)
     return path_safe_factors[-1][-1]
 
@@ -76,3 +76,5 @@ class TestSafestPath(unittest.TestCase):
 
     def test2(self) -> None:
         grid = [[0, 0, 1], [0, 0, 0], [0, 0, 0]]
+        max_safeness_factor = maximum_safeness_factor(grid=grid)
+        self.assertEqual(max_safeness_factor, 2)
