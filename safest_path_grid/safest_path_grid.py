@@ -1,5 +1,9 @@
 import unittest
+from dataclasses import dataclass
 from typing import List, Tuple
+
+
+LARGE_NUMBER = 10 ** 10
 
 
 class Grid:
@@ -24,13 +28,20 @@ class Grid:
         return min_distance
 
 
-def maximum_safeness_factor(grid: List[List[int]]) -> int:
+@dataclass(frozen=True)
+class MaxSafenessFactorResults:
+    grid: Grid
+    path_safe_factors: List[List]
+    max_safeness_factor: int
+
+
+def maximum_safeness_factor(grid: List[List[int]]) -> MaxSafenessFactorResults:
     _grid = Grid(grid=grid)
     rows = len(grid)
     columns = len(grid[0])
     path_safe_factors: List[List[int]] = []
     for _ in range(rows):
-        row = [0] * columns
+        row = [LARGE_NUMBER] * columns
         path_safe_factors += [row]
     for i in range(rows):
         for j in range(columns):
@@ -44,12 +55,38 @@ def maximum_safeness_factor(grid: List[List[int]]) -> int:
             else:
                 safest_pre_path = max(path_safe_factors[i-1][j], path_safe_factors[i][j-1])
                 path_safe_factors[i][j] = min(safest_pre_path, cell_safe_factor)
-    return path_safe_factors[-1][-1]
+    max_safeness_factor_results = MaxSafenessFactorResults(
+        grid=_grid,
+        path_safe_factors=path_safe_factors,
+        max_safeness_factor=path_safe_factors[-1][-1],
+    )
+    return max_safeness_factor_results
+
+
+def maximum_safeness_factor2(grid: List[List[int]]) -> MaxSafenessFactorResults:
+    _grid = Grid(grid=grid)
+    rows = len(grid)
+    columns = len(grid[0])
+    cell_safe_factors: List[List[int]] = []
+    for _ in range(rows):
+        row = [None] * columns
+        cell_safe_factors += [row]
+    for i in range(rows):
+        for j in range(columns):
+            cell_safe_factor = _grid.get_minimum_manhattan_distance_to_thief(i=i, j=j)
+            cell_safe_factors[i][j] = cell_safe_factor
+    max_safeness_factor_results = MaxSafenessFactorResults(
+        grid=_grid,
+        path_safe_factors=path_safe_factors,
+        max_safeness_factor=path_safe_factors[-1][-1],
+    )
+    return max_safeness_factor_results
 
 
 class Solution:
     def maximumSafenessFactor(self, grid: List[List[int]]) -> int:
-        pass
+        results = maximum_safeness_factor(grid=grid)
+        return results.max_safeness_factor
 
 
 class TestGrid(unittest.TestCase):
@@ -76,5 +113,35 @@ class TestSafestPath(unittest.TestCase):
 
     def test2(self) -> None:
         grid = [[0, 0, 1], [0, 0, 0], [0, 0, 0]]
-        max_safeness_factor = maximum_safeness_factor(grid=grid)
-        self.assertEqual(max_safeness_factor, 2)
+        results = maximum_safeness_factor(grid=grid)
+        self.assertEqual(results.max_safeness_factor, 2)
+
+    def test3(self) -> None:
+        grid = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+         [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+         [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+         [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]
+        results = maximum_safeness_factor(grid=grid)
+        self.assertEqual(results.max_safeness_factor, 2)
