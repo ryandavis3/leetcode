@@ -23,7 +23,7 @@ def get_most_frequent_even(nums: List[int]) -> int:
 
 class Solution:
     def mostFrequentEven(self, nums: List[int]) -> int:
-        pass
+        return get_most_frequent_even(nums=nums)
 
 
 class TestMostFrequentEven(unittest.TestCase):
