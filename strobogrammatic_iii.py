@@ -15,7 +15,8 @@ class StrobogrammaticNumbers:
     def get_all_numbers(self) -> List[str]:
         nums: List[str] = []
         for len, nums_len in self.numbers.items():
-            nums += nums_len
+            if len > 0:
+                nums += nums_len
         return nums
 
     @staticmethod
@@ -43,7 +44,7 @@ class StrobogrammaticNumbers:
             nums_generated_minus_two += nums_generated
         self.numbers[len] = nums_generated_minus_two
         self.max_len = max(self.max_len, len)
-        if len(nums_generated_minus_two) == 0:
+        if not nums_generated_minus_two:
             return False
         return True
 
@@ -75,8 +76,6 @@ class StrobogrammaticNumbers:
             numbers_below_high = self.generate_numbers_of_len(len=len, high=high)
             len += 1
 
-
-
 class Solution:
     def strobogrammaticInRange(self, low: str, high: str) -> int:
         pass
@@ -103,6 +102,9 @@ class TestStrobogrammaticNumbers(TestCase):
         strobo.generate_numbers_of_len(len=2, high=self.high)
         numbers_expected = ['00', '11', '88', '69', '96']
         self.assertEqual(strobo.numbers[2], numbers_expected)
+        numbers = strobo.get_all_numbers()
+        numbers_expected = ['0', '1', '8', '00', '11', '88', '69', '96']
+        self.assertEqual(numbers, numbers_expected)
 
     def test_generate_numbers_of_len_3(self) -> None:
         strobo = StrobogrammaticNumbers()
