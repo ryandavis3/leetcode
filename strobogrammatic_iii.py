@@ -44,7 +44,8 @@ class StrobogrammaticNumbers:
             nums_generated_minus_two += nums_generated
         self.numbers[len] = nums_generated_minus_two
         self.max_len = max(self.max_len, len)
-        if not nums_generated_minus_two:
+        nums_valid = self.remove_invalid_nums(nums=nums_generated_minus_two)
+        if not nums_valid:
             return False
         return True
 
@@ -75,6 +76,12 @@ class StrobogrammaticNumbers:
         while numbers_below_high:
             numbers_below_high = self.generate_numbers_of_len(len=len, high=high)
             len += 1
+        nums = self.get_all_numbers()
+        nums = self.remove_invalid_nums(nums=nums)
+        num_ints = [int(num) for num in nums]
+        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int >= high]
+        return num_ints
+
 
 class Solution:
     def strobogrammaticInRange(self, low: str, high: str) -> int:
@@ -116,3 +123,9 @@ class TestStrobogrammaticNumbers(TestCase):
     def test_generate_numbers_up_to_len_4(self) -> None:
         strobo = StrobogrammaticNumbers()
         _ = strobo.generate_numbers_up_to_len(max_len=4, low=0, high=self.high)
+
+    def test_generate_numbers_low_high(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        numbers = strobo.generate_numbers_low_high(low=50, high=1000)
+        print(numbers)
+        assert False
