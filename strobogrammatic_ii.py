@@ -11,19 +11,25 @@ class StrobogrammaticNumbers:
         self.max_len = 1
 
     @staticmethod
-    def generate_from_number(self, num: str) -> List[str]:
+    def generate_from_number(num: str) -> List[str]:
         nums_generated: List[str] = []
         for increment_num in SAME_NUMBER:
             num_generated = increment_num + num + increment_num
             nums_generated += [num_generated]
         nums_generated += ['6' + num + '9']
         nums_generated += ['9' + num + '6']
-        return num_generated
+        return nums_generated
 
     def generate_numbers_of_len(self, len: int) -> None:
         if len < 2:
             raise ValueError('Number length must be greater than two!')
-        numbers_len_minus_two = self.numbers[len-2]
+        nums_len_minus_two = self.numbers[len-2]
+        nums_generated_minus_two: List[str] = []
+        for num in nums_len_minus_two:
+            nums_generated = self.generate_from_number(num=num)
+            nums_generated_minus_two += nums_generated
+        self.numbers[len] = nums_generated_minus_two
+        self.max_len = max(self.max_len, len)
 
 
 class Solution:
