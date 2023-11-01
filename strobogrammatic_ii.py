@@ -1,7 +1,9 @@
 from unittest import TestCase
 from typing import Dict, List
 
+
 SAME_NUMBER = ['0', '1', '8']
+
 
 class StrobogrammaticNumbers:
     def __init__(self):
@@ -31,10 +33,32 @@ class StrobogrammaticNumbers:
         self.numbers[len] = nums_generated_minus_two
         self.max_len = max(self.max_len, len)
 
+    @staticmethod
+    def is_valid_num(num: str) -> bool:
+        if num == '0':
+            return True
+        if num[0] == '0':
+            return False
+        return True
+
+    @staticmethod
+    def remove_invalid_nums(nums: List[str]) -> List[str]:
+        return [num for num in nums if StrobogrammaticNumbers.is_valid_num(num=num)]
+
+    def generate_numbers_up_to_len(self, max_len: int) -> None:
+        for len in range(2, max_len+1):
+            self.generate_numbers_of_len(len=len)
+        nums = self.numbers[max_len]
+        nums = self.remove_invalid_nums(nums=nums)
+        return nums
+
 
 class Solution:
     def findStrobogrammatic(self, n: int) -> List[str]:
-        pass
+        strobo = StrobogrammaticNumbers()
+        nums = strobo.generate_numbers_up_to_len(max_len=n)
+        return nums
+
 
 
 class TestStrobogrammaticNumbers(TestCase):
@@ -53,7 +77,11 @@ class TestStrobogrammaticNumbers(TestCase):
     def test_generate_numbers_of_len_3(self) -> None:
         strobo = StrobogrammaticNumbers()
         strobo.generate_numbers_of_len(len=3)
-        print(sorted(strobo.numbers[3]))
-        numbers_expected = ['000', '010', '080', '101', '111', '181', '609', '619', '689', '808', '818', '888', '906', '916', '986']
+        numbers_expected = ['000', '010', '080', '101', '111', '181', '609', '619',
+                            '689', '808', '818', '888', '906', '916', '986']
         self.assertEqual(sorted(strobo.numbers[3]), numbers_expected)
+
+    def test_generate_numbers_up_to_len_4(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        _ = strobo.generate_numbers_up_to_len(max_len=4)
 
