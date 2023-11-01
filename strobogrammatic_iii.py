@@ -12,6 +12,12 @@ class StrobogrammaticNumbers:
         self.numbers[1] = ['0', '1', '8']
         self.max_len = 1
 
+    def get_all_numbers(self) -> List[str]:
+        nums: List[str] = []
+        for len, nums_len in self.numbers.items():
+            nums += nums_len
+        return nums
+
     @staticmethod
     def generate_from_number(num: str, high: int) -> List[str]:
         nums_generated: List[str] = []
@@ -27,7 +33,7 @@ class StrobogrammaticNumbers:
             nums_generated += [nine_start_num]
         return nums_generated
 
-    def generate_numbers_of_len(self, len: int, high: int) -> None:
+    def generate_numbers_of_len(self, len: int, high: int) -> bool:
         if len < 2:
             raise ValueError('Number length must be greater than two!')
         nums_len_minus_two = self.numbers[len-2]
@@ -37,6 +43,9 @@ class StrobogrammaticNumbers:
             nums_generated_minus_two += nums_generated
         self.numbers[len] = nums_generated_minus_two
         self.max_len = max(self.max_len, len)
+        if len(nums_generated_minus_two) == 0:
+            return False
+        return True
 
     @staticmethod
     def is_valid_num(num: str) -> bool:
@@ -58,6 +67,14 @@ class StrobogrammaticNumbers:
         num_ints = [int(num) for num in nums]
         num_ints = [num_int for num_int in num_ints if num_int >= low and num_int >= high]
         return num_ints
+
+    def generate_numbers_low_high(self, low: int, high: int) -> List[int]:
+        numbers_below_high = True
+        len = 2
+        while numbers_below_high:
+            numbers_below_high = self.generate_numbers_of_len(len=len, high=high)
+            len += 1
+
 
 
 class Solution:
