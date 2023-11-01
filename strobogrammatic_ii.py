@@ -1,3 +1,4 @@
+from unittest import TestCase
 from typing import Dict, List
 
 SAME_NUMBER = ['0', '1', '8']
@@ -9,6 +10,7 @@ class StrobogrammaticNumbers:
         self.numbers[1] = ['0', '1', '8']
         self.max_len = 1
 
+    @staticmethod
     def generate_from_number(self, num: str) -> List[str]:
         nums_generated: List[str] = []
         for increment_num in SAME_NUMBER:
@@ -27,3 +29,11 @@ class StrobogrammaticNumbers:
 class Solution:
     def findStrobogrammatic(self, n: int) -> List[str]:
         pass
+
+
+class TestStrobogrammaticNumbers(TestCase):
+
+    def test_generate_from_number(self) -> None:
+        generated_nums = StrobogrammaticNumbers.generate_from_number(num='')
+        generated_nums_expected = ['00', '11', '88', '69', '96']
+        self.assertEqual(generated_nums, generated_nums_expected)
