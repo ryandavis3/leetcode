@@ -43,3 +43,17 @@ class TestStrobogrammaticNumbers(TestCase):
         generated_nums = StrobogrammaticNumbers.generate_from_number(num='')
         generated_nums_expected = ['00', '11', '88', '69', '96']
         self.assertEqual(generated_nums, generated_nums_expected)
+
+    def test_generate_numbers_of_len_2(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        strobo.generate_numbers_of_len(len=2)
+        numbers_expected = ['00', '11', '88', '69', '96']
+        self.assertEqual(strobo.numbers[2], numbers_expected)
+
+    def test_generate_numbers_of_len_3(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        strobo.generate_numbers_of_len(len=3)
+        print(sorted(strobo.numbers[3]))
+        numbers_expected = ['000', '010', '080', '101', '111', '181', '609', '619', '689', '808', '818', '888', '906', '916', '986']
+        self.assertEqual(sorted(strobo.numbers[3]), numbers_expected)
+
