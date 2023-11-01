@@ -13,22 +13,27 @@ class StrobogrammaticNumbers:
         self.max_len = 1
 
     @staticmethod
-    def generate_from_number(num: str) -> List[str]:
+    def generate_from_number(num: str, high: int) -> List[str]:
         nums_generated: List[str] = []
         for increment_num in SAME_NUMBER:
             num_generated = increment_num + num + increment_num
-            nums_generated += [num_generated]
-        nums_generated += ['6' + num + '9']
-        nums_generated += ['9' + num + '6']
+            if int(num_generated) <= high:
+                nums_generated += [num_generated]
+        six_start_num = '6' + num + '9'
+        if int(six_start_num) <= high:
+            nums_generated += [six_start_num]
+        nine_start_num = '9' + num + '6'
+        if int(nine_start_num) <= high:
+            nums_generated += [nine_start_num]
         return nums_generated
 
-    def generate_numbers_of_len(self, len: int) -> None:
+    def generate_numbers_of_len(self, len: int, high: int) -> None:
         if len < 2:
             raise ValueError('Number length must be greater than two!')
         nums_len_minus_two = self.numbers[len-2]
         nums_generated_minus_two: List[str] = []
         for num in nums_len_minus_two:
-            nums_generated = self.generate_from_number(num=num)
+            nums_generated = self.generate_from_number(num=num, high=high)
             nums_generated_minus_two += nums_generated
         self.numbers[len] = nums_generated_minus_two
         self.max_len = max(self.max_len, len)
@@ -52,6 +57,41 @@ class StrobogrammaticNumbers:
         nums = self.remove_invalid_nums(nums=nums)
         return nums
 
+
 class Solution:
     def strobogrammaticInRange(self, low: str, high: str) -> int:
         pass
+
+
+class TestStrobogrammaticNumbers(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.high = 10 ** 10
+
+    def test_generate_from_number(self) -> None:
+        generated_nums = StrobogrammaticNumbers.generate_from_number(num='', high=self.high)
+        generated_nums_expected = ['00', '11', '88', '69', '96']
+        self.assertEqual(generated_nums, generated_nums_expected)
+
+    def test_generate_from_number_max_70(self) -> None:
+        generated_nums = StrobogrammaticNumbers.generate_from_number(num='', high=70)
+        generated_nums_expected = ['00', '11', '69']
+        self.assertEqual(generated_nums, generated_nums_expected)
+
+    def test_generate_numbers_of_len_2(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        strobo.generate_numbers_of_len(len=2, high=self.high)
+        numbers_expected = ['00', '11', '88', '69', '96']
+        self.assertEqual(strobo.numbers[2], numbers_expected)
+
+    def test_generate_numbers_of_len_3(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        strobo.generate_numbers_of_len(len=3, high=self.high)
+        numbers_expected = ['000', '010', '080', '101', '111', '181', '609', '619',
+                            '689', '808', '818', '888', '906', '916', '986']
+        self.assertEqual(sorted(strobo.numbers[3]), numbers_expected)
+
+    def test_generate_numbers_up_to_len_4(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        _ = strobo.generate_numbers_up_to_len(max_len=4)
