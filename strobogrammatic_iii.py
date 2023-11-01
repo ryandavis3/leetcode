@@ -50,12 +50,14 @@ class StrobogrammaticNumbers:
     def remove_invalid_nums(nums: List[str]) -> List[str]:
         return [num for num in nums if StrobogrammaticNumbers.is_valid_num(num=num)]
 
-    def generate_numbers_up_to_len(self, max_len: int) -> None:
+    def generate_numbers_up_to_len(self, max_len: int, low: int, high: int) -> List[int]:
         for len in range(2, max_len+1):
-            self.generate_numbers_of_len(len=len)
+            self.generate_numbers_of_len(len=len, high=high)
         nums = self.numbers[max_len]
         nums = self.remove_invalid_nums(nums=nums)
-        return nums
+        num_ints = [int(num) for num in nums]
+        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int >= high]
+        return num_ints
 
 
 class Solution:
@@ -94,4 +96,4 @@ class TestStrobogrammaticNumbers(TestCase):
 
     def test_generate_numbers_up_to_len_4(self) -> None:
         strobo = StrobogrammaticNumbers()
-        _ = strobo.generate_numbers_up_to_len(max_len=4)
+        _ = strobo.generate_numbers_up_to_len(max_len=4, low=0, high=self.high)
