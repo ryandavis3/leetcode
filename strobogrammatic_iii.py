@@ -67,7 +67,7 @@ class StrobogrammaticNumbers:
         nums = self.numbers[max_len]
         nums = self.remove_invalid_nums(nums=nums)
         num_ints = [int(num) for num in nums]
-        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int >= high]
+        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int <= high]
         return num_ints
 
     def generate_numbers_low_high(self, low: int, high: int) -> List[int]:
@@ -79,7 +79,7 @@ class StrobogrammaticNumbers:
         nums = self.get_all_numbers()
         nums = self.remove_invalid_nums(nums=nums)
         num_ints = [int(num) for num in nums]
-        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int >= high]
+        num_ints = [num_int for num_int in num_ints if num_int >= low and num_int <= high]
         return num_ints
 
 
@@ -124,8 +124,14 @@ class TestStrobogrammaticNumbers(TestCase):
         strobo = StrobogrammaticNumbers()
         _ = strobo.generate_numbers_up_to_len(max_len=4, low=0, high=self.high)
 
-    def test_generate_numbers_low_high(self) -> None:
+    def test_generate_numbers_low_high1(self) -> None:
         strobo = StrobogrammaticNumbers()
-        numbers = strobo.generate_numbers_low_high(low=50, high=1000)
-        print(numbers)
-        assert False
+        numbers = strobo.generate_numbers_low_high(low=0, high=100)
+        numbers_expected = [0, 1, 8, 11, 88, 69, 96]
+        self.assertEqual(numbers, numbers_expected)
+
+    def test_generate_numbers_low_high2(self) -> None:
+        strobo = StrobogrammaticNumbers()
+        numbers = strobo.generate_numbers_low_high(low=100, high=1000)
+        numbers_expected = [101, 808, 609, 906, 111, 818, 619, 916, 181, 888, 689, 986]
+        self.assertEqual(numbers, numbers_expected)
