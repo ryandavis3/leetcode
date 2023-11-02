@@ -81,7 +81,12 @@ class TestMaximalSquare(TestCase):
         self.assertEqual(maximal_square_results.max_square_area, 0)
 
     def test5(self) -> None:
-        matrix = [["1", "1", "1", "1", "0"], ["1", "1", "1", "1", "0"], ["1", "1", "1", "1", "1"], ["1", "1", "1", "1", "1"],
-         ["0", "0", "1", "1", "1"]]
+        matrix = [
+            ["1", "1", "1", "1", "0"],
+            ["1", "1", "1", "1", "0"],
+            ["1", "1", "1", "1", "1"],
+            ["1", "1", "1", "1", "1"],
+            ["0", "0", "1", "1", "1"]
+        ]
         maximal_square_results = get_maximal_square(matrix=matrix)
         self.assertEqual(maximal_square_results.max_square_area, 16)
