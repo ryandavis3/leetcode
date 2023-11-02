@@ -85,7 +85,9 @@ class StrobogrammaticNumbers:
 
 class Solution:
     def strobogrammaticInRange(self, low: str, high: str) -> int:
-        pass
+        strobo = StrobogrammaticNumbers()
+        numbers = strobo.generate_numbers_low_high(low=int(low), high=int(high))
+        return len(numbers)
 
 
 class TestStrobogrammaticNumbers(TestCase):
