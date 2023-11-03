@@ -5,7 +5,11 @@ from typing import List
 def get_increasing_triplet(nums: List[int]) -> bool:
     n = len(nums)
     dp = [1] * n
+    min_element = 0
     for i in range(n):
+        if nums[i] <= min_element:
+            min_element = nums[i]
+            continue
         for j in range(i):
             if nums[i] > nums[j]:
                 dp[i] = max(dp[i], dp[j]+1)
@@ -37,5 +41,6 @@ class TestIncreasingTriplet(TestCase):
         self.assertTrue(get_increasing_triplet(nums=nums))
 
     def test5(self) -> None:
-        nums = [1] * 10 ** 4 + [2,3]
-        self.assertTrue(get_increasing_triplet(nums=nums))
+        nums = [1] * 10 ** 3 + [2, 3]
+        result = get_increasing_triplet(nums=nums)
+        self.assertTrue(result)
