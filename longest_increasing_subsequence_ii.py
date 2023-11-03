@@ -28,7 +28,10 @@ class Subsequences:
         new_subseq: Dict[int, int] = {}
         for subseq_end, subseq_len in self._subsequences.items():
             if num > subseq_end:
-                new_subseq[num] = subseq_len + 1
+                if num in new_subseq:
+                    new_subseq[num] = max(subseq_len + 1, new_subseq[num])
+                else:
+                    new_subseq[num] = subseq_len + 1
                 extend_subseq = True
         self._subsequences = self.filter_extraneous(subseq=self._subsequences, new_subseq=new_subseq)
         self._subsequences = self._subsequences | new_subseq
@@ -41,6 +44,16 @@ class Subsequences:
             if subseq_len > max_subseq_len:
                 max_subseq_len = subseq_len
         return max_subseq_len
+
+
+def get_max_subsequence_length_dp(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [1] * n
+    for i in range(n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j]+1)
+    return max(dp)
 
 
 @dataclass(frozen=True)
@@ -60,7 +73,8 @@ def generate_subsequences(nums: List[int]) -> GenerateSubsequencesResults:
 
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        pass
+        results = generate_subsequences(nums=nums)
+        return results.max_subsequence_len
 
 
 class TestSubsequences(TestCase):
@@ -95,3 +109,29 @@ class TestILS(TestCase):
         results = generate_subsequences(nums=nums)
         self.assertEqual(results.max_subsequence_len, 1)
 
+    def test4(self) -> None:
+        nums = [1, 3, 6, 7, 9, 4, 10, 5, 6]
+        results = generate_subsequences(nums=nums)
+        self.assertEqual(results.max_subsequence_len, 6)
+
+
+class TestDP(TestCase):
+    def test1(self) -> None:
+        nums = [10, 9, 2, 5, 3, 7, 101, 18]
+        max_len = get_max_subsequence_length_dp(nums=nums)
+        self.assertEqual(max_len, 4)
+
+    def test2(self) -> None:
+        nums = [0, 1, 0, 3, 2, 3]
+        max_len = get_max_subsequence_length_dp(nums=nums)
+        self.assertEqual(max_len, 4)
+
+    def test3(self) -> None:
+        nums = [7, 7, 7, 7, 7, 7, 7]
+        max_len = get_max_subsequence_length_dp(nums=nums)
+        self.assertEqual(max_len, 1)
+
+    def test4(self) -> None:
+        nums = [1, 3, 6, 7, 9, 4, 10, 5, 6]
+        max_len = get_max_subsequence_length_dp(nums=nums)
+        self.assertEqual(max_len, 6)
