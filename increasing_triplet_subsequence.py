@@ -7,7 +7,7 @@ def get_increasing_triplet(nums: List[int]) -> bool:
         return False
     n = len(nums)
     dp = [1] * n
-    min_element = 0
+    min_element = 10 ** 10
     for i in range(n):
         if nums[i] <= min_element:
             min_element = nums[i]
