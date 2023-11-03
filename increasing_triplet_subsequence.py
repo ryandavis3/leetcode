@@ -3,6 +3,8 @@ from typing import List
 
 
 def get_increasing_triplet(nums: List[int]) -> bool:
+    if len(set(nums)) < 3:
+        return False
     n = len(nums)
     dp = [1] * n
     min_element = 0
