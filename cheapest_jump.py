@@ -43,6 +43,15 @@ def cheapest_jump_dp(coins: List[int], max_jump: int) -> Dict[int, Path]:
             if cheapest_jumps[j].cost < lowest_cost:
                 lowest_cost_j = j
                 lowest_cost = cheapest_jumps[j].cost
+            # If tie in cost, use lexicographic ordering
+            elif cheapest_jumps[j].cost == lowest_cost:
+                is_lex_smaller_path = is_lexicographically_smaller(
+                    path=cheapest_jumps[j].path + [i],
+                    larger_path=cheapest_jumps[lowest_cost_j].path + [i],
+                )
+                if is_lex_smaller_path:
+                    lowest_cost_j = j
+                    lowest_cost = cheapest_jumps[j].cost
         if lowest_cost_j is None:
             continue
         # Construct cheapest path
@@ -56,7 +65,13 @@ def cheapest_jump_dp(coins: List[int], max_jump: int) -> Dict[int, Path]:
 
 class Solution:
     def cheapestJump(self, coins: List[int], maxJump: int) -> List[int]:
-        pass
+        cheapest_jumps = cheapest_jump_dp(coins=coins, max_jump=maxJump)
+        target_index = len(coins) - 1
+        if target_index not in cheapest_jumps:
+            return []
+        path = cheapest_jumps[target_index].path
+        path_one_indexed = [index + 1 for index in path]
+        return path_one_indexed
 
 
 class TestCheapestJump(TestCase):
@@ -83,3 +98,8 @@ class TestCheapestJump(TestCase):
         coins = [1, 2, 4, -1, 2]
         cheapest_jumps = cheapest_jump_dp(coins=coins, max_jump=1)
         self.assertFalse(4 in cheapest_jumps)
+
+    def test_cheapest_jump_dp3(self) -> None:
+        coins = [0, 0, 0, 0, 0, 0]
+        cheapest_jumps = cheapest_jump_dp(coins=coins, max_jump=3)
+        self.assertEqual(cheapest_jumps[5].path, [0, 1, 2, 3, 4, 5])
