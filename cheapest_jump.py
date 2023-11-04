@@ -43,6 +43,8 @@ def cheapest_jump_dp(coins: List[int], max_jump: int) -> Dict[int, Path]:
             if cheapest_jumps[j].cost < lowest_cost:
                 lowest_cost_j = j
                 lowest_cost = cheapest_jumps[j].cost
+        if lowest_cost_j is None:
+            continue
         # Construct cheapest path
         cheapest_path = Path(
             path=cheapest_jumps[lowest_cost_j].path + [i],
@@ -76,3 +78,8 @@ class TestCheapestJump(TestCase):
         coins = [1, 2, 4, -1, 2]
         cheapest_jumps = cheapest_jump_dp(coins=coins, max_jump=2)
         self.assertEqual(cheapest_jumps[4], Path(path=[0, 2, 4], cost=7))
+
+    def test_cheapest_jump_dp2(self) -> None:
+        coins = [1, 2, 4, -1, 2]
+        cheapest_jumps = cheapest_jump_dp(coins=coins, max_jump=1)
+        self.assertFalse(4 in cheapest_jumps)
