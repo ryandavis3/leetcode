@@ -30,9 +30,8 @@ def step_minute_forward(monster: Monster) -> Monster:
 def eliminate_max(monsters: List[Monster]) -> int:
     if not monsters:
         return 0
-    for monster in monsters:
-        if monster.distance == 0:
-            return 0
+    if monsters[0].distance == 0:
+        return 0
     next_monsters = [step_minute_forward(monster=monster) for monster in monsters[1:]]
     return 1 + eliminate_max(monsters=next_monsters)
 
