@@ -38,7 +38,9 @@ def eliminate_max(monsters: List[Monster]) -> int:
 
 class Solution:
     def eliminateMaximum(self, dist: List[int], speed: List[int]) -> int:
-        pass
+        monsters = get_monsters_from_distance_speed(distances=dist, speeds=speed)
+        max_monsters = eliminate_max(monsters=monsters)
+        return max_monsters
 
 
 class TestEliminateMax(TestCase):
