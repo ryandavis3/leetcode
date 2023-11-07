@@ -21,12 +21,11 @@ class Rectangles:
                 area = height * (width + 1)
                 if area > self.max_area:
                     self.max_area = area
-            else:
-                if width + 1 > height_width_new[bar]:
-                    height_width_new[bar] = width + 1
-                    area = bar * (width + 1)
-                    if area > self.max_area:
-                        self.max_area = area
+            elif width + 1 > height_width_new[bar]:
+                height_width_new[bar] = width + 1
+                area = bar * (width + 1)
+                if area > self.max_area:
+                    self.max_area = area
         return Rectangles(height_width=height_width_new, max_area=self.max_area)
 
 
