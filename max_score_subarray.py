@@ -11,7 +11,7 @@ def get_score_update(min_element: int, i: int, j: int, max_score: int) -> int:
 
 def get_max_score(nums: List[int], k: int) -> int:
     i = 0
-    j = k
+    j = max(k, 1)
     L = len(nums)
     min_element = min(nums[i:j+1])
     max_score = min_element * (j - i + 1)
@@ -20,9 +20,9 @@ def get_max_score(nums: List[int], k: int) -> int:
             i += 1
             min_element = min(nums[i:j+1])
             max_score = get_score_update(min_element=min_element, i=i, j=j, max_score=max_score)
-        while k <= j < L and nums[j] != min_element:
-            j += 1
+        while k <= j < L and nums[j] >= min_element:
             max_score = get_score_update(min_element=min_element, i=i, j=j, max_score=max_score)
+            j += 1
         if j < L:
             min_element = nums[j]
     return max_score
@@ -40,4 +40,4 @@ class TestMaxScore(TestCase):
 
     def test2(self) -> None:
         max_score = get_max_score(nums=[5, 5, 4, 5, 4, 1, 1, 1], k=0)
-        self.assertEqual(max_score, 15)
+        self.assertEqual(max_score, 20)
