@@ -1,3 +1,4 @@
+import statistics
 from unittest import TestCase
 from typing import Dict, List, Optional
 
@@ -29,7 +30,23 @@ class Rectangles:
         return Rectangles(height_width=height_width_new, max_area=self.max_area)
 
 
+def find_heights_order(heights: List[int]) -> List[int]:
+    unique_heights = set(heights)
+    if len(unique_heights) <= 1:
+        return heights
+    index = list(range(1, len(heights) + 1))
+    corr = statistics.correlation(index, heights)
+    if corr > 0:
+        heights = heights[::-1]
+    return heights
+
+
 def get_largest_rectangle_area(heights: List[int]) -> int:
+    if not heights:
+        return 0
+    if len(heights) == 1:
+        return heights[0]
+    heights = find_heights_order(heights=heights)
     rectangles = Rectangles()
     for bar in heights:
         rectangles = rectangles.process_bar(bar=bar)
@@ -65,10 +82,7 @@ class TestRectangles(TestCase):
         self.assertEqual(rectangles.max_area, 3)
 
     def test4(self) -> None:
-        rectangles = Rectangles()
-        heights = list(range(1, 10))
-        for bar in heights:
-            rectangles = rectangles.process_bar(bar=bar)
-            print(rectangles._height_width)
-        assert False
+        heights = list(range(1, 30000))
+        _ = get_largest_rectangle_area(heights=heights)
+
 
