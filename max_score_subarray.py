@@ -3,7 +3,7 @@ from typing import List
 
 
 def get_score_update(min_element: int, i: int, j: int, max_score: int) -> int:
-    score = min_element * (i - j + 1)
+    score = min_element * (j - i + 1)
     if score > max_score:
         max_score = score
     return max_score
@@ -14,11 +14,12 @@ def get_max_score(nums: List[int], k: int) -> int:
     j = k
     L = len(nums)
     min_element = min(nums[i:j+1])
-    max_score = min_element * (i - j + 1)
-    while i <= k and nums[i] == min_element:
-        i += 1
-        min_element = min(nums[i:j+1])
-        max_score = get_score_update(min_element=min_element, i=i, j=j, max_score=max_score)
+    max_score = min_element * (j - i + 1)
+    while i <= k and j < L:
+        if nums[i] == min_element:
+            i += 1
+            min_element = min(nums[i:j+1])
+            max_score = get_score_update(min_element=min_element, i=i, j=j, max_score=max_score)
         while k <= j < L and nums[j] != min_element:
             j += 1
             max_score = get_score_update(min_element=min_element, i=i, j=j, max_score=max_score)
