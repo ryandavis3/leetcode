@@ -17,9 +17,16 @@ class MinCosts:
 
 def get_min_cost_tickets(days: List[int], costs: List[int], min_costs: MinCosts) -> MinCosts:
     start_day = days[0]
-    one_day_next = [day for day in days if day < start_day + 1]
-    seven_day_next = [day for day in days if day < start_day + 7]
+    end_day = days[-1]
     thirty_day_next = [day for day in days if day < start_day + 30]
+    if not thirty_day_next:
+        min_costs.update_cost(day=end_day, total_cost=costs[2])
+    seven_day_next = [day for day in days if day < start_day + 7]
+    if not seven_day_next:
+        min_costs.update_cost(day=end_day, total_cost=costs[1])
+    one_day_next = [day for day in days if day < start_day + 1]
+    if not one_day_next:
+        min_costs.update_cost(day=end_day, total_cost=costs[0])
 
 
 class Solution:
