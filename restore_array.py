@@ -20,11 +20,30 @@ def get_start_candidates(pairs_dict: Dict[int, Set]) -> int:
     for num, adjacent in pairs_dict.items():
         if len(adjacent) < 2:
             candidates.add(num)
+    if len(candidates) != 2:
+        err_msg = f'There are {len(candidates)} start messages but there should be only two!'
+        raise ValueError(err_msg)
     return candidates
 
 
 def restore_array(adjacent_pairs: List[List[int]]) -> List[int]:
-    pass
+    pairs_dict = get_pairs_dict(adjacent_pairs=adjacent_pairs)
+    start_candidates = get_start_candidates(pairs_dict=pairs_dict)
+    start = min(start_candidates)
+    end = max(start_candidates)
+    array = [start]
+    seen = set([start])
+    num = start
+    while num != end:
+        adjacent = pairs_dict[num]
+        adjacent_available = adjacent - seen
+        if len(adjacent_available) > 1:
+            err_msg = f'Found {len(adjacent_available)} available adjacent values to {num}!'
+            raise ValueError(err_msg)
+        num = adjacent_available.pop()
+        seen.add(num)
+        array += [num]
+    return array
 
 
 class Solution:
@@ -41,3 +60,8 @@ class TestRestoreArray(TestCase):
     def test_get_pairs_dict1(self) -> None:
         pairs_dict = get_pairs_dict(adjacent_pairs=self.adjacent_pairs)
         self.assertEqual(pairs_dict, self.pairs_dict)
+
+    def test_restore_array(self) -> None:
+        array = restore_array(adjacent_pairs=self.adjacent_pairs)
+        array_expected = [1, 2, 3, 4]
+        self.assertEqual(array, array_expected)
