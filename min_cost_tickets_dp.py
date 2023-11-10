@@ -58,6 +58,7 @@ class TestReachable(TestCase):
         _reachable_expected = {1: {7: 0, 30: 0}, 2: {7: 0, 30: 0}, 3: {1: 2, 7: 0, 30: 0}, 4: {1: 3, 7: 0, 30: 0}, 5: {30: 0}}
         self.assertEqual(reachable._reachable, _reachable_expected)
 
+
 class TestMinCost(TestCase):
     def test1(self) -> None:
         days = [1, 4, 6, 7, 8, 20]
