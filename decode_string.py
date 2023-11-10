@@ -11,6 +11,12 @@ def decode_string(s: str) -> str:
     # String is all alphabetic characters -> return it
     if s.isalpha():
         return s
+    # Leading alphabetic characters -> return with remainder
+    if s[0].isalpha():
+        i = 1
+        while s[i].isalpha():
+            i += 1
+        return s[0:i] + decode_string(s=s[i:])
     # Check for leading digits -> if present, use as multiplier
     if s[0].isdigit():
         i = 1
@@ -45,7 +51,9 @@ class Solution:
 class TestDecodeString(TestCase):
     def test1(self) -> None:
         s = "3[a]2[bc]"
+        out = decode_string(s=s)
         expected = "aaabcbc"
+        self.assertEqual(out, expected)
 
     def test2(self) -> None:
         s = "3[a2[c]]"
@@ -53,7 +61,9 @@ class TestDecodeString(TestCase):
 
     def test3(self) -> None:
         s = "2[abc]3[cd]ef"
+        out = decode_string(s=s)
         expected = "abcabccdcdcdef"
+        self.assertEqual(out, expected)
 
     def test4(self) -> None:
         s = 'abc'
@@ -71,4 +81,10 @@ class TestDecodeString(TestCase):
         s = '2[a]3[b]4[c]'
         out = decode_string(s=s)
         expected = 'aabbbcccc'
+        self.assertEqual(out, expected)
+
+    def test7(self) -> None:
+        s = 'a2[c]'
+        out = decode_string(s=s)
+        expected = 'acc'
         self.assertEqual(out, expected)
