@@ -65,3 +65,8 @@ class TestRestoreArray(TestCase):
         array = restore_array(adjacent_pairs=self.adjacent_pairs)
         array_expected = [1, 2, 3, 4]
         self.assertEqual(array, array_expected)
+
+    def test_restore_array2(self) -> None:
+        array = restore_array(adjacent_pairs=[[4, -2], [1, 4], [-3, 1]])
+        array_expected = [-3, 1, 4, -2]
+        self.assertEqual(array, array_expected)
