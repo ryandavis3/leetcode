@@ -1,5 +1,5 @@
 from unittest import TestCase
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 
 class Reachable:
@@ -37,8 +37,24 @@ def get_reachable(days: List[int]) -> Reachable:
     return reachable
 
 
+def get_costs_dict(costs: List[int]) -> Dict[int, int]:
+    costs_dict: Dict[int, int] = {}
+    passes_days = [30, 7]
+    costs_reversed = costs[1:][::-1]
+    min_cost = 10 ** 10
+    for i in range(2):
+        if costs_reversed[i] < min_cost:
+            min_cost = costs_reversed[i]
+            costs_dict[passes_days[i]] = costs_reversed[i]
+    return costs_dict
+
+
 def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[List[int]]:
     reachable = get_reachable(days=days)
+    costs_dict = get_costs_dict(costs=costs)
+    print(costs_dict)
+    print(reachable._reachable)
+    min_pass_cost = min(costs)
     min_cost_table: List[List[int]] = []
     D = len(days)
     for _ in range(D):
@@ -46,20 +62,31 @@ def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[List[int]]:
     for i in range(D):
         for j in range(D):
             if i == 0 and j == 0:
-                min_cost_table[i][j] = costs[0]
+                min_cost_table[i][j] = min_pass_cost
                 continue
             if i > j:
                 min_cost_table[i][j] = min_cost_table[i-1][j]
                 continue
-            min_cost = min_cost_table[i][j-1] + costs[0]
-            reachable_7 = reachable.get_reachable_day(day=j, pass_days=7)
-            if reachable_7 is not None:
-                cost_7 = min_cost_table[i][reachable_7] + costs[1]
-                min_cost = min(min_cost, cost_7)
-            reachable_30 = reachable.get_reachable_day(day=j, pass_days=30)
-            if reachable_30 is not None:
-                cost_30 = min_cost_table[i][reachable_30] + costs[2]
-                min_cost = min(min_cost, cost_30)
+            min_cost = min_cost_table[i][j-1] + min_pass_cost
+            for pass_days, pass_cost in costs_dict.items():
+                reachable_index = reachable.get_reachable_day(day=j, pass_days=pass_days)
+                if reachable_index is not None:
+                    cost_using_pass = min_cost_table[i][reachable_index] + pass_cost
+                    min_cost = min(min_cost, cost_using_pass)
+                    if False:
+                        print('-----')
+                        print('i')
+                        print(i)
+                        print('j')
+                        print(j)
+                        print('pass cost:')
+                        print(pass_cost)
+                        print('reachable index:')
+                        print(reachable_index)
+                        print('cost using pass:')
+                        print(cost_using_pass)
+                        print('min cost:')
+                        print(min_cost)
             min_cost_table[i][j] = min_cost
     return min_cost_table
 
@@ -94,3 +121,10 @@ class TestMinCost(TestCase):
         min_cost = min_cost_table[-1][-1]
         self.assertEqual(min_cost, 6)
 
+    def test3(self) -> None:
+        days = [1, 5, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 23, 24, 29]
+        costs = [3, 12, 54]
+        min_cost_table = get_min_cost_tickets(days=days, costs=costs)
+        print(min_cost_table)
+        min_cost = min_cost_table[-1][-1]
+        self.assertEqual(min_cost, 39)
