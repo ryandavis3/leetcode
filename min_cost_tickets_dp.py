@@ -47,38 +47,37 @@ def get_costs_dict(costs: List[int]) -> Dict[int, int]:
     return costs_dict
 
 
-def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[List[int]]:
+def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[int]:
     reachable = get_reachable(days=days)
     costs_dict = get_costs_dict(costs=costs)
     min_pass_cost = min(costs)
-    min_cost_table: List[List[int]] = []
     D = len(days)
-    for _ in range(D):
-        min_cost_table += [[0] * D]
     for i in range(D):
+        row_i = [0] * D
         for j in range(D):
             if i == 0 and j == 0:
-                min_cost_table[i][j] = min_pass_cost
+                row_i[j] = min_pass_cost
                 continue
             if i > j:
-                min_cost_table[i][j] = min_cost_table[i-1][j]
+                row_i[j] = row_prev[j]
                 continue
-            min_cost = min_cost_table[i][j-1] + min_pass_cost
+            min_cost = row_i[j-1] + min_pass_cost
             for pass_days, pass_cost in costs_dict.items():
                 reachable_index = reachable.get_reachable_day(day=j, pass_days=pass_days)
                 if reachable_index is not None:
-                    cost_using_pass = min_cost_table[i][reachable_index] + pass_cost
+                    cost_using_pass = row_i[reachable_index] + pass_cost
                     min_cost = min(min_cost, cost_using_pass)
                 if days[j] - pass_days < min(days):
                     min_cost = min(min_cost, pass_cost)
-            min_cost_table[i][j] = min_cost
-    return min_cost_table
+            row_i[j] = min_cost
+        row_prev = row_i
+    return row_i
 
 
 class Solution:
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         return min_cost
 
 
@@ -95,42 +94,42 @@ class TestMinCost(TestCase):
         days = [1, 4, 6, 7, 8, 20]
         costs = [2, 7, 15]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 11)
 
     def test2(self) -> None:
         days = [1, 4, 6, 7, 8, 20]
         costs = [7, 2, 15]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 6)
 
     def test3(self) -> None:
         days = [1, 5, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 23, 24, 29]
         costs = [3, 12, 54]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 39)
 
     def test4(self) -> None:
         days = [1, 2, 3, 4, 5, 30, 31]
         costs = [1, 2, 3]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 4)
 
     def test5(self) -> None:
         days = [1, 2, 3, 4, 6, 8, 9, 10, 13, 14, 16, 17, 19, 21, 24, 26, 27, 28, 29]
         costs = [3, 14, 50]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 50)
 
     def test7(self) -> None:
-        days = [2,3,4,6,8,12,14,18,19,26,27,28]
-        costs = [2,9,31]
+        days = [2, 3, 4, 6, 8, 12, 14, 18, 19, 26, 27, 28]
+        costs = [2, 9, 31]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        min_cost = min_cost_table[-1][-1]
+        min_cost = min_cost_table[-1]
         self.assertEqual(min_cost, 23)
 
 
