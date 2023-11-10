@@ -48,7 +48,7 @@ def restore_array(adjacent_pairs: List[List[int]]) -> List[int]:
 
 class Solution:
     def restoreArray(self, adjacentPairs: List[List[int]]) -> List[int]:
-        pass
+        return restore_array(adjacent_pairs=adjacentPairs)
 
 
 class TestRestoreArray(TestCase):
