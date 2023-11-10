@@ -50,8 +50,6 @@ def get_costs_dict(costs: List[int]) -> Dict[int, int]:
 def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[List[int]]:
     reachable = get_reachable(days=days)
     costs_dict = get_costs_dict(costs=costs)
-    print(costs_dict)
-    print(reachable._reachable)
     min_pass_cost = min(costs)
     min_cost_table: List[List[int]] = []
     D = len(days)
@@ -71,6 +69,8 @@ def get_min_cost_tickets(days: List[int], costs: List[int]) -> List[List[int]]:
                 if reachable_index is not None:
                     cost_using_pass = min_cost_table[i][reachable_index] + pass_cost
                     min_cost = min(min_cost, cost_using_pass)
+                if days[j] - pass_days < min(days):
+                    min_cost = min(min_cost, pass_cost)
             min_cost_table[i][j] = min_cost
     return min_cost_table
 
@@ -109,7 +109,6 @@ class TestMinCost(TestCase):
         days = [1, 5, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 23, 24, 29]
         costs = [3, 12, 54]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        print(min_cost_table)
         min_cost = min_cost_table[-1][-1]
         self.assertEqual(min_cost, 39)
 
@@ -117,6 +116,21 @@ class TestMinCost(TestCase):
         days = [1, 2, 3, 4, 5, 30, 31]
         costs = [1, 2, 3]
         min_cost_table = get_min_cost_tickets(days=days, costs=costs)
-        print(min_cost_table)
         min_cost = min_cost_table[-1][-1]
         self.assertEqual(min_cost, 4)
+
+    def test5(self) -> None:
+        days = [1, 2, 3, 4, 6, 8, 9, 10, 13, 14, 16, 17, 19, 21, 24, 26, 27, 28, 29]
+        costs = [3, 14, 50]
+        min_cost_table = get_min_cost_tickets(days=days, costs=costs)
+        min_cost = min_cost_table[-1][-1]
+        self.assertEqual(min_cost, 50)
+
+    def test7(self) -> None:
+        days = [2,3,4,6,8,12,14,18,19,26,27,28]
+        costs = [2,9,31]
+        min_cost_table = get_min_cost_tickets(days=days, costs=costs)
+        min_cost = min_cost_table[-1][-1]
+        self.assertEqual(min_cost, 23)
+
+
