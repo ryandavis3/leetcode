@@ -28,9 +28,14 @@ def decode_string(s: str) -> str:
         multiplier = 1
     # Get open and closed brackets
     if s[i] == OPEN:
-        j = i + 1
-        while s[j] != CLOSED:
+        j = i
+        closed_needed = 1
+        while closed_needed > 0:
             j += 1
+            if s[j] == OPEN:
+                closed_needed += 1
+            if s[j] == CLOSED:
+                closed_needed -= 1
         decoded_in_brackets = decode_string(s=s[i+1:j])
     # Construct decoded substring
     decoded_substring = multiplier * decoded_in_brackets
