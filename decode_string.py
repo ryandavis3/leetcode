@@ -57,7 +57,9 @@ class TestDecodeString(TestCase):
 
     def test2(self) -> None:
         s = "3[a2[c]]"
+        out = decode_string(s=s)
         expected = "accaccacc"
+        self.assertEqual(out, expected)
 
     def test3(self) -> None:
         s = "2[abc]3[cd]ef"
