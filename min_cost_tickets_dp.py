@@ -46,9 +46,6 @@ def get_min_cost_tickets(days: List[int], costs: List[int]) -> int:
                 continue
 
 
-
-
-
 class Solution:
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
         pass
