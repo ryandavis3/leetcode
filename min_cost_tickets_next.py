@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 class MinCosts:
 
-    def __init__(self, min_costs_dict: Optional[Dict[int, int]]=None)
+    def __init__(self, min_costs_dict: Optional[Dict[int, int]]=None):
         self.min_costs_dict = min_costs_dict
 
     def update_cost(self, day: int, total_cost: int) -> None:
