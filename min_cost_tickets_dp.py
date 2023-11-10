@@ -14,7 +14,7 @@ class Reachable:
 
 
 def get_reachable(days: List[int]) -> Reachable:
-    passes = [1, 7, 30]
+    passes = [7, 30]
     reachable = Reachable()
     for i, _ in enumerate(days):
         if i == 0:
@@ -31,6 +31,7 @@ def get_reachable(days: List[int]) -> Reachable:
 
 
 def get_min_cost_tickets(days: List[int], costs: List[int]) -> int:
+    reachable = get_reachable(days=days)
     min_cost_table: List[List[int]] = []
     D = len(days)
     for _ in range(D):
@@ -44,6 +45,8 @@ def get_min_cost_tickets(days: List[int], costs: List[int]) -> int:
             if i > j:
                 min_cost_table[i][j] = min_cost_table[i-1][j]
                 continue
+            options = min_cost_table[i][j-1] + 2
+
 
 
 class Solution:
@@ -55,7 +58,7 @@ class TestReachable(TestCase):
     def test1(self) -> None:
         days = [1, 4, 6, 7, 8, 20]
         reachable = get_reachable(days=days)
-        _reachable_expected = {1: {7: 0, 30: 0}, 2: {7: 0, 30: 0}, 3: {1: 2, 7: 0, 30: 0}, 4: {1: 3, 7: 0, 30: 0}, 5: {30: 0}}
+        _reachable_expected = {1: {7: 0, 30: 0}, 2: {7: 0, 30: 0}, 3: {7: 0, 30: 0}, 4: {7: 0, 30: 0}, 5: {30: 0}}
         self.assertEqual(reachable._reachable, _reachable_expected)
 
 
