@@ -40,7 +40,7 @@ def decode_string(s: str) -> str:
     # Construct decoded substring
     decoded_substring = multiplier * decoded_in_brackets
     # Continue processing remaining string
-    if j < L - 2:
+    if j < L - 1:
         decoded_remainder = decode_string(s=s[j+1:])
     else:
         decoded_remainder = ''
@@ -100,4 +100,10 @@ class TestDecodeString(TestCase):
         s = "sd2[f2[e]g]i"
         out = decode_string(s=s)
         expected = 'sdfeegfeegi'
+        self.assertEqual(out, expected)
+
+    def test9(self) -> None:
+        s = 'a2[b]c'
+        out = decode_string(s=s)
+        expected = 'abbc'
         self.assertEqual(out, expected)
