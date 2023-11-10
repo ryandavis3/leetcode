@@ -50,7 +50,7 @@ def decode_string(s: str) -> str:
 
 class Solution:
     def decodeString(self, s: str) -> str:
-        pass
+        return decode_string(s=s)
 
 
 class TestDecodeString(TestCase):
@@ -94,4 +94,10 @@ class TestDecodeString(TestCase):
         s = 'a2[c]'
         out = decode_string(s=s)
         expected = 'acc'
+        self.assertEqual(out, expected)
+
+    def test8(self) -> None:
+        s = "sd2[f2[e]g]i"
+        out = decode_string(s=s)
+        expected = 'sdfeegfeegi'
         self.assertEqual(out, expected)
