@@ -14,17 +14,15 @@ class CharacterSet:
 
     def add_char(self, char: str) -> None:
         if char not in self._characters:
-            self._characters[char] = set()
-        self._characters[char].add(i)
-        self._all_indices.add(i)
+            self._characters[char] = 0
+        self._characters[char] += 1
 
-    def as_queue(self) -> queue.Queue:
+    def as_queue(self) -> Queue:
         char_queue = Queue()
         chars_sorted = sorted(list(self._characters.keys()))
         for char in chars_sorted:
-            index_sorted = sorted(list(self._characters[char]))
-            for index in index_sorted:
-                char_queue.put(index)
+            for _ in range(self._characters[char]):
+                char_queue.put(char)
         return char_queue
 
 
@@ -50,11 +48,16 @@ class Solution:
 
 class TestCharacterSet(TestCase):
     def test1(self) -> None:
-        chars = ['e', 'a', 'i']
+        chars = ['e', 'a', 'i', 'a']
         character_set = CharacterSet()
         for char in chars:
             character_set.add_char(char=char)
-        
+        char_queue = character_set.as_queue()
+        chars_sorted: List[str] = []
+        while not char_queue.empty():
+            chars_sorted += [char_queue.get()]
+        chars_sorted_expected = ['a', 'a', 'e', 'i']
+        self.assertEqual(chars_sorted, chars_sorted_expected)
 
 class TestSortVowels(TestCase):
     def test1(self) -> None:
