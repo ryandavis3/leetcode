@@ -37,6 +37,7 @@ def get_tree_from_list(values: List[int]) -> TreeNode:
             parent.right = node
         else:
             parent = prev.get()
+    prev = curr
     return root
 
 
