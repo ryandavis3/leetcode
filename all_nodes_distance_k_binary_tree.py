@@ -23,6 +23,14 @@ def get_path_to_target(root: TreeNode, target: TreeNode) -> Optional[List[int]]:
     return None
 
 
+def get_distance_dict(path: List[int]) -> Dict[int, int]:
+    path_reversed = path[::-1]
+    distance_dict: Dict[int, int] = {}
+    for i, val in enumerate(path_reversed):
+        distance_dict[val] = i
+    return distance_dict
+
+
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
         pass
@@ -57,3 +65,9 @@ class TestDistanceK(TestCase):
     def test_get_path_to_target4(self) -> None:
         path = get_path_to_target(root=self.root, target=self.node3)
         self.assertEqual(path, [1, 3])
+
+    def test_get_distance_dict1(self) -> None:
+        path = [1, 2, 4]
+        _dict = get_distance_dict(path=path)
+        expected_dict = {4: 0, 2: 1, 1: 2}
+        self.assertEqual(_dict, expected_dict)
