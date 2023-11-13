@@ -88,6 +88,14 @@ class TestTree(TestCase):
         self.assertEqual(root.left.val, 2)
         self.assertEqual(root.right.val, 3)
 
+    def test3(self) -> None:
+        values = [1, 2, None, 3, 4]
+        root = get_tree_from_list(values=values)
+        self.assertEqual(root.val, 1)
+        self.assertEqual(root.left.val, 2)
+        self.assertEqual(root.left.left.val, 3)
+        self.assertEqual(root.left.right.val, 4)
+
     def test_get_max_level1(self) -> None:
         values = [1, 2, 3]
         max_level = get_max_level(values=values)
