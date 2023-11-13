@@ -9,8 +9,7 @@ UPPER_CASE_VOWELS = set(['A', 'E', 'I', 'O', 'U'])
 
 class CharacterSet:
     def __init__(self):
-        self._characters: Dict[str, Set[int]] = {}
-        self._all_indices: Set[int] = set()
+        self._characters: Dict[str, int] = {}
 
     def add_char(self, char: str) -> None:
         if char not in self._characters:
@@ -30,7 +29,7 @@ def sort_vowels(s: str) -> str:
     # Character sets for lower and upper case vowels, consonants
     lower_case_vowels = CharacterSet()
     upper_case_vowels = CharacterSet()
-    consonants = CharacterSet()
+    consonants: Dict[int, str] = {}
     # Populate character sets
     for i, char in enumerate(s):
         if char in LOWER_CASE_VOWELS:
@@ -38,7 +37,22 @@ def sort_vowels(s: str) -> str:
         elif char in UPPER_CASE_VOWELS:
             upper_case_vowels.add_char(char=char)
         else:
-            consonants.add_char(char=char)
+            consonants[i] = char
+    # Construct sorted word
+    L = len(s)
+    word_chars = [''] * L
+    lower_vowels_queue = lower_case_vowels.as_queue()
+    upper_vowels_queue = upper_case_vowels.as_queue()
+    for i in range(L):
+        if i in consonants:
+            word_chars[i] = consonants[i]
+        elif not upper_vowels_queue.empty():
+            word_chars[i] = upper_vowels_queue.get()
+        elif not lower_vowels_queue.empty():
+            word_chars[i] = lower_vowels_queue.get()
+        else:
+            raise ValueError('Ran out of letters!')
+    return ''.join(word_chars)
 
 
 class Solution:
@@ -59,6 +73,22 @@ class TestCharacterSet(TestCase):
         chars_sorted_expected = ['a', 'a', 'e', 'i']
         self.assertEqual(chars_sorted, chars_sorted_expected)
 
+
 class TestSortVowels(TestCase):
     def test1(self) -> None:
-        pass
+        s = "lEetcOde"
+        expected = "lEOtcede"
+        out = sort_vowels(s=s)
+        self.assertEqual(out, expected)
+
+    def test2(self) -> None:
+        s = "lYmpH"
+        expected = "lYmpH"
+        out = sort_vowels(s=s)
+        self.assertEqual(out, expected)
+
+    def test3(self) -> None:
+        s = "aaAAEfLA"
+        expected = "AAAEafLa"
+        out = sort_vowels(s=s)
+        self.assertEqual(out, expected)
