@@ -15,7 +15,7 @@ def get_longest_increasing_subsequence(nums: List[int]) -> List[int]:
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         dp = get_longest_increasing_subsequence(nums=nums)
-        return dp[-1]
+        return max(dp)
 
 
 class TestLIS(TestCase):
@@ -33,3 +33,8 @@ class TestLIS(TestCase):
         nums = [7, 7, 7, 7, 7, 7, 7]
         dp = get_longest_increasing_subsequence(nums=nums)
         self.assertEqual(dp[-1], 1)
+
+    def test4(self) -> None:
+        nums = [1, 3, 6, 7, 9, 4, 10, 5, 6]
+        dp = get_longest_increasing_subsequence(nums=nums)
+        self.assertEqual(max(dp), 6)
