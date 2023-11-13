@@ -57,7 +57,7 @@ def sort_vowels(s: str) -> str:
 
 class Solution:
     def sortVowels(self, s: str) -> str:
-        pass
+        return sort_vowels(s=s)
 
 
 class TestCharacterSet(TestCase):
