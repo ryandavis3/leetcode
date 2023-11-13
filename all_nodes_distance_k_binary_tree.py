@@ -31,6 +31,23 @@ def get_distance_dict(path: List[int]) -> Dict[int, int]:
     return distance_dict
 
 
+def fill_all_distance_dict(root: TreeNode, distance_dict: Dict[int, int]) -> None:
+    root_distance = distance_dict[root.val]
+    if root.left:
+        if root.left.val not in distance_dict:
+            distance_dict[root.left.val] = root_distance + 1
+        fill_all_distance_dict(root=root.left, distance_dict=distance_dict)
+    if root.right:
+        if root.right.val not in distance_dict:
+            distance_dict[root.right.val] = root_distance + 1
+        fill_all_distance_dict(root=root.right, distance_dict=distance_dict)
+
+
+def get_distance_k(root: TreeNode, target: TreeNode, k: int) -> List[int]:
+    path_to_target = get_path_to_target(root=root, target=target)
+    distance_dict = get_distance_dict(path=path_to_target)
+
+
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
         pass
@@ -71,3 +88,9 @@ class TestDistanceK(TestCase):
         _dict = get_distance_dict(path=path)
         expected_dict = {4: 0, 2: 1, 1: 2}
         self.assertEqual(_dict, expected_dict)
+
+    def test_fill_all_distance_dict1(self) -> None:
+        distance_dict = {4: 0, 2: 1, 1: 2}
+        fill_all_distance_dict(root=self.root, distance_dict=distance_dict)
+        expected_distance_dict = {4: 0, 2: 1, 1: 2, 5: 2, 3: 3}
+        self.assertEqual(distance_dict, expected_distance_dict)
