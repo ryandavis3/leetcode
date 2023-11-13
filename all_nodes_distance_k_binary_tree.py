@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 from unittest import TestCase
 
 
@@ -9,10 +9,18 @@ class TreeNode:
         self.right = None
 
 
-def get_path_to_target(root: TreeNode, target: TreeNode) -> List[int]:
+def get_path_to_target(root: TreeNode, target: TreeNode) -> Optional[List[int]]:
     if root.val == target.val:
         return [root.val]
-
+    if root.left:
+        left_path = get_path_to_target(root=root.left, target=target)
+        if left_path is not None:
+            return [root.val] + left_path
+    if root.right:
+        right_path = get_path_to_target(root=root.right, target=target)
+        if right_path is not None:
+            return [root.val] + right_path
+    return None
 
 
 class Solution:
@@ -37,3 +45,7 @@ class TestDistanceK(TestCase):
     def test_get_path_to_target1(self) -> None:
         path = get_path_to_target(root=self.root, target=self.root)
         self.assertEqual(path, [1])
+
+    def test_get_path_to_target2(self) -> None:
+        path = get_path_to_target(root=self.root, target=self.node4)
+        self.assertEqual(path, [1, 2, 4])
