@@ -49,3 +49,11 @@ class TestDistanceK(TestCase):
     def test_get_path_to_target2(self) -> None:
         path = get_path_to_target(root=self.root, target=self.node4)
         self.assertEqual(path, [1, 2, 4])
+
+    def test_get_path_to_target3(self) -> None:
+        path = get_path_to_target(root=self.root, target=self.node5)
+        self.assertEqual(path, [1, 2, 5])
+
+    def test_get_path_to_target4(self) -> None:
+        path = get_path_to_target(root=self.root, target=self.node3)
+        self.assertEqual(path, [1, 3])
