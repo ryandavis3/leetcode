@@ -54,7 +54,7 @@ def get_tree_from_list(values: List[int]) -> TreeNode:
         parent = prev.get()
         next = Queue()
         while not curr.empty():
-            if visits[parent.val] == 2:
+            if visits[parent.val] == 2 or parent is None:
                 parent = prev.get()
             node = curr.get()
             next.put(node)
