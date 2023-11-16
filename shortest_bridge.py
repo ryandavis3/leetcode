@@ -38,3 +38,7 @@ class TestShortestBridge(TestCase):
         dfs(grid=grid, visited=visited, i=0, j=0)
         visited_expected = [[1, 1, 0], [1, 1, 0], [0, 0, 0]]
         self.assertEqual(visited, visited_expected)
+        visited = get_empty_matrix(n=3)
+        dfs(grid=grid, visited=visited, i=2, j=2)
+        visited_expected = [[0, 0, 0], [0, 0, 0], [0, 0, 1]]
+        self.assertEqual(visited, visited_expected)
