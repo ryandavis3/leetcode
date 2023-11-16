@@ -66,7 +66,7 @@ def find_islands(grid: List[List[int]]) -> Islands:
     return islands
 
 
-def find_shortest_bridge(islands: Islands) -> int:
+def find_shortest_bridge_from_islands(islands: Islands) -> int:
     shortest_bridge = 10 ** 10
     for coordinates_1 in islands.island_1:
         x_1, y_1 = coordinates_1
@@ -75,6 +75,12 @@ def find_shortest_bridge(islands: Islands) -> int:
             bridge_len = abs(x_1 - x_2) + abs(y_1 - y_2) - 1
             if bridge_len < shortest_bridge:
                 shortest_bridge = bridge_len
+    return shortest_bridge
+
+
+def find_shortest_bridge_from_grid(grid: List[List[int]]) -> int:
+    islands = find_islands(grid=grid)
+    shortest_bridge = find_shortest_bridge_from_islands(islands=islands)
     return shortest_bridge
 
 
@@ -109,5 +115,9 @@ class TestShortestBridge(TestCase):
         self.assertEqual(islands, self.islands)
 
     def test3(self) -> None:
-        shortest_bridge = find_shortest_bridge(islands=self.islands)
+        shortest_bridge = find_shortest_bridge_from_islands(islands=self.islands)
+        self.assertEqual(shortest_bridge, 1)
+
+    def test4(self) -> None:
+        shortest_bridge = find_shortest_bridge_from_grid(grid=self.grid)
         self.assertEqual(shortest_bridge, 1)
