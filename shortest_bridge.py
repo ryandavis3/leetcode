@@ -29,3 +29,12 @@ def dfs(grid: List[List[int]], visited: List[List[int]], i: int, j: int) -> None
 class Solution:
     def shortestBridge(self, grid: List[List[int]]) -> int:
         pass
+
+
+class TestShortestBridge(TestCase):
+    def test1(self) -> None:
+        grid = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
+        visited = get_empty_matrix(n=3)
+        dfs(grid=grid, visited=visited, i=0, j=0)
+        visited_expected = [[1, 1, 0], [1, 1, 0], [0, 0, 0]]
+        self.assertEqual(visited, visited_expected)
