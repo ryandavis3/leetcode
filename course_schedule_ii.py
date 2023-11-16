@@ -17,6 +17,7 @@ class Courses:
         self.prerequisites_dict = prerequisites_dict
 
     def get_subsequent_courses(self, prerequisite: int) -> Set:
+        # Get later, subsequent courses
         if prerequisite not in self.prerequisites_dict:
             return set()
         return self.prerequisites_dict[prerequisite]
