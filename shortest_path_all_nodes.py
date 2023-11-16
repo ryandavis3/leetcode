@@ -23,6 +23,21 @@ def remove_node_adjacency_dict(adjacency_dict: Dict[int, Set], node: int) -> Dic
     del adjacency_dict[node]
 
 
+def find_next_node(adjacency_dict: Dict[int, Set], node: int) -> int:
+    adjacent_nodes = adjacency_dict[node]
+    candidates = set()
+    min_degree = 10 ** 10
+    for adjacent_node in adjacent_nodes:
+        degree = len(adjacency_dict[adjacent_node])
+        if degree == min_degree:
+            candidates.add(adjacent_node)
+        elif degree < min_degree:
+            min_degree = degree
+            candidates = set([adjacent_node])
+    if len(candidates) == 1:
+        return candidates.pop()
+
+
 class Solution:
     def shortestPathLength(self, graph: List[List[int]]) -> int:
         pass
