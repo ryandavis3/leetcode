@@ -12,7 +12,7 @@ class Adjacency:
         for prerequisite in prerequisites:
             # b is the prerequisite for a
             a, b = prerequisite
-            if a not in prerequisites_dict:
+            if a not in adjacency_dict:
                 adjacency_dict[a] = set()
             adjacency_dict[a].add(b)
             if b not in prereq_dict:
@@ -31,48 +31,15 @@ class Adjacency:
         self.adjacency_dict[course].remove(prereq)
 
 
-class CourseGraph:
-    def __init__(self, courses: Courses):
-        self.courses = courses
-        self.visited = set()
 
-
-def dfs(courses: Courses, root: int, visited: Set, in_stack: Set) -> bool:
-    if root in in_stack:
-        return True
-    if root in visited:
-        return False
-    visited.add(root)
-    in_stack.add(root)
-    prereqs = courses.get_prerequisites(course=root)
-    for prereq in prereqs:
-        found_cycle = dfs(courses=courses, root=prereq, visited=visited, in_stack=in_stack)
-        if found_cycle:
-            return True
-    in_stack.remove(root)
-    return False
-
-
-def can_finish(num_courses: int, prerequisites: List[List[int]]) -> bool:
-    courses = Courses(num_courses=num_courses, prerequisites=prerequisites)
-    visited = set()
-    for root in range(num_courses):
-        if root in visited:
-            continue
-        found_cycle = dfs(courses=courses, root=root, visited=visited, in_stack=set())
-        if found_cycle:
-            return False
-    return True
-
-
-class TestCourses(TestCase):
+class TestAdjacency(TestCase):
     def test1(self) -> None:
-        courses = Courses(prerequisites=[[1, 0]])
+        courses = Adjacency(prerequisites=[[1, 0]])
         prerequisites_dict_expected = {0: {1}}
-        self.assertEqual(courses.prerequisites_dict, prerequisites_dict_expected)
+        self.assertEqual(courses.prereq_dict, prerequisites_dict_expected)
 
     def test2(self) -> None:
         prerequisites = [[1, 0], [2, 0], [2, 1], [3, 2]]
-        courses = Courses(prerequisites=prerequisites)
+        courses = Adjacency(prerequisites=prerequisites)
         prerequisites_dict_expected = {0: {1, 2}, 1: {2}, 2: {3}}
-        self.assertEqual(courses.prerequisites_dict, prerequisites_dict_expected)
+        self.assertEqual(courses.prereq_dict, prerequisites_dict_expected)
