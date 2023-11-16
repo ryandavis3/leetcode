@@ -38,7 +38,8 @@ def get_coordinates_from_visited(visited: List[List[int]]) -> Set[Tuple]:
     coordinates = set()
     for i in range(n):
         for j in range(n):
-            coordinates.add((i, j))
+            if visited[i][j]:
+                coordinates.add((i, j))
     return coordinates
 
 
@@ -49,10 +50,11 @@ def find_islands(grid: List[List[int]]) -> Islands:
     visited_second = get_empty_matrix(n=n)
     for i in range(n):
         for j in range(n):
-            if grid[i][j] == 1 and visited_first[i][j] == 0 and visited_second[i][j] == 0:
+            if grid[i][j] == 1 and not visited_first[i][j] and not visited_second[i][j]:
                 if islands_found == 0:
                     dfs(grid=grid, visited=visited_first, i=i, j=j)
                     island_1 = get_coordinates_from_visited(visited=visited_first)
+                    print(island_1)
                     islands_found += 1
                 elif islands_found == 1:
                     dfs(grid=grid, visited=visited_second, i=i, j=j)
@@ -74,16 +76,23 @@ class TestShortestBridge(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.grid = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
+        cls.visited_expected_1 = [[1, 1, 0], [1, 1, 0], [0, 0, 0]]
+        cls.visited_expected_2 = [[0, 0, 0], [0, 0, 0], [0, 0, 1]]
 
     def test1(self) -> None:
         visited = get_empty_matrix(n=3)
         dfs(grid=self.grid, visited=visited, i=0, j=0)
-        visited_expected = [[1, 1, 0], [1, 1, 0], [0, 0, 0]]
-        self.assertEqual(visited, visited_expected)
+        self.assertEqual(visited, self.visited_expected_1)
         visited = get_empty_matrix(n=3)
         dfs(grid=self.grid, visited=visited, i=2, j=2)
-        visited_expected = [[0, 0, 0], [0, 0, 0], [0, 0, 1]]
-        self.assertEqual(visited, visited_expected)
+        self.assertEqual(visited, self.visited_expected_2)
 
     def test2(self) -> None:
         islands = find_islands(grid=self.grid)
+        island_1_expected = {(0, 0), (0, 1), (1, 0), (1, 1)}
+        island_2_expected = {(2, 2)}
+        islands_expected = Islands(
+            island_1=island_1_expected,
+            island_2=island_2_expected,
+        )
+        self.assertEqual(islands, islands_expected)
