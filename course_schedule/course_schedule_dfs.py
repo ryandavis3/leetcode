@@ -42,6 +42,18 @@ def dfs(courses: Courses, root: int, visited: Set, in_stack: Set) -> bool:
     return False
 
 
+def can_finish(num_courses: int, prerequisites: List[List[int]]) -> bool:
+    courses = Courses(num_courses=num_courses, prerequisites=prerequisites)
+    visited = set()
+    for root in range(num_courses):
+        if root in visited:
+            continue
+        found_cycle = dfs(courses=courses, root=root, visited=visited, in_stack=set())
+        if found_cycle:
+            return False
+    return True
+
+
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         pass
@@ -72,3 +84,28 @@ class TestDFS(TestCase):
         courses = Courses(num_courses=4, prerequisites=prerequisites)
         found_cycle = dfs(courses=courses, root=3, visited=set(), in_stack=set())
         self.assertTrue(found_cycle)
+
+    def test3(self) -> None:
+        prerequisites = [[3, 2], [2, 1], [1, 0], [0, 3]]
+        no_cycles = can_finish(num_courses=4, prerequisites=prerequisites)
+        self.assertFalse(no_cycles)
+
+    def test4(self) -> None:
+        prerequisites = [[3, 2], [2, 1], [1, 0]]
+        no_cycles = can_finish(num_courses=3, prerequisites=prerequisites)
+        self.assertTrue(no_cycles)
+
+    def test5(self) -> None:
+        prerequisites = [[3, 2], [4, 2], [1, 0]]
+        no_cycles = can_finish(num_courses=3, prerequisites=prerequisites)
+        self.assertTrue(no_cycles)
+
+    def test6(self) -> None:
+        prerequisites = [[3, 2], [4, 2], [1, 0], [0, 1]]
+        no_cycles = can_finish(num_courses=4, prerequisites=prerequisites)
+        self.assertFalse(no_cycles)
+
+    def test7(self) -> None:
+        prerequisites = [[1, 0]]
+        no_cycles = can_finish(num_courses=2, prerequisites=prerequisites)
+        self.assertTrue(no_cycles)
