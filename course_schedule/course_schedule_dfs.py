@@ -56,7 +56,7 @@ def can_finish(num_courses: int, prerequisites: List[List[int]]) -> bool:
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        pass
+        return can_finish(num_courses=numCourses, prerequisites=prerequisites)
 
 
 class TestCourses(TestCase):
