@@ -3,24 +3,32 @@ from unittest import TestCase
 from typing import Dict, List, Set
 
 
-class Courses:
+class Adjacency:
     def __init__(self, prerequisites: List[List[int]]):
         # Keys are prerequisites. Values are later courses
         # for which the key is a prerequisite.
-        prerequisites_dict: Dict[int, Set] = {}
+        adjacency_dict: Dict[int, Set] = {}
+        prereq_dict: Dict[int, Set] = {}
         for prerequisite in prerequisites:
             # b is the prerequisite for a
             a, b = prerequisite
-            if b not in prerequisites_dict:
-                prerequisites_dict[b] = set()
-            prerequisites_dict[b].add(a)
-        self.prerequisites_dict = prerequisites_dict
+            if a not in prerequisites_dict:
+                adjacency_dict[a] = set()
+            adjacency_dict[a].add(b)
+            if b not in prereq_dict:
+                prereq_dict[b] = set()
+            prereq_dict[b].add(a)
+        self.adjacency_dict = adjacency_dict
+        self.prereq_dict = prereq_dict
 
-    def get_subsequent_courses(self, prerequisite: int) -> Set:
-        # Get later, subsequent courses
-        if prerequisite not in self.prerequisites_dict:
-            return set()
-        return self.prerequisites_dict[prerequisite]
+    def apply_prereq(self, course: int, prereq: int) -> None:
+        if course not in self.adjacency_dict:
+            err_msg = f'Course {course} not in adjacency dictionary!'
+            raise ValueError(err_msg)
+        if prereq not in self.adjacency_dict[course]:
+            err_msg = f'Prereq {prereq} not listed for course {course}!'
+            raise ValueError(err_msg)
+        self.adjacency_dict[course].remove(prereq)
 
 
 class CourseGraph:
