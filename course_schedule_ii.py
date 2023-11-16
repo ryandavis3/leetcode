@@ -22,15 +22,15 @@ class Adjacency:
         self.follow_dict = follow_dict
 
     def apply_prereq(self, course: int, prereq: int) -> bool:
-        if course not in self.follow_dict:
-            err_msg = f'Course {course} not in adjacency dictionary!'
+        if course not in self.prereq_dict:
+            err_msg = f'Course {course} not in prereq dictionary!'
             raise ValueError(err_msg)
-        if prereq not in self.follow_dict[course]:
+        if prereq not in self.prereq_dict[course]:
             err_msg = f'Prereq {prereq} not listed for course {course}!'
             raise ValueError(err_msg)
-        self.follow_dict[course].remove(prereq)
-        if not self.follow_dict[course]:
-            del self.follow_dict[course]
+        self.prereq_dict[course].remove(prereq)
+        if not self.prereq_dict[course]:
+            del self.prereq_dict[course]
             return True
         return False
 
@@ -52,9 +52,10 @@ class TestAdjacency(TestCase):
         self.assertEqual(adjacency.follow_dict, follow_dict_expected)
         prereq_dict_expected = {2: {0, 1}, 1: {0}, 3: {2}}
         self.assertEqual(adjacency.prereq_dict, prereq_dict_expected)
+        available = adjacency.apply_prereq(course=1, prereq=0)
+        self.assertTrue(available)
 
-    def test3(self) -> None:
-        prerequisites = [[1, 0], [2, 0], [3, 1], [3, 2]]
-        adjacency = Adjacency(prerequisites=prerequisites)
+
+
 
 
