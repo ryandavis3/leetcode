@@ -66,6 +66,17 @@ def find_islands(grid: List[List[int]]) -> Islands:
     return islands
 
 
+def find_shortest_bridge(islands: Islands) -> int:
+    shortest_bridge = 10 ** 10
+    for coordinates_1 in islands.island_1:
+        x_1, y_1 = coordinates_1
+        for coordinates_2 in islands.island_2:
+            x_2, y_2 = coordinates_2
+            bridge_len = abs(x_1 - x_2) + abs(y_1 - y_2) - 1
+            if bridge_len < shortest_bridge:
+                shortest_bridge = bridge_len
+    return shortest_bridge
+
 
 class Solution:
     def shortestBridge(self, grid: List[List[int]]) -> int:
@@ -78,6 +89,12 @@ class TestShortestBridge(TestCase):
         cls.grid = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
         cls.visited_expected_1 = [[1, 1, 0], [1, 1, 0], [0, 0, 0]]
         cls.visited_expected_2 = [[0, 0, 0], [0, 0, 0], [0, 0, 1]]
+        island_1 = {(0, 0), (0, 1), (1, 0), (1, 1)}
+        island_2 = {(2, 2)}
+        cls.islands = Islands(
+            island_1=island_1,
+            island_2=island_2,
+        )
 
     def test1(self) -> None:
         visited = get_empty_matrix(n=3)
@@ -89,10 +106,8 @@ class TestShortestBridge(TestCase):
 
     def test2(self) -> None:
         islands = find_islands(grid=self.grid)
-        island_1_expected = {(0, 0), (0, 1), (1, 0), (1, 1)}
-        island_2_expected = {(2, 2)}
-        islands_expected = Islands(
-            island_1=island_1_expected,
-            island_2=island_2_expected,
-        )
-        self.assertEqual(islands, islands_expected)
+        self.assertEqual(islands, self.islands)
+
+    def test3(self) -> None:
+        shortest_bridge = find_shortest_bridge(islands=self.islands)
+        self.assertEqual(shortest_bridge, 1)
