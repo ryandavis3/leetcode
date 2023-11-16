@@ -54,8 +54,28 @@ class Adjacency:
 
 
 
-def find_order():
-    pass
+def find_order(num_courses: int, prerequisites: List[List[int]]) -> List[int]:
+    # Construct adjacency lists
+    adjacency = Adjacency(prerequisites=prerequisites)
+    # Get set of available courses
+    available_courses = adjacency.get_available_courses(num_courses=num_courses)
+    if len(available_courses) == 0:
+        return []
+    # Build initial queue
+    queue = Queue()
+    for course in available_courses:
+        queue.put(course)
+    # Operate on queue
+    course_order: List[int] = []
+    while not queue.empty():
+        course = queue.get()
+        course_order += [course]
+        available_courses = adjacency.apply_prereq_all(prereq=course)
+        for available_course in available_courses:
+            queue.put(available_course)
+    if len(course_order) < num_courses:
+        return []
+    return course_order
 
 
 class TestAdjacency(TestCase):
@@ -93,6 +113,18 @@ class TestAdjacency(TestCase):
         self.assertTrue(len(available_courses)==0)
 
 
+class TestFindOrder(TestCase):
+    def test1(self) -> None:
+        prerequisites = [[1, 0], [2, 0], [2, 1], [3, 2]]
+        order = find_order(num_courses=4, prerequisites=prerequisites)
+        order_expected = [0, 1, 2, 3]
+        self.assertEqual(order, order_expected)
+
+    def test2(self) -> None:
+        prerequisites = [[0, 3], [3, 1]]
+        order = find_order(num_courses=4, prerequisites=prerequisites)
+        order_expected = [1, 3, 0, 2]
+        self.assertEqual(order, order_expected)
 
 
 
