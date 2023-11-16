@@ -86,6 +86,12 @@ class TestAdjacency(TestCase):
         newly_avaialble_courses = adjacency.apply_prereq_all(prereq=1)
         self.assertEqual(newly_avaialble_courses, [2])
 
+    def test4(self) -> None:
+        prerequisites = [[0, 1], [1, 2], [2, 3], [3, 0]]
+        adjacency = Adjacency(prerequisites=prerequisites)
+        available_courses = adjacency.get_available_courses(num_courses=4)
+        self.assertTrue(len(available_courses)==0)
+
 
 
 
