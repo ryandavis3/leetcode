@@ -16,6 +16,13 @@ def get_empty_visited_dict(n: int) -> Dict[int, int]:
     return visited_dict
 
 
+def remove_node_adjacency_dict(adjacency_dict: Dict[int, Set], node: int) -> Dict[int, Set]:
+    adjacent_nodes = adjacency_dict[node]
+    for adjacent_node in adjacent_nodes:
+        adjacency_dict[adjacent_node].remove(node)
+    del adjacency_dict[node]
+
+
 class Solution:
     def shortestPathLength(self, graph: List[List[int]]) -> int:
         pass
@@ -24,9 +31,15 @@ class Solution:
 class TestShortestPath(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.graph = [[1,2,3],[0],[0],[0]]
+        cls.graph = [[1, 2, 3], [0], [0], [0]]
 
     def test1(self) -> None:
         adjacency_dict = get_adjacency_dict(graph=self.graph)
         adjacency_dict_expected = {0: {1, 2, 3}, 1: {0}, 2: {0}, 3: {0}}
+        self.assertEqual(adjacency_dict, adjacency_dict_expected)
+
+    def test2(self) -> None:
+        adjacency_dict = {0: {1, 2, 3}, 1: {0}, 2: {0}, 3: {0}}
+        remove_node_adjacency_dict(adjacency_dict=adjacency_dict, node=1)
+        adjacency_dict_expected = {0: {2, 3}, 2: {0}, 3: {0}}
         self.assertEqual(adjacency_dict, adjacency_dict_expected)
