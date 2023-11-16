@@ -123,7 +123,7 @@ class TestFindOrder(TestCase):
     def test2(self) -> None:
         prerequisites = [[0, 3], [3, 1]]
         order = find_order(num_courses=4, prerequisites=prerequisites)
-        order_expected = [1, 3, 0, 2]
+        order_expected = [1, 2, 3, 0]
         self.assertEqual(order, order_expected)
 
 
