@@ -78,6 +78,11 @@ def find_order(num_courses: int, prerequisites: List[List[int]]) -> List[int]:
     return course_order
 
 
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        return find_order(num_courses=numCourses, prerequisites=prerequisites)
+
+
 class TestAdjacency(TestCase):
     def test1(self) -> None:
         adjacency = Adjacency(prerequisites=[[1, 0]])
