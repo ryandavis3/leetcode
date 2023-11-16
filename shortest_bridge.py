@@ -24,7 +24,7 @@ def dfs(grid: List[List[int]], visited: List[List[int]], i: int, j: int) -> None
     if i < n - 1:
         dfs(grid=grid, visited=visited, i=i+1, j=j)
     if j < n - 1:
-        dfs(grid=grid, visited=visited, i=1, j=j+1)
+        dfs(grid=grid, visited=visited, i=i, j=j+1)
 
 
 @dataclass(frozen=True)
@@ -124,5 +124,15 @@ class TestShortestBridge(TestCase):
 
     def test5(self) -> None:
         grid = [[0, 1], [1, 0]]
+        shortest_bridge = find_shortest_bridge_from_grid(grid=grid)
+        self.assertEqual(shortest_bridge, 1)
+
+    def test6(self) -> None:
+        grid = [[0, 1, 0], [0, 0, 0], [0, 0, 1]]
+        shortest_bridge = find_shortest_bridge_from_grid(grid=grid)
+        self.assertEqual(shortest_bridge, 2)
+
+    def test7(self) -> None:
+        grid = [[1, 1, 1, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 1], [1, 0, 0, 0, 1], [1, 1, 1, 1, 1]]
         shortest_bridge = find_shortest_bridge_from_grid(grid=grid)
         self.assertEqual(shortest_bridge, 1)
