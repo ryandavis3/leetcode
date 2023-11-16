@@ -70,11 +70,15 @@ def find_order(num_courses: int, prerequisites: List[List[int]]) -> List[int]:
     while not queue.empty():
         course = queue.get()
         course_order += [course]
+        # Get newly available courses and add to queue
         available_courses = adjacency.apply_prereq_all(prereq=course)
         for available_course in available_courses:
             queue.put(available_course)
+    # Return empty list if we cannot find a full ordered list -> this means there
+    # was a cycle.
     if len(course_order) < num_courses:
         return []
+    # Return course order
     return course_order
 
 
