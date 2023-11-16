@@ -26,6 +26,21 @@ class CourseGraph:
         self.visited = set()
 
 
+def dfs(courses: Courses, root: int, visited: Set, in_stack: Set) -> bool:
+    if root in in_stack:
+        return True
+    if root in visited:
+        return False
+    visited.add(root)
+    in_stack.add(root)
+    prereqs = courses.get_prerequisites(course=root)
+    for prereq in prereqs:
+        found_cycle = dfs(courses=courses, root=prereq, visited=visited, in_stack=in_stack)
+        if found_cycle:
+            return True
+    in_stack.remove(root)
+    return False
+
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -43,3 +58,11 @@ class TestCourses(TestCase):
         courses = Courses(num_courses=4, prerequisites=prerequisites)
         prerequisites_dict_expected = {1: {0}, 2: {0, 1}, 3: {2}}
         self.assertEqual(courses.prerequisites_dict, prerequisites_dict_expected)
+
+
+class TestDFS(TestCase):
+    def test1(self) -> None:
+        prerequisites = [[1, 0], [2, 0], [2, 1], [3, 2]]
+        courses = Courses(num_courses=4, prerequisites=prerequisites)
+        found_cycle = dfs(courses=courses, root=3, visited=set(), in_stack=set())
+        self.assertFalse(found_cycle)
