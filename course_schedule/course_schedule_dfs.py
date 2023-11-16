@@ -66,3 +66,9 @@ class TestDFS(TestCase):
         courses = Courses(num_courses=4, prerequisites=prerequisites)
         found_cycle = dfs(courses=courses, root=3, visited=set(), in_stack=set())
         self.assertFalse(found_cycle)
+
+    def test2(self) -> None:
+        prerequisites = [[3, 2], [2, 1], [1, 0], [0, 3]]
+        courses = Courses(num_courses=4, prerequisites=prerequisites)
+        found_cycle = dfs(courses=courses, root=3, visited=set(), in_stack=set())
+        self.assertTrue(found_cycle)
