@@ -45,6 +45,13 @@ class Adjacency:
                 newly_available_courses += [following_course]
         return newly_available_courses
 
+    def get_available_courses(self, num_courses: int) -> List[int]:
+        available_courses: List[int] = []
+        for course in range(num_courses):
+            if course not in self.prereq_dict:
+                available_courses += [course]
+        return available_courses
+
 
 
 def find_order():
@@ -72,6 +79,8 @@ class TestAdjacency(TestCase):
     def test3(self) -> None:
         prerequisites = [[1, 0], [2, 0], [2, 1], [3, 2]]
         adjacency = Adjacency(prerequisites=prerequisites)
+        available_courses = adjacency.get_available_courses(num_courses=4)
+        self.assertEqual(available_courses, [0])
         newly_avaialble_courses = adjacency.apply_prereq_all(prereq=0)
         self.assertEqual(newly_avaialble_courses, [1])
         newly_avaialble_courses = adjacency.apply_prereq_all(prereq=1)
