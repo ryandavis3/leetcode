@@ -86,7 +86,7 @@ def find_shortest_bridge_from_grid(grid: List[List[int]]) -> int:
 
 class Solution:
     def shortestBridge(self, grid: List[List[int]]) -> int:
-        pass
+        return find_shortest_bridge_from_grid(grid=grid)
 
 
 class TestShortestBridge(TestCase):
