@@ -121,3 +121,8 @@ class TestShortestBridge(TestCase):
     def test4(self) -> None:
         shortest_bridge = find_shortest_bridge_from_grid(grid=self.grid)
         self.assertEqual(shortest_bridge, 1)
+
+    def test5(self) -> None:
+        grid = [[0, 1], [1, 0]]
+        shortest_bridge = find_shortest_bridge_from_grid(grid=grid)
+        self.assertEqual(shortest_bridge, 1)
