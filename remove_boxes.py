@@ -33,6 +33,8 @@ class Boxes:
 
 
 def remove_boxes(boxes: List[int]) -> int:
+    if len(boxes) == 1:
+        return 1
     boxes_ = Boxes(boxes=boxes)
     if boxes_.number_box_locations() == 1:
         keys = list(boxes_._box_locations.keys())
@@ -71,3 +73,8 @@ class TestRemoveBoxes(TestCase):
         boxes = [1]
         output = remove_boxes(boxes=boxes)
         self.assertEqual(output, 1)
+
+    def test3(self) -> None:
+        boxes = [1, 1]
+        output = remove_boxes(boxes=boxes)
+        self.assertEqual(output, 4)
