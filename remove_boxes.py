@@ -20,18 +20,26 @@ class Boxes:
             if i == 0:
                 continue
             if box != prev:
-                print('a')
                 box_row = BoxRow(number=prev, length=i-start)
                 self._box_locations[start] = box_row
                 start = i
                 prev = box
-        if start < L -1:
-            box_row = BoxRow(number=prev, length=L-1-start)
+        if start < L - 1:
+            box_row = BoxRow(number=prev, length=L-start)
             self._box_locations[start] = box_row
+
+    def number_box_locations(self) -> int:
+        return len(self._box_locations)
 
 
 def remove_boxes(boxes: List[int]) -> int:
-    pass
+    boxes_ = Boxes(boxes=boxes)
+    if boxes_.number_box_locations == 1:
+        keys = list(boxes_._box_locations.keys())
+        key = keys[0]
+        box_row = boxes_._box_locations[key]
+        k = box_row.length
+        return k * k
 
 
 class Solution:
@@ -43,7 +51,13 @@ class TestBoxes(TestCase):
     def test1(self) -> None:
         boxes = [1, 1, 1, 2, 2]
         boxes_ = Boxes(boxes=boxes)
-        expected_box_locations = {0: BoxRow(number=1, length=3), 3: BoxRow(number=2, length=1)}
+        expected_box_locations = {0: BoxRow(number=1, length=3), 3: BoxRow(number=2, length=2)}
+        self.assertEqual(boxes_._box_locations, expected_box_locations)
+
+    def test2(self) -> None:
+        boxes = [1, 1, 1]
+        boxes_ = Boxes(boxes=boxes)
+        expected_box_locations = {0: BoxRow(number=1, length=3)}
         self.assertEqual(boxes_._box_locations, expected_box_locations)
 
 
