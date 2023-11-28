@@ -34,7 +34,7 @@ class Boxes:
 
 def remove_boxes(boxes: List[int]) -> int:
     boxes_ = Boxes(boxes=boxes)
-    if boxes_.number_box_locations == 1:
+    if boxes_.number_box_locations() == 1:
         keys = list(boxes_._box_locations.keys())
         key = keys[0]
         box_row = boxes_._box_locations[key]
