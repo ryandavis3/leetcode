@@ -6,6 +6,7 @@ class WordsManager:
     def __init__(self, words: List[str]):
         self.words = words
         self.successor_dict = self.build_successor_dict(words=words)
+        self.words_with_successors = set(self.successor_dict.keys())
 
     @staticmethod
     def is_successor(word, word_successor) -> bool:
@@ -37,6 +38,19 @@ class WordsManager:
         return successor_dict
 
 
+def dfs(word: str, predecessors: Set, words_manager: WordsManager) -> int:
+    if word not in words_manager.successor_dict:
+        return 1
+    successors = words_manager.successor_dict[word] - predecessors
+    longest_chain = 0
+    predecessors.add(word)
+    for successor in successors:
+        len_chain = dfs(word=successor, predecessors=predecessors.copy(), words_manager=words_manager)
+        if len_chain > longest_chain:
+            longest_chain = len_chain
+    return 1 + longest_chain
+
+
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
         pass
@@ -66,3 +80,21 @@ class TestWordsManager(TestCase):
 
     def test_init(self) -> None:
         _ = WordsManager(words=self.words)
+
+
+class TestLongestStrChain(TestCase):
+    def test_dfs1(self) -> None:
+        words = ["a", "b", "ba", "bca"]
+        words_manager = WordsManager(words=words)
+        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager)
+        self.assertEqual(len_longest, 3)
+        len_longest = dfs(word='b', predecessors=set(), words_manager=words_manager)
+        self.assertEqual(len_longest, 3)
+
+    def test_dfs2(self) -> None:
+        words = ["a", "b", "ba", "bca", "bda", "bdca"]
+        words_manager = WordsManager(words=words)
+        len_longest = dfs(word='bca', predecessors=set(), words_manager=words_manager)
+        self.assertEqual(len_longest, 2)
+        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager)
+        self.assertEqual(len_longest, 4)
