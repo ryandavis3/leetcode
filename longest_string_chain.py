@@ -38,16 +38,20 @@ class WordsManager:
         return successor_dict
 
 
-def dfs(word: str, predecessors: Set, words_manager: WordsManager) -> int:
+def dfs(word: str, predecessors: Set, words_manager: WordsManager, memo: Dict) -> int:
+    if word in memo:
+        return memo[word]
     if word not in words_manager.successor_dict:
+        memo[word] = 1
         return 1
     successors = words_manager.successor_dict[word] - predecessors
     longest_chain = 0
     predecessors.add(word)
     for successor in successors:
-        len_chain = dfs(word=successor, predecessors=predecessors.copy(), words_manager=words_manager)
+        len_chain = dfs(word=successor, predecessors=predecessors.copy(), words_manager=words_manager, memo=memo)
         if len_chain > longest_chain:
             longest_chain = len_chain
+    memo[word] = 1 + longest_chain
     return 1 + longest_chain
 
 
@@ -86,15 +90,15 @@ class TestLongestStrChain(TestCase):
     def test_dfs1(self) -> None:
         words = ["a", "b", "ba", "bca"]
         words_manager = WordsManager(words=words)
-        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager)
+        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 3)
-        len_longest = dfs(word='b', predecessors=set(), words_manager=words_manager)
+        len_longest = dfs(word='b', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 3)
 
     def test_dfs2(self) -> None:
         words = ["a", "b", "ba", "bca", "bda", "bdca"]
         words_manager = WordsManager(words=words)
-        len_longest = dfs(word='bca', predecessors=set(), words_manager=words_manager)
+        len_longest = dfs(word='bca', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 2)
-        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager)
+        len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 4)
