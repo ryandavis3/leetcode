@@ -4,7 +4,8 @@ from typing import Dict, List, Set
 
 class WordsManager:
     def __init__(self, words: List[str]):
-        pass
+        self.words = words
+        self.successor_dict = self.build_successor_dict(words=words)
 
     @staticmethod
     def is_successor(word, word_successor) -> bool:
@@ -42,6 +43,10 @@ class Solution:
 
 
 class TestWordsManager(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.words = ["a", "b", "ba", "bca", "bda", "bdca"]
+
     def test_is_successor1(self) -> None:
         test_cases = {
             ('a', 'ab'): True,
@@ -55,8 +60,9 @@ class TestWordsManager(TestCase):
             self.assertEqual(result, expected)
 
     def test_build_successor_dict(self) -> None:
-        words = ["a", "b", "ba", "bca", "bda", "bdca"]
-        successor_dict = WordsManager.build_successor_dict(words=words)
+        successor_dict = WordsManager.build_successor_dict(words=self.words)
         successor_dict_expected = {'a': {'ba'}, 'b': {'ba'}, 'ba': {'bda', 'bca'}, 'bca': {'bdca'}, 'bda': {'bdca'}}
         self.assertEqual(successor_dict, successor_dict_expected)
 
+    def test_init(self) -> None:
+        _ = WordsManager(words=self.words)
