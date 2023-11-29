@@ -102,3 +102,15 @@ class TestLongestStrChain(TestCase):
         self.assertEqual(len_longest, 2)
         len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 4)
+
+    def test_dfs3(self) -> None:
+        words = ["xbc", "pcxbcf", "xb", "cxbc", "pcxbc"]
+        words_manager = WordsManager(words=words)
+        len_longest = dfs(word='xb', predecessors=set(), words_manager=words_manager, memo=dict())
+        self.assertEqual(len_longest, 5)
+
+    def test_dfs4(self) -> None:
+        words = ["abcd", "dbqca"]
+        words_manager = WordsManager(words=words)
+        len_longest = dfs(word='abcd', predecessors=set(), words_manager=words_manager, memo=dict())
+        self.assertEqual(len_longest, 1)
