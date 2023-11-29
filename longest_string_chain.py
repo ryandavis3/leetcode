@@ -1,5 +1,5 @@
 from unittest import TestCase
-from typing import Dict, List
+from typing import Dict, List, Set
 
 
 class WordsManager:
@@ -24,8 +24,16 @@ class WordsManager:
         return True
 
     @staticmethod
-    def build_successor_dict(words: List[str]) -> Dict:
-        pass
+    def build_successor_dict(words: List[str]) -> Dict[str, Set[str]]:
+        successor_dict: Dict[str, Set[str]] = {}
+        for word in words:
+            word_successors = set()
+            for potential_successor in words:
+                if WordsManager.is_successor(word=word, word_successor=potential_successor):
+                    word_successors.add(potential_successor)
+            if word_successors:
+                successor_dict[word] = word_successors
+        return successor_dict
 
 
 class Solution:
@@ -45,4 +53,10 @@ class TestWordsManager(TestCase):
             word, word_successor = words
             result = WordsManager.is_successor(word=word, word_successor=word_successor)
             self.assertEqual(result, expected)
+
+    def test_build_successor_dict(self) -> None:
+        words = ["a", "b", "ba", "bca", "bda", "bdca"]
+        successor_dict = WordsManager.build_successor_dict(words=words)
+        successor_dict_expected = {'a': {'ba'}, 'b': {'ba'}, 'ba': {'bda', 'bca'}, 'bca': {'bdca'}, 'bda': {'bdca'}}
+        self.assertEqual(successor_dict, successor_dict_expected)
 
