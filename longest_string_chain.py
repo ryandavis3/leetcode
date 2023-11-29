@@ -38,7 +38,7 @@ class WordsManager:
         return successor_dict
 
 
-def dfs(word: str, predecessors: Set, words_manager: WordsManager, memo: Dict) -> int:
+def dfs(word: str, predecessors: Set, words_manager: WordsManager, memo: Dict[str, int]) -> int:
     if word in memo:
         return memo[word]
     if word not in words_manager.successor_dict:
@@ -53,6 +53,18 @@ def dfs(word: str, predecessors: Set, words_manager: WordsManager, memo: Dict) -
             longest_chain = len_chain
     memo[word] = 1 + longest_chain
     return 1 + longest_chain
+
+
+def longest_str_chain(words: List[str]) -> int:
+    memo: Dict[str, int] = {}
+    words_manager = WordsManager(words=words)
+    words = sorted(words)
+    max_len = 0
+    for word in words:
+        len_starting_word = dfs(word=word, predecessors=set(), words_manager=words_manager, memo=memo)
+        if len_starting_word > max_len:
+            max_len = len_starting_word
+    return max_len
 
 
 class Solution:
@@ -87,6 +99,10 @@ class TestWordsManager(TestCase):
 
 
 class TestLongestStrChain(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.words = ["a", "b", "ba", "bca", "bda", "bdca"]
+
     def test_dfs1(self) -> None:
         words = ["a", "b", "ba", "bca"]
         words_manager = WordsManager(words=words)
@@ -96,8 +112,7 @@ class TestLongestStrChain(TestCase):
         self.assertEqual(len_longest, 3)
 
     def test_dfs2(self) -> None:
-        words = ["a", "b", "ba", "bca", "bda", "bdca"]
-        words_manager = WordsManager(words=words)
+        words_manager = WordsManager(words=self.words)
         len_longest = dfs(word='bca', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 2)
         len_longest = dfs(word='a', predecessors=set(), words_manager=words_manager, memo=dict())
@@ -114,3 +129,7 @@ class TestLongestStrChain(TestCase):
         words_manager = WordsManager(words=words)
         len_longest = dfs(word='abcd', predecessors=set(), words_manager=words_manager, memo=dict())
         self.assertEqual(len_longest, 1)
+
+    def test_longest_str_chain1(self) -> None:
+        max_len = longest_str_chain(words=self.words)
+        self.assertEqual(max_len, 4)
