@@ -69,7 +69,7 @@ def longest_str_chain(words: List[str]) -> int:
 
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
-        pass
+        return longest_str_chain(words=words)
 
 
 class TestWordsManager(TestCase):
