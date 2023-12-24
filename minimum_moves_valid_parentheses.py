@@ -11,18 +11,26 @@ class Solution:
 
 
 def remove_parentheses(s: str) -> str:
+    stack = list()
     index_remove = set()
-    open_parens_count = 0
     for i, char in enumerate(s):
-        if char == CLOSED:
-            if open_parens_count == 0:
+        if char == OPEN:
+            stack.append(i)
+        elif char == CLOSED:
+            if not stack:
                 index_remove.add(i)
             else:
-                open_parens_count -= 1
-        elif char == OPEN:
-            open_parens_count += 1
+                stack.pop()
+    for char in stack:
+        index_remove.add(char)
+    s_cleaned = [char for i, char in enumerate(s) if i not in index_remove]
+    return ''.join(s_cleaned)
+
 
 
 class TestMinRemove(TestCase):
     def test1(self) -> None:
-        pass
+        s = "lee(t(c)o)de)"
+        s_cleaned = remove_parentheses(s=s)
+        s_expected = "lee(t(c)o)de"
+        self.assertEqual(s_cleaned, s_expected)
