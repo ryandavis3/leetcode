@@ -34,3 +34,13 @@ class TestMinRemove(TestCase):
         s_cleaned = remove_parentheses(s=s)
         s_expected = "lee(t(c)o)de"
         self.assertEqual(s_cleaned, s_expected)
+
+    def test2(self) -> None:
+        test_cases = {
+            'a)b(c)d': 'ab(c)d',
+            '))((': '',
+            '(((a)': '(a)'
+        }
+        for s, s_expected in test_cases.items():
+            s_cleaned = remove_parentheses(s=s)
+            self.assertEqual(s_cleaned, s_expected)
