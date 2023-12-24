@@ -9,17 +9,6 @@ class Solution:
         return get_min_meeting_rooms(intervals=intervals)
 
 
-@dataclass(frozen=True)
-class Interval:
-    num: int
-    start: int
-    end: int
-
-    def __post_init__(self):
-        if self.start > self.end:
-            raise ValueError('start cannot be before end!')
-
-
 class IntervalSet:
 
     def __init__(self, intervals: List[List[int]]):
