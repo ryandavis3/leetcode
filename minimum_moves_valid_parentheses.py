@@ -7,7 +7,7 @@ CLOSED = ')'
 
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
-        pass
+        return remove_parentheses(s=s)
 
 
 def remove_parentheses(s: str) -> str:
