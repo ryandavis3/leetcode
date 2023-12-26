@@ -28,6 +28,8 @@ class TestDuplicateLetters(TestCase):
         test_cases = {
             'bcabc': 'abc',
             'cbacdcbc': 'acdb',
+            'aaaccbb': 'acb',
+            'bcdabcd': 'abcd',
         }
         for s, expected in test_cases.items():
             result = remove_duplicate_letters(s=s)
