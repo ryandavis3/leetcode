@@ -6,12 +6,33 @@ class Solution:
         pass
 
 
+class StringChars:
+    def __init__(self, s: str):
+        chars: Dict[s, Set] = {}
+        for i, char in enumerate(s):
+            if char not in chars:
+                chars[char] = set()
+            chars[char].add(i)
+        self.chars = chars
+        self.unique_chars = sorted(list(set(s)), reverse=True)
+
+
 def remove_duplicate_letters(s: str) -> str:
     pass
 
 
+class TestStringChars(TestCase):
+    def test1(self) -> None:
+        string_chars = StringChars(s='bcabc')
+        chars_expected = {'a': set([2]), 'b': set([0, 3]), 'c': set([1, 4])}
+        unique_chars_expected = ['c', 'b', 'a']
+        self.assertEqual(string_chars.chars, chars_expected)
+        self.assertEqual(string_chars.unique_chars, unique_chars_expected)
+
+
 class TestDuplicateLetters(TestCase):
     def test1(self) -> None:
+        return None
         test_cases = {
             'bcabc': 'abc',
             'cbacdcbc': 'acdb',
