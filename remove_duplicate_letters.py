@@ -15,6 +15,12 @@ class StringChars:
             chars[char].add(i)
         self.chars = chars
         self.unique_chars = sorted(list(set(s)), reverse=True)
+        self.index = -1
+
+    def pop_letter(self) -> str:
+        letter = self.unique_chars.pop()
+        letter_index = self.chars[letter]
+        valid_letter_index = [index for index in letter_index if index > self.index]
 
 
 def remove_duplicate_letters(s: str) -> str:
