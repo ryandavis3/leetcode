@@ -4,7 +4,7 @@ from unittest import TestCase
 
 class Solution:
     def removeDuplicateLetters(self, s: str) -> str:
-        pass
+        return remove_duplicate_letters(s=s)
 
 
 def remove_duplicate_letters(s: str) -> str:
