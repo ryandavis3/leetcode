@@ -48,6 +48,7 @@ def get_max_frequency_from_matrix(increment_matrix: List[List[int]], k: int) -> 
 
 
 def get_max_freq(nums: List[int], k: int) -> int:
+    nums = sorted(nums)
     increment_matrix = get_increment_matrix(nums=nums)
     max_freq = get_max_frequency_from_matrix(increment_matrix=increment_matrix, k=k)
     return max_freq
@@ -92,4 +93,15 @@ class TestIncrementMatrix(TestCase):
         nums = [1, 4, 8, 13]
         max_freq = get_max_freq(nums=nums, k=5)
         self.assertEqual(max_freq, 2)
+        max_freq = get_max_freq(nums=nums, k=11)
+        self.assertEqual(max_freq, 3)
+
+    def test7(self) -> None:
+        nums = [3, 9, 6]
+        max_freq = get_max_freq(nums=nums, k=2)
+        self.assertEqual(max_freq, 1)
+        max_freq = get_max_freq(nums=nums, k=3)
+        self.assertEqual(max_freq, 2)
+        max_freq = get_max_freq(nums=nums, k=9)
+        self.assertEqual(max_freq, 3)
 
