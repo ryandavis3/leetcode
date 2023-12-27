@@ -22,10 +22,7 @@ class HitCounter:
 
     def apply_timestamp(self, timestamp: int) -> None:
         cutoff_timestamp = timestamp - self.lookback_seconds
-        if self.tail is not None:
-            print(self.tail.val)
         while self.tail is not None and self.tail.val <= cutoff_timestamp:
-            print(self.tail.val)
             self.tail = self.tail.next
             self.n_hits -= 1
 
@@ -34,6 +31,8 @@ class HitCounter:
         if self.head is None and self.tail is None:
             self.head = node
             self.tail = node
+            self.n_hits += 1
+            return None
         self.apply_timestamp(timestamp=timestamp)
         self.head.next = node
         self.head = node
@@ -93,3 +92,17 @@ class TestHitCounter(TestCase):
         self.assertEqual(hits, 3)
         counter.hit(timestamp=956)
         counter.hit(timestamp=957)
+
+    def test3(self) -> None:
+        counter = HitCounter()
+        counter.hit(timestamp=100)
+        hits = counter.getHits(timestamp=121)
+        self.assertEqual(hits, 1)
+        hits = counter.getHits(timestamp=153)
+        self.assertEqual(hits, 1)
+        hits = counter.getHits(timestamp=252)
+        self.assertEqual(hits, 1)
+        hits = counter.getHits(timestamp=360)
+        self.assertEqual(hits, 1)
+        hits = counter.getHits(timestamp=425)
+        self.assertEqual(hits, 0)
