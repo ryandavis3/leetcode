@@ -23,7 +23,7 @@ def get_increment_dict(nums: List[int]) -> Dict[int, List[int]]:
             if target_num >= start_num and i != j:
                 diff = target_num - start_num
                 increment_array.append(diff)
-        increment_dict[target_num] = increment_array
+        increment_dict[target_num] = sorted(increment_array)
     return increment_dict
 
 
@@ -137,11 +137,11 @@ class TestIncrementMatrix(TestCase):
     def test10(self) -> None:
         nums = [1, 2, 4]
         increment_dict = get_increment_dict(nums=nums)
-        increment_dict_expected = {1: [], 2: [1], 4: [3, 2]}
+        increment_dict_expected = {1: [], 2: [1], 4: [2, 3]}
         self.assertEqual(increment_dict, increment_dict_expected)
 
     def test11(self) -> None:
         nums = [1, 1, 2, 4]
         increment_dict = get_increment_dict(nums=nums)
-        increment_dict_expected = {1: [0, ], 2: [1, 1], 4: [3, 3, 2]}
+        increment_dict_expected = {1: [0, ], 2: [1, 1], 4: [2, 3, 3]}
         self.assertEqual(increment_dict, increment_dict_expected)
