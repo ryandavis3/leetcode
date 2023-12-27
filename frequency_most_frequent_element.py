@@ -94,7 +94,7 @@ def get_max_freq2(nums: List[int], k: int) -> int:
 
 class Solution:
     def maxFrequency(self, nums: List[int], k: int) -> int:
-        return get_max_freq(nums=nums, k=k)
+        return get_max_freq2(nums=nums, k=k)
 
 
 class TestIncrementMatrix(TestCase):
@@ -151,13 +151,13 @@ class TestIncrementMatrix(TestCase):
          9901, 9926, 9908, 9969, 9978, 9984, 9952, 9945, 9958, 9958, 9930, 9923, 9950, 9993, 9938, 9976, 9942, 9946,
          9990, 9951, 9971, 9980, 9966, 9944, 9976, 9954, 9970, 9984, 9939, 9961, 9996, 9993, 9935, 9949, 9975, 9952,
          9998, 9956, 9957, 9949, 9902, 9946, 9979, 9904, 9925, 9948, 9952, 9961, 9948, 9982, 9922, 9958, 9956]
-        max_freq = get_max_freq(nums=nums, k=1911)
-        #self.assertEqual(max_freq, 75)
+        max_freq = get_max_freq2(nums=nums, k=1911)
+        self.assertEqual(max_freq, 75)
 
     def test9(self) -> None:
         nums = [3, 3, 3]
-        max_freq = get_max_freq(nums=nums, k=1)
-        #self.assertEqual(max_freq, 3)
+        max_freq = get_max_freq2(nums=nums, k=1)
+        self.assertEqual(max_freq, 3)
 
     def test10(self) -> None:
         nums = [1, 2, 4]
