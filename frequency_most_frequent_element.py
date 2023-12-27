@@ -68,10 +68,27 @@ def get_max_frequency_from_matrix(increment_matrix: List[List[int]], k: int) -> 
     return max_freq
 
 
+def get_max_freq_from_cumulative_dict(cumulative_increment_dict: Dict[int, List[int]], k: int) -> Dict[int, List[int]]:
+    max_freq = 0
+    for target_num, cumulative_increments in cumulative_increment_dict.items():
+        max_freq_i = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=k)
+        if max_freq_i > max_freq:
+            max_freq = max_freq_i
+    return max_freq
+
+
 def get_max_freq(nums: List[int], k: int) -> int:
     nums = sorted(nums)
     increment_matrix = get_increment_matrix(nums=nums)
     max_freq = get_max_frequency_from_matrix(increment_matrix=increment_matrix, k=k)
+    return max_freq
+
+
+def get_max_freq2(nums: List[int], k: int) -> int:
+    nums = sorted(nums)
+    increment_dict = get_increment_dict(nums=nums)
+    cumulative_increment_dict = get_cumulative_increment_dict(increment_dict=increment_dict)
+    max_freq = get_max_freq_from_cumulative_dict(cumulative_increment_dict=cumulative_increment_dict, k=k)
     return max_freq
 
 
@@ -159,3 +176,29 @@ class TestIncrementMatrix(TestCase):
         cumulative_increment_dict = get_cumulative_increment_dict(increment_dict=increment_dict)
         cumulative_increment_dict_expected = {1: [], 2: [1], 4: [2, 5]}
         self.assertEqual(cumulative_increment_dict, cumulative_increment_dict_expected)
+
+    def test13(self) -> None:
+        cumulative_increment_dict = {1: [], 2: [1], 4: [2, 5]}
+        max_freq = get_max_freq_from_cumulative_dict(cumulative_increment_dict=cumulative_increment_dict, k=5)
+        self.assertEqual(max_freq, 3)
+
+    def test14(self) -> None:
+        nums = [1, 2, 4]
+        max_freq = get_max_freq2(nums=nums, k=5)
+        self.assertEqual(max_freq, 3)
+        max_freq = get_max_freq2(nums=nums, k=1)
+        self.assertEqual(max_freq, 2)
+
+    def test15(self) -> None:
+        nums = [1, 1, 1]
+        max_freq = get_max_freq2(nums=nums, k=0)
+        self.assertEqual(max_freq, 3)
+        max_freq = get_max_freq2(nums=nums, k=1)
+        self.assertEqual(max_freq, 3)
+
+    def test16(self) -> None:
+        nums = [1, 1, 3, 4]
+        max_freq = get_max_freq2(nums=nums, k=4)
+        self.assertEqual(max_freq, 3)
+        max_freq = get_max_freq2(nums=nums, k=7)
+        self.assertEqual(max_freq, 4)
