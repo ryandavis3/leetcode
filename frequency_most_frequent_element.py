@@ -143,5 +143,5 @@ class TestIncrementMatrix(TestCase):
     def test11(self) -> None:
         nums = [1, 1, 2, 4]
         increment_dict = get_increment_dict(nums=nums)
-        increment_dict_expected = {1: [0, ], 2: [1, 1], 4: [2, 3, 3]}
+        increment_dict_expected = {1: [0], 2: [1, 1], 4: [2, 3, 3]}
         self.assertEqual(increment_dict, increment_dict_expected)
