@@ -50,3 +50,8 @@ class TestMaxFreq(TestCase):
         nums = [3, 9, 6]
         max_freq = get_max_frequency(nums=nums, k=2)
         self.assertEqual(max_freq, 1)
+
+    def test5(self) -> None:
+        nums = [3, 3, 3]
+        max_freq = get_max_frequency(nums=nums, k=1)
+        self.assertEqual(max_freq, 3)
