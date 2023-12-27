@@ -116,4 +116,11 @@ class TestIncrementMatrix(TestCase):
         max_freq = get_max_freq(nums=nums, k=1911)
         self.assertEqual(max_freq, 75)
 
+    def test9(self) -> None:
+        nums = [3, 3, 3]
+        max_freq = get_max_freq(nums=nums, k=1)
+        self.assertEqual(max_freq, 3)
+
+
+
 
