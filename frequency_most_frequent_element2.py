@@ -25,7 +25,7 @@ def get_max_frequency(nums: List[int], k: int) -> int:
 
 class Solution:
     def maxFrequency(self, nums: List[int], k: int) -> int:
-        pass
+        return get_max_frequency(nums=nums, k=k)
 
 
 class TestMaxFreq(TestCase):
