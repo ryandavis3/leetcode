@@ -37,6 +37,14 @@ def get_cumulative_increments(increments: List[int]) -> List[int]:
     return cumulative_increments
 
 
+def get_cumulative_increment_dict(increment_dict: Dict[int, List[int]]) -> Dict[int, List[int]]:
+    cumulative_increments_dict: Dict[int, List[int]] = dict()
+    for target_num, increments in increment_dict.items():
+        cumulative_increments = get_cumulative_increments(increments=increments)
+        cumulative_increments_dict[target_num] = cumulative_increments
+    return cumulative_increments_dict
+
+
 def get_max_freq_cumulative_increments(cumulative_increments: List[int], k: int) -> int:
     if not cumulative_increments:
         return 1
@@ -145,3 +153,9 @@ class TestIncrementMatrix(TestCase):
         increment_dict = get_increment_dict(nums=nums)
         increment_dict_expected = {1: [0], 2: [1, 1], 4: [2, 3, 3]}
         self.assertEqual(increment_dict, increment_dict_expected)
+
+    def test12(self) -> None:
+        increment_dict = {1: [], 2: [1], 4: [2, 3]}
+        cumulative_increment_dict = get_cumulative_increment_dict(increment_dict=increment_dict)
+        cumulative_increment_dict_expected = {1: [], 2: [1], 4: [2, 5]}
+        self.assertEqual(cumulative_increment_dict, cumulative_increment_dict_expected)
