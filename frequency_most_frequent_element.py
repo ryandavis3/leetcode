@@ -24,11 +24,25 @@ def get_cumulative_increments(increments: List[int]) -> List[int]:
     return cumulative_increments
 
 
+def get_max_freq_cumulative_increments(cumulative_increments: List[int], k: int) -> int:
+    if cumulative_increments[-1] <= k:
+        return len(cumulative_increments)
+    for i, cumulative_increment in enumerate(cumulative_increments):
+        if cumulative_increment > k:
+            return i
+
+
 def get_max_frequency_from_matrix(increment_matrix: List[List[int]], k: int) -> List[int]:
     L = len(increment_matrix)
+    max_freq = 0
     for i in range(L):
         increments = increment_matrix[i][::-1]
         increments = [x for x in increments if x > 0]
+        cumulative_increments = get_cumulative_increments(increments=increments)
+        max_freq_i = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=k)
+        if max_freq_i > max_freq:
+            max_freq = max_freq_i
+    return max_freq
 
 
 class Solution:
@@ -48,3 +62,10 @@ class TestIncrementMatrix(TestCase):
         cumulative_increments = get_cumulative_increments(increments=increments)
         cumulative_increments_expected = [2, 5]
         self.assertEqual(cumulative_increments, cumulative_increments_expected)
+
+    def test3(self) -> None:
+        cumulative_increments = [2, 5, 10]
+        max_freq = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=5)
+        self.assertEqual(max_freq, 2)
+        max_freq = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=15)
+        self.assertEqual(max_freq, 3)
