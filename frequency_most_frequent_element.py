@@ -25,11 +25,13 @@ def get_cumulative_increments(increments: List[int]) -> List[int]:
 
 
 def get_max_freq_cumulative_increments(cumulative_increments: List[int], k: int) -> int:
+    if not cumulative_increments:
+        return 1
     if cumulative_increments[-1] <= k:
-        return len(cumulative_increments)
+        return len(cumulative_increments) + 1
     for i, cumulative_increment in enumerate(cumulative_increments):
         if cumulative_increment > k:
-            return i
+            return i + 1
 
 
 def get_max_frequency_from_matrix(increment_matrix: List[List[int]], k: int) -> List[int]:
@@ -42,6 +44,12 @@ def get_max_frequency_from_matrix(increment_matrix: List[List[int]], k: int) -> 
         max_freq_i = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=k)
         if max_freq_i > max_freq:
             max_freq = max_freq_i
+    return max_freq
+
+
+def get_max_freq(nums: List[int], k: int) -> int:
+    increment_matrix = get_increment_matrix(nums=nums)
+    max_freq = get_max_frequency_from_matrix(increment_matrix=increment_matrix, k=k)
     return max_freq
 
 
@@ -66,6 +74,22 @@ class TestIncrementMatrix(TestCase):
     def test3(self) -> None:
         cumulative_increments = [2, 5, 10]
         max_freq = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=5)
-        self.assertEqual(max_freq, 2)
-        max_freq = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=15)
         self.assertEqual(max_freq, 3)
+        max_freq = get_max_freq_cumulative_increments(cumulative_increments=cumulative_increments, k=20)
+        self.assertEqual(max_freq, 4)
+
+    def test4(self) -> None:
+        increment_matrix = [[0, 0, 0], [1, 0, 0], [3, 2, 0]]
+        max_freq = get_max_frequency_from_matrix(increment_matrix=increment_matrix, k=5)
+        self.assertEqual(max_freq, 3)
+
+    def test5(self) -> None:
+        increment_matrix = [[0, 0, 0], [1, 0, 0], [3, 2, 0]]
+        max_freq = get_max_frequency_from_matrix(increment_matrix=increment_matrix, k=5)
+        self.assertEqual(max_freq, 3)
+
+    def test6(self) -> None:
+        nums = [1, 4, 8, 13]
+        max_freq = get_max_freq(nums=nums, k=5)
+        self.assertEqual(max_freq, 2)
+
