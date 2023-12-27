@@ -58,6 +58,6 @@ class TestPeak(TestCase):
         self.assertEqual(peak_index, 3)
 
     def test6(self) -> None:
-        arr = [13,25,38,55,58,75,85,88,100,94,88,82,60,58,48,43,40,35,17,2]
+        arr = [13, 25, 38, 55, 58, 75, 85, 88, 100, 94, 88, 82, 60, 58, 48, 43, 40, 35, 17, 2]
         peak_index = get_peak_index_mountain_array(arr=arr)
         self.assertEqual(peak_index, 8)
