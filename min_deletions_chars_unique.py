@@ -9,7 +9,6 @@ def get_min_deletions(s: str) -> int:
     heapify(pq)
     n_deletions = 0
     while pq:
-        print(pq)
         count_first, char_first = heappop(pq)
         if not pq:
             break
@@ -33,5 +32,10 @@ class Solution:
 class TestMinDeletions(TestCase):
     def test1(self) -> None:
         s = 'aaabbbcc'
+        min_deletions = get_min_deletions(s=s)
+        self.assertEqual(min_deletions, 2)
+
+    def test2(self) -> None:
+        s = 'ceabaacb'
         min_deletions = get_min_deletions(s=s)
         self.assertEqual(min_deletions, 2)
