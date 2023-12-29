@@ -21,12 +21,13 @@ def get_min_deletions(s: str) -> int:
                 n_deletions += 1
                 if count + 1 != 0:
                     heappush(pq, (count + 1, char))
+            heapify(pq)
     return n_deletions
 
 
 class Solution:
     def minDeletions(self, s: str) -> int:
-        pass
+        return get_min_deletions(s=s)
 
 
 class TestMinDeletions(TestCase):
@@ -39,3 +40,8 @@ class TestMinDeletions(TestCase):
         s = 'ceabaacb'
         min_deletions = get_min_deletions(s=s)
         self.assertEqual(min_deletions, 2)
+
+    def test3(self) -> None:
+        s = 'baeccdae'
+        min_deletions = get_min_deletions(s=s)
+        self.assertEqual(min_deletions, 5)
