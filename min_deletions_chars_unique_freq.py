@@ -38,3 +38,8 @@ class TestMinDeletions(TestCase):
         s = "ceabaacb"
         n_deletions = get_min_deletions(s=s)
         self.assertEqual(n_deletions, 2)
+
+    def test3(self) -> None:
+        s = "aab"
+        n_deletions = get_min_deletions(s=s)
+        self.assertEqual(n_deletions, 0)
