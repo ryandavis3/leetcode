@@ -4,7 +4,7 @@ from unittest import TestCase
 
 class Solution:
     def minDeletions(self, s: str) -> int:
-        pass
+        return get_min_deletions(s=s)
 
 
 def get_min_deletions(s: str) -> int:
