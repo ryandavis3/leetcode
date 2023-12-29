@@ -15,9 +15,6 @@ def find_pattern(nums: List[int]) -> bool:
             i = num
         if j is not None:
             if num < j and num > i:
-                print(i)
-                print(j)
-                print(num)
                 return True
             if num > j:
                 j = num
