@@ -38,3 +38,13 @@ class TestPattern(TestCase):
         nums = [-1, 3, 2, 0]
         pattern = find_pattern(nums=nums)
         self.assertTrue(pattern)
+
+    def test4(self) -> None:
+        nums = [5, 2, 4, 3]
+        pattern = find_pattern(nums=nums)
+        self.assertTrue(pattern)
+
+    def test5(self) -> None:
+        nums = [1, 2, 3, 2, 1]
+        pattern = find_pattern(nums=nums)
+        self.assertTrue(pattern)
