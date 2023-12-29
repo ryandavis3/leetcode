@@ -17,9 +17,9 @@ def is_robot_bounded(instructions: str) -> bool:
     y = 0
     for instruction in instructions:
         if instruction == L:
-            degree = (degree + 1) / 4
+            degree = (degree + 1) % 4
         elif instruction == R:
-            degree = (degree - 1) / 4
+            degree = (degree - 1) % 4
         if instruction == G:
             # north
             if degree == 0:
@@ -32,7 +32,7 @@ def is_robot_bounded(instructions: str) -> bool:
                 y -= 1
             else:
                 x += 1
-    return (degree % 4) != 0 or (x==0 and y==0)
+    return (degree % 4) != 0 or (x == 0 and y == 0)
 
 
 class TestRobotBounded(TestCase):
@@ -41,7 +41,8 @@ class TestRobotBounded(TestCase):
             'GGLLGG': True,
             'GG': False,
             'GL': True,
-            'GLRLLGLL': True
+            'GLRLLGLL': True,
+            'GLGLGGLGL': False,
         }
         for instructions, expected in test_cases.items():
             result = is_robot_bounded(instructions=instructions)
