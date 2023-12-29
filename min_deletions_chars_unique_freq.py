@@ -15,10 +15,12 @@ def get_min_deletions(s: str) -> int:
         i = ord(char) - ord('a')
         frequency[i] = char_freq
     # Delete one character at a time
-    frequency_set = set(frequency)
+    frequency_set = set()
     n_deletions = 0
     for freq in frequency:
-        while freq not in frequency_set and freq > 0:
+        if not freq:
+            continue
+        while freq in frequency_set and freq > 0:
             freq -= 1
             n_deletions += 1
         if freq > 0:
@@ -27,4 +29,12 @@ def get_min_deletions(s: str) -> int:
 
 
 class TestMinDeletions(TestCase):
-    pass
+    def test1(self) -> None:
+        s = "aaabbbcc"
+        n_deletions = get_min_deletions(s=s)
+        self.assertEqual(n_deletions, 2)
+
+    def test2(self) -> None:
+        s = "ceabaacb"
+        n_deletions = get_min_deletions(s=s)
+        self.assertEqual(n_deletions, 2)
