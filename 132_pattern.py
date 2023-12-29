@@ -4,7 +4,7 @@ from typing import List
 
 class Solution:
     def find132pattern(self, nums: List[int]) -> bool:
-        pass
+        return find_pattern(nums=nums)
 
 
 def find_pattern(nums: List[int]) -> bool:
@@ -14,7 +14,10 @@ def find_pattern(nums: List[int]) -> bool:
         if num < i:
             i = num
         if j is not None:
-            if num < j:
+            if num < j and num > i:
+                print(i)
+                print(j)
+                print(num)
                 return True
             if num > j:
                 j = num
@@ -48,3 +51,8 @@ class TestPattern(TestCase):
         nums = [1, 2, 3, 2, 1]
         pattern = find_pattern(nums=nums)
         self.assertTrue(pattern)
+
+    def test6(self) -> None:
+        nums = [1, 0, 1, -4, -3]
+        pattern = find_pattern(nums=nums)
+        self.assertFalse(pattern)
