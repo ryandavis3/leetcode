@@ -6,7 +6,7 @@ from unittest import TestCase
 
 class Solution:
     def reorganizeString(self, s: str) -> str:
-        pass
+        return reorganize_string(s=s)
 
 
 def reorganize_string(s: str) -> str:
