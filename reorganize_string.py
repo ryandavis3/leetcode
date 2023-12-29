@@ -49,3 +49,9 @@ class TestReorganizeString(TestCase):
         result = reorganize_string(s=s)
         expected = 'abaca'
         self.assertEqual(result, expected)
+
+    def test4(self) -> None:
+        s = 'bcaaaa'
+        result = reorganize_string(s=s)
+        expected = ''
+        self.assertEqual(result, expected)
