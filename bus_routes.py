@@ -55,6 +55,8 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
 
 
 def get_num_buses_to_destination(routes: List[List[int]], source: int, target: int) -> int:
+    if source == target:
+        return 0
     stop_to_routes = get_stop_to_routes_dict(routes=routes)
     route_to_routes_dict = get_route_to_routes_dict(routes=routes)
     source_routes = stop_to_routes[source]
