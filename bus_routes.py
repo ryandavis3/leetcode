@@ -3,6 +3,7 @@ from typing import Dict, List, Set, Tuple
 
 
 LARGE = 10 ** 10
+NO_ROUTE = -1
 
 
 class Solution:
@@ -42,7 +43,7 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
         return 1
     possible_routes = route_to_routes_dict[source_route] - prev_routes
     if not possible_routes:
-        return -1
+        return NO_ROUTE
     if target_route in possible_routes:
         memo[key] = 2
         return 2
@@ -56,8 +57,8 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
     ]
     reachable_paths = [path for path in paths if path >= 0]
     if not reachable_paths:
-        memo[key] = -1
-        return -1
+        memo[key] = NO_ROUTE
+        return NO_ROUTE
     buses = 1 + min(reachable_paths)
     memo[key] = buses
     return buses
@@ -68,7 +69,11 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
         return 0
     stop_to_routes = get_stop_to_routes_dict(routes=routes)
     route_to_routes_dict = get_route_to_routes_dict(routes=routes)
+    if source not in stop_to_routes:
+        return -1
     source_routes = stop_to_routes[source]
+    if target not in stop_to_routes:
+        return -1
     target_routes = stop_to_routes[target]
     if source_routes & target_routes:
         return 1
@@ -144,7 +149,7 @@ class TestBuses(TestCase):
 
     def test6(self) -> None:
         buses = get_num_buses_to_destination(source=7, target=5, routes=self.routes_long)
-        self.assertEqual(buses, -1)
+        self.assertEqual(buses, NO_ROUTE)
 
     def test7(self) -> None:
         routes = [[2], [2, 8]]
