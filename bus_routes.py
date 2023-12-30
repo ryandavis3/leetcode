@@ -35,3 +35,4 @@ class TestBuses(TestCase):
             3: [1],
             6: [1],
         }
+        self.assertEqual(stop_to_routes, stop_to_routes_expected)
