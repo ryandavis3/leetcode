@@ -60,7 +60,7 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
     source_routes = stop_to_routes[source]
     target_routes = stop_to_routes[target]
     if source_routes & target_routes:
-        return 0
+        return 1
     min_buses = LARGE
     for source_route in source_routes:
         for target_route in target_routes:
@@ -129,3 +129,8 @@ class TestBuses(TestCase):
     def test6(self) -> None:
         buses = get_num_buses_to_destination(source=7, target=5, routes=self.routes_long)
         self.assertEqual(buses, -1)
+
+    def test7(self) -> None:
+        routes = [[2], [2, 8]]
+        buses = get_num_buses_to_destination(source=2, target=8, routes=routes)
+        self.assertEqual(buses, 1)
