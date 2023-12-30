@@ -7,7 +7,7 @@ MOD = 10**9 + 7
 
 class Solution:
     def numMusicPlaylists(self, n: int, goal: int, k: int) -> int:
-        pass
+        return get_num_music_playlists(n=n, goal=goal, k=k)
 
 
 def get_num_music_playlists(n: int, goal: int, k: int) -> int:
