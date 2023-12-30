@@ -36,3 +36,9 @@ class TestMaxSlidingWindow(TestCase):
         sliding_window = get_max_sliding_window(nums=nums, k=3)
         expected = [3, 3, 5, 5, 6, 7]
         self.assertEqual(sliding_window, expected)
+
+    def test2(self) -> None:
+        nums = [1]
+        sliding_window = get_max_sliding_window(nums=nums, k=1)
+        expected = [1]
+        self.assertEqual(sliding_window, expected)
