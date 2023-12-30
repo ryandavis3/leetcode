@@ -78,3 +78,10 @@ class TestBuses(TestCase):
                                     prev_routes=set())
         self.assertEqual(buses, 1)
 
+    def test4(self) -> None:
+        routes = [[1, 2], [2, 3], [3, 4], [4, 5]]
+        route_to_routes = get_route_to_routes_dict(routes=routes)
+        buses = get_buses_to_target(source=0, target=3, route_to_routes_dict=route_to_routes, prev_routes=set())
+        self.assertEqual(buses, 3)
+
+
