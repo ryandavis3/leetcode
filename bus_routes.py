@@ -1,5 +1,5 @@
 from unittest import TestCase
-from typing import Dict, List
+from typing import Dict, List, Set
 
 
 class Solution:
@@ -7,13 +7,13 @@ class Solution:
         pass
 
 
-def get_stop_to_routes_dict(routes: List[List[int]]) -> Dict[int, List[int]]:
-    stop_to_routes: Dict[int, List[int]] = {}
+def get_stop_to_routes_dict(routes: List[List[int]]) -> Dict[int, Set[int]]:
+    stop_to_routes: Dict[int, Set[int]] = {}
     for route_index, route_stops in enumerate(routes):
         for stop in route_stops:
             if stop not in stop_to_routes:
-                stop_to_routes[stop] = list()
-            stop_to_routes[stop].append(route_index)
+                stop_to_routes[stop] = set()
+            stop_to_routes[stop].add(route_index)
     return stop_to_routes
 
 
@@ -29,10 +29,10 @@ class TestBuses(TestCase):
     def test1(self) -> None:
         stop_to_routes = get_stop_to_routes_dict(routes=self.routes)
         stop_to_routes_expected = {
-            1: [0],
-            2: [0],
-            7: [0, 1],
-            3: [1],
-            6: [1],
+            1: {0},
+            2: {0},
+            7: {0, 1},
+            3: {1},
+            6: {1},
         }
         self.assertEqual(stop_to_routes, stop_to_routes_expected)
