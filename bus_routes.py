@@ -56,6 +56,7 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
     ]
     reachable_paths = [path for path in paths if path >= 0]
     if not reachable_paths:
+        memo[key] = -1
         return -1
     buses = 1 + min(reachable_paths)
     memo[key] = buses
