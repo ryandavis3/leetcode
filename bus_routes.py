@@ -136,3 +136,7 @@ class TestBuses(TestCase):
         routes = [[2], [2, 8]]
         buses = get_num_buses_to_destination(source=2, target=8, routes=routes)
         self.assertEqual(buses, 1)
+
+    def test8(self) -> None:
+        buses = get_num_buses_to_destination(source=1, target=1, routes=self.routes)
+        self.assertEqual(buses, 0)
