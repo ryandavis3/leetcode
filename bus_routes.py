@@ -34,6 +34,14 @@ def get_buses_to_target(source: int, target: int, route_to_routes_dict: Dict[int
     possible_routes = route_to_routes_dict[source] - prev_routes
     if not possible_routes:
         return -1
+    if target in possible_routes:
+        return 1
+    prev_routes = prev_routes.union(set([source]))
+    paths = [get_buses_to_target(source=route, target=target, route_to_routes_dict=route_to_routes_dict, prev_routes=prev_routes) for route in possible_routes]
+    reachable_paths = [path for path in paths if path >= 0]
+    if not reachable_paths:
+        return -1
+    return 1 + min(reachable_paths)
 
 
 def get_num_buses_to_destination(routes: List[List[int]], source: int, target: int) -> int:
