@@ -9,14 +9,31 @@ class Solution:
 
 def find_pattern(nums: List[int]) -> bool:
     N = len(nums)
+    # No possibility of pattern if N < 3
     if N < 3:
         return False
+    # Compute min array
     min_array = [0] * N
     for i, num in enumerate(nums):
         if i == 0:
             min_array[i] = num
             continue
         min_array[i] = min(min_array[i-1], num)
+    # Use stack to find 132 pattern
+    stack = list()
+    for j in range(N - 1, -1, -1):
+        # Array element not greater than minimum
+        if nums[j] <= min_array[j]:
+            continue
+        # Pop elements from stack until we find an element which
+        # satisfies nums[k] > nums[i]
+        while stack and stack[-1] <= min_array[j]:
+            stack.pop()
+        # Check if we have nums[k] < nums[j]
+        if stack and stack[-1] < nums[j]:
+            return True
+        stack.append(nums[j])
+    return False
 
 
 class TestPattern(TestCase):
