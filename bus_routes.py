@@ -28,24 +28,20 @@ def get_route_to_routes_dict(routes: List[List[int]]) -> Dict[int, Set[int]]:
     return route_to_routes_dict
 
 
-def get_buses_to_target(source: int, target: int, route_to_routes_dict: Dict[int, Set[int]], prev_routes: Set[int]) -> int:
-    if source == target:
+def get_buses_to_target(source_route: int, target_route: int, route_to_routes_dict: Dict[int, Set[int]], prev_routes: Set[int]) -> int:
+    if source_route == target:
         return 0
-    possible_routes = route_to_routes_dict[source] - prev_routes
+    possible_routes = route_to_routes_dict[source_route] - prev_routes
     if not possible_routes:
         return -1
-    if target in possible_routes:
+    if target_route in possible_routes:
         return 1
-    prev_routes = prev_routes.union(set([source]))
-    paths = [get_buses_to_target(source=route, target=target, route_to_routes_dict=route_to_routes_dict, prev_routes=prev_routes) for route in possible_routes]
+    prev_routes = prev_routes.union(set([source_route]))
+    paths = [get_buses_to_target(source_route=route, target_route=target_route, route_to_routes_dict=route_to_routes_dict, prev_routes=prev_routes) for route in possible_routes]
     reachable_paths = [path for path in paths if path >= 0]
     if not reachable_paths:
         return -1
     return 1 + min(reachable_paths)
-
-
-def get_num_buses_to_destination(routes: List[List[int]], source: int, target: int) -> int:
-    pass
 
 
 class TestBuses(TestCase):
@@ -83,5 +79,3 @@ class TestBuses(TestCase):
         route_to_routes = get_route_to_routes_dict(routes=routes)
         buses = get_buses_to_target(source=0, target=3, route_to_routes_dict=route_to_routes, prev_routes=set())
         self.assertEqual(buses, 3)
-
-
