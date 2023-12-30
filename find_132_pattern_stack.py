@@ -66,3 +66,8 @@ class TestPattern(TestCase):
         nums = [1, 0, 1, -4, -3]
         pattern = find_pattern(nums=nums)
         self.assertFalse(pattern)
+
+    def test7(self) -> None:
+        nums = [3, 2, 1, 2, 5]
+        pattern = find_pattern(nums=nums)
+        self.assertFalse(pattern)
