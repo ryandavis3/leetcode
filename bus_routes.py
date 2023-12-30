@@ -1,5 +1,5 @@
 from unittest import TestCase
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 
 LARGE = 10 ** 10
@@ -33,25 +33,33 @@ def get_route_to_routes_dict(routes: List[List[int]]) -> Dict[int, Set[int]]:
 
 
 def get_buses_to_target(source_route: int, target_route: int, route_to_routes_dict: Dict[int, Set[int]],
-                        prev_routes: Set[int]) -> int:
+                        prev_routes: Set[int], memo: Dict[Tuple, int]) -> int:
+    key = (source_route, target_route)
+    if key in memo:
+        return memo[key]
     if source_route == target_route:
+        memo[key] = 1
         return 1
     possible_routes = route_to_routes_dict[source_route] - prev_routes
     if not possible_routes:
         return -1
     if target_route in possible_routes:
+        memo[key] = 2
         return 2
     prev_routes = prev_routes.union(set([source_route]))
     paths = [
         get_buses_to_target(source_route=route,
                             target_route=target_route,
                             route_to_routes_dict=route_to_routes_dict,
-                            prev_routes=prev_routes) for route in possible_routes
+                            prev_routes=prev_routes,
+                            memo=memo) for route in possible_routes
     ]
     reachable_paths = [path for path in paths if path >= 0]
     if not reachable_paths:
         return -1
-    return 1 + min(reachable_paths)
+    buses = 1 + min(reachable_paths)
+    memo[key] = buses
+    return buses
 
 
 def get_num_buses_to_destination(routes: List[List[int]], source: int, target: int) -> int:
@@ -64,12 +72,14 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
     if source_routes & target_routes:
         return 1
     min_buses = LARGE
+    memo = dict()
     for source_route in source_routes:
         for target_route in target_routes:
             buses = get_buses_to_target(source_route=source_route,
                                         target_route=target_route,
                                         route_to_routes_dict=route_to_routes_dict,
-                                        prev_routes=set())
+                                        prev_routes=set(),
+                                        memo=memo)
             if buses == -1:
                 continue
             elif buses < min_buses:
@@ -107,12 +117,14 @@ class TestBuses(TestCase):
         buses = get_buses_to_target(source_route=2,
                                     target_route=0,
                                     route_to_routes_dict=self.route_to_routes_long,
-                                    prev_routes=set())
+                                    prev_routes=set(),
+                                    memo=dict())
         self.assertEqual(buses, -1)
         buses = get_buses_to_target(source_route=0,
                                     target_route=4,
                                     route_to_routes_dict=self.route_to_routes_long,
-                                    prev_routes=set())
+                                    prev_routes=set(),
+                                    memo=dict())
         self.assertEqual(buses, 2)
 
     def test4(self) -> None:
@@ -121,7 +133,8 @@ class TestBuses(TestCase):
         buses = get_buses_to_target(source_route=0,
                                     target_route=3,
                                     route_to_routes_dict=route_to_routes,
-                                    prev_routes=set())
+                                    prev_routes=set(),
+                                    memo=dict())
         self.assertEqual(buses, 4)
 
     def test5(self) -> None:
