@@ -70,10 +70,10 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
     stop_to_routes = get_stop_to_routes_dict(routes=routes)
     route_to_routes_dict = get_route_to_routes_dict(routes=routes)
     if source not in stop_to_routes:
-        return -1
+        return NO_ROUTE
     source_routes = stop_to_routes[source]
     if target not in stop_to_routes:
-        return -1
+        return NO_ROUTE
     target_routes = stop_to_routes[target]
     if source_routes & target_routes:
         return 1
@@ -86,12 +86,12 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
                                         route_to_routes_dict=route_to_routes_dict,
                                         prev_routes=set(),
                                         memo=memo)
-            if buses == -1:
+            if buses == NO_ROUTE:
                 continue
             elif buses < min_buses:
                 min_buses = buses
     if min_buses == LARGE:
-        return -1
+        return NO_ROUTE
     return min_buses
 
 
