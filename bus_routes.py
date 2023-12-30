@@ -8,7 +8,7 @@ LARGE = 10 ** 10
 class Solution:
 
     def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
-        pass
+        return get_num_buses_to_destination(routes=routes, source=source, target=target)
 
 
 def get_stop_to_routes_dict(routes: List[List[int]]) -> Dict[int, Set[int]]:
@@ -72,6 +72,8 @@ def get_num_buses_to_destination(routes: List[List[int]], source: int, target: i
                 continue
             elif buses < min_buses:
                 min_buses = buses
+    if min_buses == LARGE:
+        return -1
     return min_buses
 
 
@@ -123,3 +125,7 @@ class TestBuses(TestCase):
     def test5(self) -> None:
         buses = get_num_buses_to_destination(source=1, target=3, routes=self.routes)
         self.assertEqual(buses, 1)
+
+    def test6(self) -> None:
+        buses = get_num_buses_to_destination(source=7, target=9, routes=self.routes_long)
+        self.assertEqual(buses, -1)
