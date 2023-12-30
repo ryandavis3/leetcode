@@ -5,7 +5,7 @@ from collections import deque
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        pass
+        return get_max_sliding_window(nums=nums, k=k)
 
 
 def get_max_sliding_window(nums: List[int], k: int) -> List[int]:
@@ -20,7 +20,6 @@ def get_max_sliding_window(nums: List[int], k: int) -> List[int]:
     res[0] = nums[dq[0]]
     # Sliding window
     for i in range(k, n):
-        print(dq)
         if dq[0] == i - k:
             dq.popleft()
         while dq and nums[i] >= nums[dq[-1]]:
