@@ -3,6 +3,7 @@ from typing import Dict, List, Set
 
 
 class Solution:
+
     def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
         pass
 
@@ -28,7 +29,8 @@ def get_route_to_routes_dict(routes: List[List[int]]) -> Dict[int, Set[int]]:
     return route_to_routes_dict
 
 
-def get_buses_to_target(source_route: int, target_route: int, route_to_routes_dict: Dict[int, Set[int]], prev_routes: Set[int]) -> int:
+def get_buses_to_target(source_route: int, target_route: int, route_to_routes_dict: Dict[int, Set[int]],
+                        prev_routes: Set[int]) -> int:
     if source_route == target_route:
         return 0
     possible_routes = route_to_routes_dict[source_route] - prev_routes
@@ -37,7 +39,12 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
     if target_route in possible_routes:
         return 1
     prev_routes = prev_routes.union(set([source_route]))
-    paths = [get_buses_to_target(source_route=route, target_route=target_route, route_to_routes_dict=route_to_routes_dict, prev_routes=prev_routes) for route in possible_routes]
+    paths = [
+        get_buses_to_target(source_route=route,
+                            target_route=target_route,
+                            route_to_routes_dict=route_to_routes_dict,
+                            prev_routes=prev_routes) for route in possible_routes
+    ]
     reachable_paths = [path for path in paths if path >= 0]
     if not reachable_paths:
         return -1
@@ -45,6 +52,7 @@ def get_buses_to_target(source_route: int, target_route: int, route_to_routes_di
 
 
 class TestBuses(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.routes = [[1, 2, 7], [3, 6, 7]]
@@ -68,14 +76,22 @@ class TestBuses(TestCase):
         self.assertEqual(route_to_routes, route_to_routes_expected)
 
     def test3(self) -> None:
-        buses = get_buses_to_target(source_route=2, target_route=0, route_to_routes_dict=self.route_to_routes_long, prev_routes=set())
+        buses = get_buses_to_target(source_route=2,
+                                    target_route=0,
+                                    route_to_routes_dict=self.route_to_routes_long,
+                                    prev_routes=set())
         self.assertEqual(buses, -1)
-        buses = get_buses_to_target(source_route=0, target_route=4, route_to_routes_dict=self.route_to_routes_long,
+        buses = get_buses_to_target(source_route=0,
+                                    target_route=4,
+                                    route_to_routes_dict=self.route_to_routes_long,
                                     prev_routes=set())
         self.assertEqual(buses, 1)
 
     def test4(self) -> None:
         routes = [[1, 2], [2, 3], [3, 4], [4, 5]]
         route_to_routes = get_route_to_routes_dict(routes=routes)
-        buses = get_buses_to_target(source_route=0, target_route=3, route_to_routes_dict=route_to_routes, prev_routes=set())
+        buses = get_buses_to_target(source_route=0,
+                                    target_route=3,
+                                    route_to_routes_dict=route_to_routes,
+                                    prev_routes=set())
         self.assertEqual(buses, 3)
